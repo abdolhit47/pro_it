@@ -16,12 +16,11 @@ function Sign_up() {
         middleName:'',
         lastName:'',
         phone:'',
-        birthday:'',
-        placeOfBirth:'',
         gender:'',
+        maritalStatus:'',
         address:'',
-        closePhone:'',
-        NearPhone:'',
+        birthday:'',
+        //placeOfBirth:'',
         userName:'',
         email:'',
         password:'',
@@ -95,29 +94,31 @@ function Sign_up() {
 
                 <div className=" flex flex-row-reverse -mx-3 mb-4">
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label for="phone" className="block mb-2 text-gray-700 font-medium  text-right">رقم الهاتف</label>
-                        <input type="text" id="phone" name="phone" {...register("phone",{required:true})} value={value.phone} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
-                    {errors.phone&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
-                    </div>
-
-                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label for="birthday" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
                         <input type="date" id="birthday" name="birthday" {...register("birthday",{required:true})} value={value.birthday} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
                     {errors.birthday&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
-
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label for="placeOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">مكان الميلاد</label>
                         <input type="text" id="placeOfBirth" name="placeOfBirth" {...register("placeOfBirth",{required:true})} value={value.placeOfBirth} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
                     {errors.placeOfBirth&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
+                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                        <label htmlFor="gender" className="block mb-2 text-gray-700 font-medium  text-right">الجنس</label>
+                        <select  id="gender" name="gender" {...register("gender",{required:true})} value={value.gender} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right">
+                            <option value=""></option>
+                            <option value="1">ذكر</option>
+                            <option value="2">انثى</option>
+                        </select>
+                        {errors.gender&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                    </div>
                 </div>
 
                 <div className="flex flex-row-reverse -mx-3 mb-4">
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label for="gender" className="block mb-2 text-gray-700 font-medium  text-right">الجنس</label>
-                        <input type="text" id="gender"name="gender" {...register("gender",{required:true})} value={value.gender} onChange={handleChange}  className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
-                    {errors.gender&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                        <label htmlFor="phone" className="block mb-2 text-gray-700 font-medium  text-right">رقم الهاتف</label>
+                        <input type="text" id="phone" name="phone" {...register("phone",{required:true})} value={value.phone} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
+                        {errors.phone&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
 
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -127,19 +128,26 @@ function Sign_up() {
                     </div>
 
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label for="closePhone" className="block mb-2 text-gray-700 font-medium  text-right">اسم القريب</label>
-                        <input type="text" id="closePhone" name="closePhone" {...register("closePhone",{required:true})} value={value.closePhone} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
-                    {errors.closePhone&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                        <label for="maritalStatus" className="block mb-2 text-gray-700 font-medium  text-right">حالة الإجتماعية</label>
+                        <select id='maritalStatus' name='maritalStatus' {...register("maritalStatus",{required:true})} value={value.maritalStatus} onChange={handleChange}  className={'w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right'}>
+                           <option value=""></option>
+                            <option value="1">أعزب</option>
+                            <option value="2">متزوج</option>
+                            <option value="3">مطلق</option>
+                            <option value="4">أرمل</option>
+                        </select>
+                        {/*<input type="text" id="closePhone" name="closePhone" {...register("maritalStatus",{required:true})} value={value.maritslStatus} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />*/}
+                    {errors.maritalStatus&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
                 </div>
 
-                <div className="flex flex-row-reverse -mx-3 mb-4">
-                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label for="NearPhone" className="block mb-2 text-gray-700 font-medium  text-right">رقم القريب</label>
-                        <input type="text" id="NearPhone" name="NearPhone" {...register("NearPhone",{required:true})} value={value.NearPhone} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 text-right" />
-                    {errors.NearPhone&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
-                    </div>
-                </div>
+                {/*<div className="flex flex-row-reverse -mx-3 mb-4">*/}
+                {/*    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">*/}
+                {/*        <label for="NearPhone" className="block mb-2 text-gray-700 font-medium  text-right">رقم القريب</label>*/}
+                {/*        <input type="text" id="NearPhone" name="NearPhone" {...register("NearPhone",{required:true})} value={value.NearPhone} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 text-right" />*/}
+                {/*    {errors.NearPhone&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
                 <div className="flex flex-col justify-between ">
                     <div className="flex flex-row-reverse -mx-3 mb-4 justify-between">
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">

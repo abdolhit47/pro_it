@@ -28,7 +28,7 @@ function User() {
                         <div class="px-6 py-4 flex justify-center">
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">
                                 <thead className="flex w-full ">
-                                    <tr className="border-b text-center flex w-full  mb-4">
+                                    <tr className="border-b text-center flex w-full  px-2 pl-3 mb-4">
                                         <th className="p-3 w-1/8">#</th>
                                         <th className="p-3 w-1/5">الاسم</th>
                                         <th className="p-3 w-1/5">رقم الهاتف</th>
@@ -37,8 +37,8 @@ function User() {
                                         <th className="p-3 w-1/5">العرض</th>
                                     </tr>
                                 </thead>
-                                <tbody className="flex flex-col items-center overflow-y-scroll h-auto max-h-96">
-                                    <tr className="text-center hover:bg-orange-100 flex w-full">
+                                <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
+                                    <tr className="text-center hover:bg-orange-100 flex w-full px-2  pl-3">
                                         <td className="p-3 w-1/8 flex items-center justify-center">1</td>
                                         <td className="p-3 w-1/5 flex items-center justify-center">test</td>
                                         <td className="p-3 w-1/5 flex items-center justify-center">test</td>

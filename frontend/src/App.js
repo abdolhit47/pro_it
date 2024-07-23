@@ -10,8 +10,14 @@ import{
   User,
   TEST,
   Sign_up,
- 
-  Showprofile
+  Showprofile,
+  ShowOffice,
+  ShowOrder,
+  Office,
+    Service,
+    Order,
+  Archive,
+  Chats
 }from './page'
 // import PrivateRoute from './PrivateRoute';
 function App() {
@@ -27,6 +33,14 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/showprofile/:id" element={<Showprofile />} />
           <Route path="/user" element={<User />} />
+        <Route path="/office" element={<Office />} />
+        <Route path={"/service"} element={<Service/>} />
+        <Route path="/showoffice/:id" element={<ShowOffice />} />
+        <Route path="/test" element={<TEST />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/showorder/:id" element={<ShowOrder />} />
+        <Route path="/archive" element={<Archive />} />
+        <Route path="/chats" element={<Chats />} />
       </Routes>
     </BrowserRouter>
   );

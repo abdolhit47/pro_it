@@ -14,7 +14,7 @@ function Profile() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-10">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
                         <div className="flex flex-col p-8 max-w-3xl">
                             <h1 className="text-2xl text-gray-900 text-right mb-6">بياناتي الشخصية</h1>
