@@ -1,11 +1,12 @@
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 import React, {useState} from "react";
-import AddOffice from "../component/addOffice";
+import AddService from "../../component/addService";
 function Service() {
     const [Model, setModel] = useState([]);
-    const [addOffice, setaddOffice] = useState(false);
+    const [addService, setaddService] = useState(false);
+    const id = 123;
     const handleshow = ()=>{
-        setaddOffice(true)
+        setaddService(true)
     }
     return (
         <>
@@ -118,7 +119,7 @@ function Service() {
                 </div>
             </div>
         </div>
-            {addOffice && <AddOffice setOpenModal={setaddOffice}/>}
+            {addService && <AddService setOpenModal={setaddService} id={id}/>}
         </>
     )
 }

@@ -1,30 +1,30 @@
-import Navbar from "./Navbar";
-import {Link, useNavigate} from "react-router-dom";
-import HomeIcon from "@mui/icons-material/Home";
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from "@mui/icons-material/Person";
-import React from "react";
+import Navbar from "../Navbar";
+import React, {useState} from "react";
+import AddOffice from "../../component/addOffice";
+import {useNavigate} from "react-router-dom";
+function Office() {
+    const [Model, setModel] = useState([]);
+    const [addOffice, setaddOffice] = useState(false);
+    const handleadd = ()=>{
+        setaddOffice(true)
+    }
+    const navigate = useNavigate()
 
-function Order() {
-
-    const navigate = useNavigate();
-    const handleshow = () => {
-        navigate('/showorder/1');
-    };
+    const handleshow = ()=>{
+        navigate('/showoffice/1')
+    }
     return (
         <>
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
                 <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
-                    <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto  ">
-                        <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
-                            <h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>
-                            {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
+                    <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto  ">
+                        <div class="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
+                            <h1 class="text-2xl text-gray-900 text-right">الجهة/المركز</h1>
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة جهة</button>
                         </div>
-                        <div className="px-6 py-4 flex justify-center">
+                        <div class="px-6 py-4 flex justify-center">
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">
                                 <thead className="flex w-full ">
                                 <tr className="border-b text-center flex w-full px-2 mb-4">
@@ -33,9 +33,8 @@ function Order() {
                                     <th className="p-3 w-1/5">وصف</th>
                                     <th className="p-3 w-1/5">المسؤول</th>
                                     <th className="p-3 w-1/5">العنوان</th>
-                                    <th className="p-3 w-1/5">العرض</th>
+                                    <th className={"p-3 w-1/5"}>العرض</th>
                                     <th className="p-3 w-1/5">التعديل</th>
-                                    <th className="p-3 w-1/5">إصدار</th>
                                 </tr>
                                 </thead>
                                 <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
@@ -51,9 +50,6 @@ function Order() {
                                     <td className="p-3 w-1/5 flex items-center justify-center">
                                         <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">التعديل</button>
                                     </td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">
-                                        <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">إصدار الوثيقة</button>
-                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -62,8 +58,8 @@ function Order() {
                 </div>
             </div>
         </div>
-
+            {addOffice && <AddOffice setOpenModal={setaddOffice}/>}
         </>
     )
 }
-export default Order
+export default Office

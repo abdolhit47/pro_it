@@ -30,22 +30,49 @@ function Navbar() {
         setAnchorEl(null);
     };
     const handleLogoutClick = async () => {
-        // await axios.get(baseurl + 'logout',{
-        //     headers: {
-        //         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        //     },
-        // });
-        // toast.success('تم تسجيل الخروج بنجاح');
-        // localStorage.removeItem('token');
-        // localStorage.removeItem('username');
-        // localStorage.removeItem('role');
-        // setAnchorEl(null);
-        navigate('/');
+        await axios.get(baseurl + 'logout',{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        toast.success('تم تسجيل الخروج بنجاح');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        setAnchorEl(null);
+        setTimeout(() => {
+            navigate('/login');
+        }, 1000);
     };
     const handleProfileClick = () => {
         setAnchorEl(null);
         navigate('/Profile');
     };
+    const [countmes, getCountMes] = useState(0);
+    async function getCount() {
+        try {
+            const res =await axios.get(baseurl + "countMes", {
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            if(res.status===200){
+                getCountMes(res.data);
+            }else{
+                //error show data
+            }
+        } catch (error) {
+            if(error?.response?.status === 401){
+                toast.warning('تحقق من كلمة المرور او اسم المستخدم');
+            }else if(error?.response?.status === 402){
+                toast.warning('حسابك غير مؤكد، رجاء تأكيده');
+            }else {
+                toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+    }
+
+    useEffect(() => {
+        getCount();
+    }, []);
 
     return (
         <>
@@ -94,9 +121,9 @@ function Navbar() {
                                   <span class="flex gap-2">
                                     <PersonIcon/>
                                       {username && (<span className='font-bold'>
-                                        {username}
-
-                                    </span>)} test
+                                                        {username}
+                                                    </span>)
+                                      }
                                   </span>
                             </summary>
                         </details>
@@ -106,14 +133,17 @@ function Navbar() {
                             <div className="relative inline-flex">
                                 {/*<span className="ml-2 text-sm font-medium mr-4 ">الرسائل</span>*/}
                                 <MessageIcon />
-                                <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>
-                                <span className="absolute inline-flex h-2 w-2 rounded-full bottom-0 right-0 text-xs text-black">123</span>
+                                {countmes>0&&(<>
+                                    <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>
+                                    <span className="absolute inline-flex h-2 w-2 rounded-full bottom-0 right-0 text-x text-black">{countmes}
+                            </span></>)
+                            }
                             </div>
                         </Link>
                     </li>
                 </ul>
                 <p class="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>منظومة وزارة</p>
-            </nav>
+            </nav><ToastContainer position="top-left" />
         </>
     );
 

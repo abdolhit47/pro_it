@@ -10,15 +10,9 @@ import { useForm } from "react-hook-form"
 
 function Login() {
     const [value,setValues] = useState({
-        userName:'',
+        email:'',
         password:''
     });
-    // const {
-    //     register,
-    //     handleSubmit,
-    //     watch,
-    //     formState: { errors },
-    //   } = useForm()
       
       const handleChange = (event) => {
         const { name, value } = event.target;
@@ -32,16 +26,21 @@ function Login() {
 
      async function onSubmit ()  { 
         try{
-            // const res =  await axios.post(baseurl + 'login', value);
-            // if(res.status===200 && res.data.token){
-            //     localStorage.setItem('token', res.data.token);
-            //     localStorage.setItem('username', res.data.userName);
-            //     localStorage.setItem('role', res.data.adjective);
+            const res =  await axios.post(baseurl + 'login', value);
+
+            if(res.status===200 && res.data.token){
+                localStorage.setItem('access_token', res.data.access_token);
+                localStorage.setItem('username', res.data.username);
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('role', res.data.role);
+                localStorage.setItem('Office', res.data.Office);
                 toast.success('مرحبا');
-                navigate("/Dashboard");
-            // }else{
-            //    toast.warning('تحقق من كلمة المرور او اسم المستخدم');
-            // }
+                setTimeout(() => {
+                    navigate('/Dashboard');
+                }, 1000);
+            }else{
+               toast.warning('تحقق من كلمة المرور او اسم المستخدم');
+            }
 
         }catch (error){
             if(error?.response?.status === 401){
@@ -57,10 +56,9 @@ function Login() {
         <div class="min-h-screen flex items-center justify-center w-full  bg-yellow-800">
             <div class="bg-gray-100 shadow-md rounded-lg px-8 py-6 w-full max-w-md">
                 <h1 class="text-2xl font-bold text-center mb-4 text-gray-900" dir="rtl">مرحبا بك!</h1>
-                <form >
                     <div class="mb-4"  dir="rtl">
-                        <label for="userName" class="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
-                        <input type="text" id="userName" name='userName' value={value.userName} onChange={handleChange} class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ahmed, Ali...etc"/>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
+                        <input type="text" id="email" name='email' value={value.email} onChange={handleChange} class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ahmed, Ali...etc"/>
                         {/* {errors.userName&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>} */}
                     </div>
                     <div class="mb-4"  dir="rtl">
@@ -78,7 +76,7 @@ function Login() {
                         </Link>
                     </div>
                     <button onClick={onSubmit} type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">تسجيل الدخول</button>
-                </form><ToastContainer position="top-left" />
+                <ToastContainer position="top-left" />
             </div>
         </div>
 

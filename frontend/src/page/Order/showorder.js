@@ -1,6 +1,6 @@
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 import React, {useState} from "react";
-import AddOffice from "../component/addOffice";
+import AddOffice from "../../component/addOffice";
 function ShowOrder() {
 
     return (
