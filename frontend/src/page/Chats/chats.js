@@ -25,6 +25,18 @@ function Chats() {
     useEffect(() => {
         getChats();
     }, [0]);
+    const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
+    const handleChatClick = (chatId) => {
+        setSelectedChatId(chatId); // Update selected chat ID on click
+
+        console.log("Selected chat ID:", chatId); // Example logging for debugging
+        const res =  axios.post(baseurl + 'getmessages/' + chatId + '', {
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        })
+        console.log(res.data)
+    };
+
+
     return (
         <>
         <div className="flex h-screen">
@@ -42,23 +54,21 @@ function Chats() {
                             {/*    {"لا يوجد رسائل"}*/}
 
                             {/*</div>*/}
-                            {chats.length === 0 ? <p className="flex items-center justify-center bg-gray-100 flex-grow text-black border-x-8 border-green-500 rounded-md px-3 py-2 w-2">
+                            {chats.length === 0 ?
+                                <p className=" text-center h-auto tall:h-96 col-span-1 row-span-2 bg-gray-100 border-l-2 border-gray-500 rounded-r-md overflow-y-auto">
                                 لا يوجد رسائل
                             </p>:
                                 <div className="flex  h-auto tall:h-96 col-span-1 row-span-2 bg-gray-100 border-l-2 border-gray-500 rounded-r-md overflow-y-auto ">
                                 <div className={' flex flex-col md:w-11/12 h-fit pr-2 pt-2 items-start scroll-p-15'}>
-                                    {chats.map((chat, index) => (<>
-
-                                        <div className=" w-full rounded-xl border-2 my-2 ">
-
-
-
+                                    {chats.map((chat, index) => (
+                                        <>
+                                        <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={chat.id}  onClick={() => handleChatClick(chat.id)}>
                                             <p className="relative inline-flex p-1">{chat.user}
                                                 {chat.messages.Status === 'Unread'? <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>:''}
                                             </p>
-                                            <p className="text-gray-500 font-thin text-sm p-1 truncate ">{chat.messages.Message}</p>
+                                            <p className={chat.messages.Status === 'Unread'?`text-gray-500 font-bold text-sm p-1 truncate `:`text-gray-500 font-thin text-sm p-1 truncate `}>{chat.messages.Message}</p>
                                         </div>
-                                            </>
+                                        </>
                                     ))}
                                 </div>
                                 </div>

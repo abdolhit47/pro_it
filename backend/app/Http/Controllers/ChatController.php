@@ -13,9 +13,18 @@ class ChatController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->role == 1) {
-                $chats = Chat::where('ID_office', $user->emplyee->offices->id)->get();
-                return response()->json($chats);
+            if ($user->role == 1 || $user->role == 0) {
+                $chats = Chat::with('messages')->where('ID_office', $user->emplyee->offices->id)
+                    ->get();
+                $chat = $chats->map(function ($chat) {
+                   return [
+                       'id' => $chat->id,
+                       'user' => $chat->mwatens->first_name.' '.$chat->mwatens->last_name,
+                       'Title' => $chat->Title,
+                       'Status' => $chat->Status,
+                       'messages' => $chat->messages->sortByDesc('Date_send')->first()];
+                });
+                return response()->json($chat);
             }
             if ($user->role == 2) {
                 $chats = Chat::with('messages','offices')->where('mwaten_id', $user->mwaten->id)
@@ -26,13 +35,47 @@ class ChatController extends Controller
         return response()->json(['success' => "doesn't have permission"], 403);
     }
 
-    public function show_message($id)#show all messages in chat by admin
-    {
+    public function countMes(){
+        try{
+            $mes = Chat::where('Status', 'Active')
+                ->whereHas('messages', function ($query) {
+                    $query->where('Status', 'Unread');
+                })->count();
+            return response()->json($mes);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 403);
+
+        }
+    }
+
+    public function update_status($id){
         $user = Auth::user();
         if($user->role != 1){
             return response()->json(['success' => "doesn't have permission"],403);
         }
+        $chat = Chat::find($id);
+        $chat->Status = 'Inactive';
+        $chat->save();
+        return response()->json(['success' => true]);
+    }
+
+
+
+
+    public function show_message($id)#show all messages in chat by admin
+    {
+        $user = Auth::user();
+        if($user->role != 0){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
         $chat = Chat::with('messages')->where('id', $id)->get();
+        $chat = $chat->map(function ($chat) {
+            return [
+                'id' => $chat->id,
+                'Title' => $chat->Title,
+                'messages' => $chat->messages
+            ];
+        });
         return response()->json($chat);
     }
 
@@ -99,7 +142,7 @@ class ChatController extends Controller
 
     public function end_chat($id){
         $user = Auth::user();
-        if($user->role != 1){
+        if($user->role != 1 || $user->role != 0){
             return response()->json(['success' => "doesn't have permission"],403);
         }
         $chat = Chat::find($id);
