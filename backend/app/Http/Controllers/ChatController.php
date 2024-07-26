@@ -107,21 +107,21 @@ class ChatController extends Controller
     public function new_chat(Request $request)
     {
         $user = Auth::user();
-        if($user->role != 2){
-            return response()->json(['success' => "doesn't have permission"],403);
-        }
+//        if($user->role != 2){
+//            return response()->json(['success' => "doesn't have permission"],403);
+//        }
         try{
             $request->validate([
                 #'mwaten_id' => 'required|numeric',
-                'ID_office' => 'required|numeric',
-                'Title' => 'required|string',
+                'office' => 'required|numeric',
+                'title' => 'required|string',
                 'message' => 'required|string',
             ]);
             $user = Auth::user();
             $chat = new Chat();
             $chat->mwaten_id = $user->mwaten->id;
-            $chat->ID_office = $request->ID_office;
-            $chat->Title = $request->Title;
+            $chat->ID_office = $request->office;
+            $chat->Title = $request->title;
             $chat->Status = 'Active';
             $chat->date_start = date('Y-m-d');
             $chat->save();

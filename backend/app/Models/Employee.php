@@ -18,7 +18,7 @@ class Employee extends Model
 
     public function offices()
     {
-        return $this->belongsTo(Office::class, 'ID_office', 'id');
+        return $this->belongsTo(Office::class, "ID_office", "id");
     }
     public function users(){
         return $this->belongsTo(User::class,"id","id");

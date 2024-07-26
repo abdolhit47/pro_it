@@ -11,7 +11,7 @@ class AddressController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if ($user->role == 1 || $user->role == 0) {
+        if ($user->role == 0 || $user->role == 1 || $user->role == 2 || $user->role == 4) {
             $addresses = Address::all();
             return response()->json($addresses);
         }

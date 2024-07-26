@@ -1,11 +1,10 @@
 import Navbar from "../Navbar";
 import React, {useEffect, useState,useRef} from "react";
 import AddIcon from '@mui/icons-material/Add';
-import AddOffice from "../../component/addOffice";
+import NewMessage from "../../component/NewMessage";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import SendIcon from '@mui/icons-material/Send';
 import {baseurl} from "../../Baseurl/baseurl";
-import { getCount } from '../utils/api'; // Import the getCount function
 import axios from 'axios';
 const role = localStorage.getItem('role');
 function Chats() {
@@ -80,6 +79,13 @@ function Chats() {
         setvalue({message: ''});
         handleChatClick(selectedChatId)
     }
+
+
+    const [newMessage, setnewMessage] = useState(false);
+    const handleadd = ()=>{
+        setnewMessage(true)
+    }
+
     return (
         <>
         <div className="flex h-screen">
@@ -89,14 +95,9 @@ function Chats() {
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
                         <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 className="text-2xl text-gray-900 text-right">الاستفسارات</h1>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" /*onClick={handleshow}*/>اضافة <AddIcon/></button>
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة <AddIcon/></button>
                         </div>
                         <div className={"px-6 py-4 flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-screen max-w-full grid grid-cols-4 "} dir={'rtl'}>
-
-                            {/*<div className="flex col-span-1 row-span-2 items-center justify-center bg-gray-100 flex-grow text-black border-l-2 border-gray-500 rounded-r-md px-3 py-2">*/}
-                            {/*    {"لا يوجد رسائل"}*/}
-
-                            {/*</div>*/}
                             {chats.length === 0 ?
                                 <p className=" text-center h-auto tall:h-96 col-span-1 row-span-2 bg-gray-100 border-l-2 border-gray-500 rounded-r-md overflow-y-auto">
                                 لا يوجد رسائل
@@ -167,6 +168,7 @@ function Chats() {
                     </div>
                 </div>
             </div>
+            { newMessage && <NewMessage setOpenModal={setnewMessage}/>}
         </div>
         </>
     )

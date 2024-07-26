@@ -1,22 +1,17 @@
 import { baseurl } from '../Baseurl/baseurl';
 import axios from 'axios';
-import React, { useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
+import React, { useEffect, useState,useRef} from "react";
 import { ToastContainer, toast } from 'react-toastify'
+import Select from "react-select";
 
 export default function AddOffice({setOpenModal}) {
     const[value,setValues] = useState({
-        name_model:'',
-        version:'',
-        release_date:'',
-        documentation:''
+        name:'',
+        description:'',
+        address:'',
+        user_name:''
     });
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm()
+
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -29,18 +24,54 @@ export default function AddOffice({setOpenModal}) {
         setOpenModal(false);
 
     };
+
+    const [address, setAddress] = useState([]);
+    const selectInputCityRef = useRef();
+
+    async function getaddresses ()  {
+        try{
+            const res =  await axios.get(baseurl + 'getaddresses',{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            if(res.status===200){
+                setAddress(res.data)
+            }
+        }catch (error){
+            if(error?.response?.status === 422){
+                toast.error('------');
+            }else{
+                toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+    }
+    useEffect(() => {
+        getaddresses();
+
+    }, []);
+    const [selectedcity, setSelectedcity] = useState([]);
+
+    const handleSelectChangecity = (selectedOptions) => {
+        setSelectedcity(selectedOptions.map((option) => option.value));
+        value.address = selectedcity;
+    };
+
+    const optionscity = address.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+    console.log(value)
     async function onSubmit ()  {
         try{
-            const res =  await axios.post(baseurl + 'addmodel', value,{
+            const res =  await axios.post(baseurl + 'storeoffice', value,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
             });
             if(res.status===201){
-                toast.success('تم إضافة النموذج بنجاح');
+                toast.success('تم إضافة الجهة بنجاح');
                 setOpenModal(false);
             }
         }catch (error){
             if(error?.response?.status === 422){
-                toast.error('رقم الإصدار موجود بالفعل');
+                toast.error('----');
             }else{
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }
@@ -63,38 +94,53 @@ export default function AddOffice({setOpenModal}) {
             </div>
             <div className="pt-0 text-center">
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
-                    <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label for="name_model" className="block mb-2 text-gray-700 font-medium  text-right">اسم الجهة</label>
-                                <input type="text" id="name_model" {...register("name_model", { required: true })} name="name_model" value={value.name_model} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {errors.name_model&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                <label form="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الجهة</label>
+                                <input type="text" id="name" name="name" value={value.name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                {/*{errors.name_model&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label for="version" className="block mb-2 text-gray-700 font-medium  text-right">العنوان</label>
-                                <input type="text" id="version" {...register("version", { required: true })} name="version" value={value.version} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                <label form="version" className="block mb-2 text-gray-700 font-medium  text-right">العنوان</label>
+                                {/*<input type="text" id="version" name="version" value={value.version} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
+                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                <Select
+                                    ref={selectInputCityRef}
+                                    isSearchable
+                                    isClearable
+                                    value={optionscity.find(
+                                        (option) => option.value === selectedcity[0]
+                                    )}
+                                    onChange={(selectedOption) => {
+                                        handleSelectChangecity(
+                                            selectedOption ? [selectedOption] : []
+                                        );
+                                        value.address = selectedOption
+                                            ? selectedOption.value
+                                            : null;
+                                    }}
+                                    options={optionscity}
+                                />
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label for="release_date" className="block mb-2 text-gray-700 font-medium  text-right">اسم مستخدم</label>
-                                <input type="text" id="version" {...register("version", { required: true })} name="version" value={value.version} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                <label form="user_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم موظف الجهة</label>
+                                <input type="text" id="user_name" name="user_name" value={value.user_name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label for="documentation" className="block mb-2 text-gray-700 font-medium  text-right">الوصف</label>
-                                <textarea  id="documentation" {...register("documentation", { required: true })} name="documentation" value={value.documentation} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف</label>
+                                <textarea  id="description" name="description" value={value.description} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                            <button  type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">إضافة</button>
+                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">إضافة</button>
                             <button onClick={closeModalTp} className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 ">رجوع</button>
                         </div>
-                    </form>
                 </div>
             </div>
             <ToastContainer position="top-left" />

@@ -36,7 +36,7 @@ Route::get("/showservice", [ServiceController::class, "index"])->middleware('aut
 Route::post("/storeservice", [ServiceController::class, "store"])->middleware('auth:sanctum');
 
 Route::get("/showchat", [ChatController::class, "index"])->middleware('auth:sanctum');
-Route::post("/storchat", [ChatController::class, "new_chat"])->middleware('auth:sanctum');
+Route::post("/storechat", [ChatController::class, "new_chat"])->middleware('auth:sanctum');
 Route::post("/sendmessage", [ChatController::class, "sendmessage"])->middleware('auth:sanctum');
 Route::get("/getmessages/{id}", [ChatController::class, "show_message"])->middleware('auth:sanctum');
 Route::put('endchat/{id}', [ChatController::class, 'end_chat'])->middleware('auth:sanctum');

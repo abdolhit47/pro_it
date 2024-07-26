@@ -16,8 +16,17 @@ class OfficeController extends Controller
 {
     public function index()
     {
-        $offices = Office::all();
-        return response()->json($offices);
+        $offices = Office::with('employees','addresses')->get();
+        $office = $offices->map(function ($office) {
+            return [
+                'id' => $office->id,
+                'name' => $office->name,
+                'description' => $office->description,
+                'address' => $office->addresses->name,
+                'employee' => $office->employees->map(function ($office) {return $office->first_name." ".$office->last_name;})//." ".$office->employees->last_name,
+            ];
+        });
+        return response()->json($office);
     }
 
     public function store(Request $request){
@@ -33,22 +42,25 @@ class OfficeController extends Controller
                 'description' => 'required|string',
                 'address' => 'required|numeric',
                 'user_name' => 'required|string',
-                'user_email' => 'required|email',
+                //'user_email' => 'required|email',
             ]);
             $office = new Office();
             $office->name = $request->name;
             $office->description = $request->description;
             $office->ID_address = $request->address;
             $office->save();
+
             $user = New User();
             $user->name = $request->user_name;
-            $user->email = $request->user_email;
-            $user->role = 1;
-
+            $user->email = $request->user_name."@gmail.com";
+            $user->role = 2;
             $user->password = Hash::make("123456789");
+            $user->save();
 
-
-            $office->employees()->save($user);
+            $employee = new Employee();
+            $employee->ID_office = $office->id;
+            $employee->id = $user->id; // Ensure your `Employee` model has a user_id column
+            $employee->save();
 //            Employee::create(
 //                [
 //                    'id' => $user->id,
@@ -71,21 +83,20 @@ class OfficeController extends Controller
 //                    return response()->json(['success' => "doesn't have permission"],403);
 //                }
 //            }
-            $office = Office::with('addresses','services')->where('id',$id)->get();
-            $service = $office->map(function ($service) {
-                return [
-                    'id' => $service->id,
-                    'name' => $service->name,
-                    'description' => $service->description,
-                    'address' => $service->addresses->name,
-                    'services' => $service->services->map(function ($service) {
-                        return [
-                            'name' => $service->name,
-                        ];
-                    }),
-                ];
-            });
-            return response()->json([ "offices" => $service]);
+            $office = Office::with('addresses','services')->where('id',$id)->first();
+
+            $office = (object) [
+                'id' => $office->id,
+                'name' => $office->name,
+                'description' => $office->description,
+                'address' => $office->addresses->name,
+                'services' => $office->services->map(function ($service) {
+                    return (object) [
+                        'name' => $service->name,
+                    ];
+                })
+            ];
+            return response()->json($office,200);
         }catch (Exception $e) {
             error_log($e->getMessage());
             return response()->json(['success' => $e->getMessage()],400);

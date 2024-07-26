@@ -1,7 +1,9 @@
 import Navbar from "../Navbar";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AddOffice from "../../component/addOffice";
 import {useNavigate} from "react-router-dom";
+import { baseurl } from '../../Baseurl/baseurl';
+import axios from 'axios';
 function Office() {
     const [Model, setModel] = useState([]);
     const [addOffice, setaddOffice] = useState(false);
@@ -10,9 +12,25 @@ function Office() {
     }
     const navigate = useNavigate()
 
-    const handleshow = ()=>{
-        navigate('/showoffice/1')
+    const [office, setOffice] = useState([]);
+
+    async function getOffices() {
+        const res =  await axios.get(baseurl + 'showoffice', {
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        });
+        setOffice(res.data)
     }
+    useEffect(() => {
+        getOffices();
+    }, []);
+
+    const handleshow = (index, event) => {
+        event.preventDefault();
+        if (index) {
+            navigate(`/showoffice/${index}/`);
+        }
+    };
+
     return (
         <>
         <div className="flex h-screen ">
@@ -38,19 +56,22 @@ function Office() {
                                 </tr>
                                 </thead>
                                 <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
-                                <tr className="text-center hover:bg-orange-100 flex w-full px-2">
-                                    <td className="p-3 w-1/8 flex items-center justify-center">1</td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">
-                                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>العرض</button>
-                                    </td>
-                                    <td className="p-3 w-1/5 flex items-center justify-center">
-                                        <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">التعديل</button>
-                                    </td>
-                                </tr>
+                                {office.map((item, index) => (
+                                    <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
+                                        <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.name}</td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.description}</td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.employee}</td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.address}</td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">
+                                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>العرض</button>
+                                        </td>
+                                        <td className="p-3 w-1/6 flex items-center justify-center">
+                                            <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>
+                                        </td>
+                                    </tr>
+                                ))}
+
                                 </tbody>
                             </table>
                         </div>
