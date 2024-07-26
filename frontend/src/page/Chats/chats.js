@@ -5,13 +5,10 @@ import AddOffice from "../../component/addOffice";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import SendIcon from '@mui/icons-material/Send';
 import {baseurl} from "../../Baseurl/baseurl";
+import { getCount } from '../utils/api'; // Import the getCount function
 import axios from 'axios';
 
 function Chats() {
-    //const [addOffice, setaddOffice] = useState(false);
-    // const handleshow = ()=>{
-    //     setaddOffice(true)
-    // }
 
     const [chats, setChats] = useState([]);
     async function getChats() {
@@ -22,26 +19,33 @@ function Chats() {
         console.log(chats)
     }
 
-    useEffect(() => {
-        getChats();
-    }, [0]);
+
     const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
-    const handleChatClick = (chatId) => {
+
+    const [messages, setMessage] = useState('');
+    const [title, setTitle] = useState('');
+    const [updateCount, setUpdateCount] = useState(false);
+     const  handleChatClick = async(chatId) => {
         setSelectedChatId(chatId); // Update selected chat ID on click
 
-        console.log("Selected chat ID:", chatId); // Example logging for debugging
-        const res =  axios.post(baseurl + 'getmessages/' + chatId + '', {
+        const res = await axios.get(baseurl + 'getmessages/' + chatId , {
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        });
+         setTitle(res.data[0].Title)
+         setMessage(res.data[0].messages)
+        await axios.put(baseurl + 'update_status2/'+chatId,{}, {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
-        console.log(res.data)
-    };
-
-
+         setUpdateCount(!updateCount);
+     };
+    useEffect(() => {
+        getChats();
+    }, [messages]);
     return (
         <>
         <div className="flex h-screen">
             <div className="flex-grow bg-gray-100 h-lvh">
-                <Navbar />
+                <Navbar countme={updateCount}/>
                 <div className="flex flex-grow flex-row-reverse text-right inset-y-14 h-auto max-h-screen md:max-w-[calc(100%-16rem)] mt-20">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
                         <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
@@ -78,40 +82,22 @@ function Chats() {
                                 <div className="m-2 w-4/5  border flex flex-col rounded-t-xl h-full">
                                     <header className="w-full bg-primary-500 flex  justify-between px-2 py-1 rounded-t-lg items-center relative mb-10">
                                         <h2 className="text-sm font-semibold flex items-center absolute tall2:text-2xl tall3:text-4xl">
-                                            عنوان الموضوع
+                                            {title}
                                         </h2>
                                     </header>
-                                    <div className="flex flex-col gap-4 p-2 select-none overflow-y-auto">
-                                        <div className="flex items-end">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end flex-row-reverse">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end flex-row-reverse">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end flex-row-reverse">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end flex-row-reverse">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
-                                        <div className="flex items-end flex-row-reverse">
-                                            <p className="mx-2 p-2 rounded bg-gray-200 leading-4 text-sm">Hi there 👋<br/>How can I help you today?</p>
-                                        </div>
+                                    <div className="flex flex-col  gap-4 p-2 select-none overflow-y-auto">
+                                        {messages.length>0 ?
+                                            (<>
+                                                {
+                                                    messages.map((message, index) => (
+                                                        <div className={`flex items-end ${message.type==='Mwaten'?`flex-row-reverse`:`flex-row`} `} key={index}>
+                                                            <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm ${message.type==='Mwaten'?`bg-sky-500 basis-1/2`:`border-2 border-sky-500 basis-1/2`}`} >{message.Message}</p>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </>)
+                                            :"لا يوجد رسائل"
+                                        }
                                     </div>
                                 </div>
                             </div>

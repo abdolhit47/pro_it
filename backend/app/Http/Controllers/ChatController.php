@@ -50,7 +50,7 @@ class ChatController extends Controller
 
     public function update_status($id){
         $user = Auth::user();
-        if($user->role != 1){
+        if($user->role != 1 || $user->role != 0){
             return response()->json(['success' => "doesn't have permission"],403);
         }
         $chat = Chat::find($id);
@@ -59,11 +59,25 @@ class ChatController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function update_status2($id){
 
+        try {
+            $user = Auth::user();
+            if($user->role != 0 && $user->role != 1){
+                return response()->json(['success' => "doesn't have permission"],403);
+            }
+            Message::where('ID_Chat', $id)->where('Status', 'Unread')->update(['Status' => 'Read']);
+            //return response()->json(['success' => true]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 403);
+        }
+
+    }
 
 
     public function show_message($id)#show all messages in chat by admin
     {
+        error_log("asda");
         $user = Auth::user();
         if($user->role != 0){
             return response()->json(['success' => "doesn't have permission"],403);

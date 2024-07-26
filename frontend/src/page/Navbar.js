@@ -10,14 +10,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import { baseurl } from '../Baseurl/baseurl';
+import { getCount } from './utils/api'; // Import the getCount function
 
 import Sideba from './Sideba'
 import PersonIcon from "@mui/icons-material/Person";
 import MessageIcon from "@mui/icons-material/Message";
 const options = ['الملف الشخصي', 'تسجيل الخروج'];
 const ITEM_HEIGHT = 48;
-
-function Navbar() {
+function Navbar({countme}) {
     const username = localStorage.getItem('username');
 
     const navigate = useNavigate();
@@ -39,6 +39,8 @@ function Navbar() {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         localStorage.removeItem('role');
+        localStorage.removeItem('Office');
+        localStorage.removeItem('access_token');
         setAnchorEl(null);
         setTimeout(() => {
             navigate('/login');
@@ -48,38 +50,19 @@ function Navbar() {
         setAnchorEl(null);
         navigate('/Profile');
     };
-    const [countmes, getCountMes] = useState(0);
-    async function getCount() {
-        try {
-            const res =await axios.get(baseurl + "countMes", {
-                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-            });
-            if(res.status===200){
-                getCountMes(res.data);
-            }else{
-                //error show data
-            }
-        } catch (error) {
-            if(error?.response?.status === 401){
-                toast.warning('تحقق من كلمة المرور او اسم المستخدم');
-            }else if(error?.response?.status === 402){
-                toast.warning('حسابك غير مؤكد، رجاء تأكيده');
-            }else {
-                toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
-            }
-        }
-    }
 
+    const [countmes, setCountMes] = useState(0);
     useEffect(() => {
-        getCount();
-    }, []);
+        getCount(setCountMes);
+    }, [countme]);
+
 
     return (
         <>
             <Sideba/>
             <nav
-                class="flex  inset-x-0 top-0 flex justify-between  pt-4 pb-2 items-center sticky backdrop-blur-md border-2 border-b-stone-700 bg-white/30">
-                <ul class="md:flex space-x-0 mx-8">
+                className="flex  inset-x-0 top-0 justify-between  pt-4 pb-2 items-center sticky backdrop-blur-md border-2 border-b-stone-700 bg-white/30">
+                <ul className="md:flex space-x-0 mx-8">
                     <li>
                         <IconButton
                             aria-label="more"
@@ -115,10 +98,10 @@ function Navbar() {
                         </Menu>
                     </li>
                     <li>
-                        <details class="group">
+                        <details className="group">
                             <summary
-                                class="flex items-center justify-between gap-2 py-2 font-medium marker:content-none hover:cursor-pointer">
-                                  <span class="flex gap-2">
+                                className="flex items-center justify-between gap-2 py-2 font-medium marker:content-none hover:cursor-pointer">
+                                  <span className="flex gap-2">
                                     <PersonIcon/>
                                       {username && (<span className='font-bold'>
                                                         {username}
@@ -142,7 +125,7 @@ function Navbar() {
                         </Link>
                     </li>
                 </ul>
-                <p class="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>منظومة وزارة</p>
+                <p className="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>منظومة وزارة</p>
             </nav><ToastContainer position="top-left" />
         </>
     );

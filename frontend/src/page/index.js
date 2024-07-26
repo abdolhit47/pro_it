@@ -14,3 +14,4 @@ export {default as Chats} from './Chats/chats';
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";
 export { default as TEST } from "./test";
+//export {default as Chackemail} from './chackemail';

@@ -38,9 +38,10 @@ Route::post("/storeservice", [ServiceController::class, "store"])->middleware('a
 Route::get("/showchat", [ChatController::class, "index"])->middleware('auth:sanctum');
 Route::post("/storchat", [ChatController::class, "new_chat"])->middleware('auth:sanctum');
 Route::post("/sendmessage", [ChatController::class, "sendmessage"])->middleware('auth:sanctum');
-Route::post("/getmessages/{id}", [ChatController::class, "show_message"])->middleware('auth:sanctum');
+Route::get("/getmessages/{id}", [ChatController::class, "show_message"])->middleware('auth:sanctum');
 Route::put('endchat/{id}', [ChatController::class, 'end_chat'])->middleware('auth:sanctum');
 Route::get('/countMes', [ChatController::class, 'countMes'])->middleware('auth:sanctum');
+Route::put('/update_status2/{id}', [ChatController::class, 'update_status2'])->middleware('auth:sanctum');
 
 Route::get('/getaddresses', [AddressController::class, "index"])->middleware('auth:sanctum');
 Route::post('/storeaddress', [AddressController::class, "store"])->middleware('auth:sanctum');
