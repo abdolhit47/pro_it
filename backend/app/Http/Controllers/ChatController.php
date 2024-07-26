@@ -13,7 +13,8 @@ class ChatController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->role == 1 || $user->role == 0) {
+            if ($user->role == 0 || $user->role == 1|| $user->role == 2) {
+                error_log("123");
                 $chats = Chat::with('messages')->where('ID_office', $user->emplyee->offices->id)
                     ->get();
                 $chat = $chats->map(function ($chat) {
@@ -22,14 +23,26 @@ class ChatController extends Controller
                        'user' => $chat->mwatens->first_name.' '.$chat->mwatens->last_name,
                        'Title' => $chat->Title,
                        'Status' => $chat->Status,
-                       'messages' => $chat->messages->sortByDesc('Date_send')->first()];
+                       'messages' => $chat->messages->sortByDesc('Date_send')->first(),
+
+                   ];
+
                 });
-                return response()->json($chat);
+                return response()->json([$chat,'send' => 'Office']);
             }
-            if ($user->role == 2) {
+            if ($user->role == 4) {
                 $chats = Chat::with('messages','offices')->where('mwaten_id', $user->mwaten->id)
                     ->where('Status', 'Active')->get();
-                return response()->json($chats);
+                $chat = $chats->map(function ($chat) {
+                    return [
+                        'id' => $chat->id,
+                        'user' => $chat->offices->name,
+                        'Title' => $chat->Title,
+                        'Status' => $chat->Status,
+                        'messages' => $chat->messages->sortByDesc('Date_send')->first(),
+                    ];
+                });
+                return response()->json([$chat,'send' => 'Mwaten']);
             }
         }
         return response()->json(['success' => "doesn't have permission"], 403);
@@ -50,7 +63,7 @@ class ChatController extends Controller
 
     public function update_status($id){
         $user = Auth::user();
-        if($user->role != 1 || $user->role != 0){
+        if($user->role != 0 || $user->role != 1|| $user->role != 2|| $user->role != 4){
             return response()->json(['success' => "doesn't have permission"],403);
         }
         $chat = Chat::find($id);
@@ -60,18 +73,16 @@ class ChatController extends Controller
     }
 
     public function update_status2($id){
-
         try {
             $user = Auth::user();
-            if($user->role != 0 && $user->role != 1){
-                return response()->json(['success' => "doesn't have permission"],403);
-            }
+//            if($user->role != 0 || $user->role != 1|| $user->role != 2|| $user->role != 4){
+//                return response()->json(['success' => "doesn't have permission"],403);
+//            }
             Message::where('ID_Chat', $id)->where('Status', 'Unread')->update(['Status' => 'Read']);
             //return response()->json(['success' => true]);
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 403);
         }
-
     }
 
 
@@ -79,9 +90,9 @@ class ChatController extends Controller
     {
         error_log("asda");
         $user = Auth::user();
-        if($user->role != 0){
-            return response()->json(['success' => "doesn't have permission"],403);
-        }
+//        if($user->role != 0){
+//            return response()->json(['success' => "doesn't have permission"],403);
+//        }
         $chat = Chat::with('messages')->where('id', $id)->get();
         $chat = $chat->map(function ($chat) {
             return [
@@ -131,22 +142,21 @@ class ChatController extends Controller
 
     public function sendmessage(Request $request){
         $user = Auth::user();
-        $message = Message::where("ID_Chat",$request->ID_Chat)
-            ->orderBy('Date_send', 'desc')
-            ->first();
-        //dd($message);
-        if ($message)
-        {
-            if ($message->Status == 'Unread')
-            {
-                $message->Status = 'Read';
-                $message->save();
-            }
-        }
+//        $message = Message::where("ID_Chat",$request->ID_Chat)
+//            ->orderBy('Date_send', 'desc')
+//            ->first();
+//        //dd($message);
+//        if ($message)
+//        {
+//            if ($message->Status == 'Unread')
+//            {
+//                $message->Status = 'Read';
+//                $message->save();
+//            }
+//        }
         $message = new Message();
-
         $message->ID_Chat = $request->ID_Chat;
-        $message->type = $user->role == 2 ? 'Mwaten' : 'Office';
+        $message->type = $user->role == 4 ? 'Mwaten' : 'Office';
         $message->message = $request->message;
         $message->Status = 'Unread';
         $message->Date_send = date('Y-m-d H:i:s');

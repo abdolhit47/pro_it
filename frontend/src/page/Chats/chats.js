@@ -1,5 +1,5 @@
 import Navbar from "../Navbar";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState,useRef} from "react";
 import AddIcon from '@mui/icons-material/Add';
 import AddOffice from "../../component/addOffice";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -7,18 +7,20 @@ import SendIcon from '@mui/icons-material/Send';
 import {baseurl} from "../../Baseurl/baseurl";
 import { getCount } from '../utils/api'; // Import the getCount function
 import axios from 'axios';
-
+const role = localStorage.getItem('role');
 function Chats() {
 
     const [chats, setChats] = useState([]);
+    const [howSend, setHowSend] = useState('');
     async function getChats() {
         const res =  await axios.get(baseurl + 'showchat', {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         });
-        setChats(res.data)
-        console.log(chats)
+        setChats(res.data[0])
+        setHowSend(res.data['send'])
     }
 
+    const [read,setread]=useState('true');
 
     const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
 
@@ -33,14 +35,51 @@ function Chats() {
         });
          setTitle(res.data[0].Title)
          setMessage(res.data[0].messages)
-        await axios.put(baseurl + 'update_status2/'+chatId,{}, {
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-        })
-         setUpdateCount(!updateCount);
+
+         const lastMessage = res.data[0].messages.slice(-1)[0]; // الحصول على آخر رسالة
+         const lastMessageType = lastMessage.type;
+         const isLastMessageFromOffice = lastMessageType === 'Office';
+         const isCurrentUserOffice = role in ['0', '1', '2'];
+         console.log(isCurrentUserOffice)
+
+         // تنفيذ الكود بناءً على الشروط
+         if ((isLastMessageFromOffice && !isCurrentUserOffice) ||
+             (!isLastMessageFromOffice && isCurrentUserOffice)) {
+             await axios.put(baseurl + 'update_status2/' + chatId, {}, {
+                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+             });
+             setUpdateCount(!updateCount);
+         }
      };
+
+    const messagesEndRef = useRef(null);
+
     useEffect(() => {
         getChats();
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     }, [messages]);
+
+    const [value,setvalue] = useState({message: ''});
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setvalue((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+    };
+    async function send_message(){
+        const  formdata=new FormData();
+        formdata.append('message',value.message);
+        formdata.append('ID_Chat',selectedChatId);
+        const res = await axios.post(baseurl+'sendmessage',formdata,{
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        })
+        setread('false');
+        setvalue({message: ''});
+        handleChatClick(selectedChatId)
+    }
     return (
         <>
         <div className="flex h-screen">
@@ -61,20 +100,20 @@ function Chats() {
                             {chats.length === 0 ?
                                 <p className=" text-center h-auto tall:h-96 col-span-1 row-span-2 bg-gray-100 border-l-2 border-gray-500 rounded-r-md overflow-y-auto">
                                 لا يوجد رسائل
-                            </p>:
+                                </p>:
                                 <div className="flex  h-auto tall:h-96 col-span-1 row-span-2 bg-gray-100 border-l-2 border-gray-500 rounded-r-md overflow-y-auto ">
-                                <div className={' flex flex-col md:w-11/12 h-fit pr-2 pt-2 items-start scroll-p-15'}>
-                                    {chats.map((chat, index) => (
-                                        <>
-                                        <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={chat.id}  onClick={() => handleChatClick(chat.id)}>
-                                            <p className="relative inline-flex p-1">{chat.user}
-                                                {chat.messages.Status === 'Unread'? <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>:''}
-                                            </p>
-                                            <p className={chat.messages.Status === 'Unread'?`text-gray-500 font-bold text-sm p-1 truncate `:`text-gray-500 font-thin text-sm p-1 truncate `}>{chat.messages.Message}</p>
-                                        </div>
-                                        </>
-                                    ))}
-                                </div>
+                                    <div className={' flex flex-col md:w-11/12 h-fit pr-2 pt-2 items-start scroll-p-15'} >
+                                        {chats.map((chat, index) => (
+                                            <>
+                                            <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={index}  onClick={() => handleChatClick(chat.id)}>
+                                                <p className="relative inline-flex p-1">{chat.user}
+                                                    {chat.messages.Status === 'Unread'? <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>:''}
+                                                </p>
+                                                <p className={chat.messages.Status === 'Unread'?`text-gray-500 font-bold text-sm p-1 truncate `:`text-gray-500 font-thin text-sm p-1 truncate `}>{chat.messages.Message}</p>
+                                            </div>
+                                            </>
+                                        ))}
+                                    </div>
                                 </div>
                             }
 
@@ -86,31 +125,43 @@ function Chats() {
                                         </h2>
                                     </header>
                                     <div className="flex flex-col  gap-4 p-2 select-none overflow-y-auto">
+
                                         {messages.length>0 ?
                                             (<>
                                                 {
                                                     messages.map((message, index) => (
-                                                        <div className={`flex items-end ${message.type==='Mwaten'?`flex-row-reverse`:`flex-row`} `} key={index}>
-                                                            <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm ${message.type==='Mwaten'?`bg-sky-500 basis-1/2`:`border-2 border-sky-500 basis-1/2`}`} >{message.Message}</p>
+                                                        howSend === message.type &&
+                                                        <div className={`flex items-end flex-row`}  key={index}>
+                                                            <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm border-2 border-sky-500 basis-1/2`} >{message.Message}</p>
+                                                        </div>
+                                                        ||
+                                                        <div className={`flex items-end flex-row-reverse`} key={index}>
+                                                            <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm bg-sky-500 basis-1/2`} >{message.Message}</p>
                                                         </div>
                                                     ))
-                                                }
+                                                }<div ref={messagesEndRef} />
                                             </>)
-                                            :"لا يوجد رسائل"
+                                            :""
                                         }
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex col-span-3 items-center justify-center">
-                                <div className="flex w-4/5 my-2 mx-1">
-                                    <textarea id="chat" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 " placeholder="Your message..."></textarea>
-                                    <button type="submit" className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer hover:bg-green-200">
-                                        <SendIcon/>
-                                    </button>
-                                    <button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce">
-                                        <CheckCircleOutlineIcon/>
-                                    </button>
-                                </div>
+                            <div className="flex col-span-3 items-center justify-center h-12">
+                                {messages.length>0?
+                                   ( <div className="flex w-4/5 my-2 mx-1">
+                                        <textarea id="message" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                                              name={'message'} value={value.message} onChange={handleChange}   placeholder="Your message..."></textarea>
+                                        <button className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer hover:bg-green-200"
+                                            onClick={send_message} type="submit" >
+                                            <SendIcon/>
+                                        </button>
+                                        <button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce"
+                                        //onClick={}
+                                        >
+                                            <CheckCircleOutlineIcon/>
+                                        </button>
+                                    </div>):""
+                                }
                             </div>
                         </div>
                     </div>
