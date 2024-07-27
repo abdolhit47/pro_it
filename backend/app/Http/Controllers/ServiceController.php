@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Office;
 use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
@@ -11,13 +12,15 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            if ($user->role != 1) {
-                return response()->json(['success' => "doesn't have permission"], 403);
-            }
-        }
-        $services = Service::all();
+//        if (Auth::check()) {
+//            $user = Auth::user();
+//            if ($user->role != 0) {
+//                return response()->json(['success' => "doesn't have permission"], 403);
+//            }
+//        }
+        $user = Auth::user();
+        $services = Service::select('name')->where('ID_office', $user->emplyee->ID_office)->get();
+
         return response()->json($services);
     }
 

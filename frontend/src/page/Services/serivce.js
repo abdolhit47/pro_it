@@ -1,10 +1,26 @@
 import Navbar from "../Navbar";
 import React, {useState} from "react";
 import AddService from "../../component/addService";
+import axios from "axios";
+import {baseurl} from "../../Baseurl/baseurl";
+
 function Service() {
-    const [Model, setModel] = useState([]);
+    const [ervice, setervice] = useState([]);
     const [addService, setaddService] = useState(false);
-    const id = 123;
+
+    async function getServices() {
+        const res = await axios.get(baseurl + "showservice", {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        setervice(res.data);
+        console.log(res.data);
+    }
+
+    React.useEffect(() => {
+        getServices();
+    }, []);
     const handleshow = ()=>{
         setaddService(true)
     }
@@ -119,7 +135,7 @@ function Service() {
                 </div>
             </div>
         </div>
-            {addService && <AddService setOpenModal={setaddService} id={id}/>}
+            {/*{addService && <AddService setOpenModal={setaddService} id={id}/>}*/}
         </>
     )
 }
