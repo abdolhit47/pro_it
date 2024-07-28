@@ -1,14 +1,11 @@
 import Navbar from "../Navbar";
 import React, {useState} from "react";
-import AddService from "../../component/addService";
 import axios from "axios";
 import {baseurl} from "../../Baseurl/baseurl";
 import {toast} from "react-toastify";
 
 function Service() {
     const [service, setservice] = useState([]);
-    const [addService, setaddService] = useState(false);
-
     async function getServices() {
         const res = await axios.get(baseurl + "showservice", {
             headers: {
@@ -53,12 +50,6 @@ function Service() {
                                className=" border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={AddService}>اضافة الخدمة</button>
                         </div>
-                        {/*<div class="px-6 py-4 flex justify-center ">*/}
-                            {/*<div className='w-16 text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl'>*/}
-                            {/*    <p>asdashfdhjgasdhaf kjdshfdjskhfgkjshdfksdhf skdjhgfjhsdafdskjfhkj</p>*/}
-                            {/*</div>*/}
-                        {/*<div className=" gap-8 m-7 w-auto max-h-screen " dir={"rtl"}>*/}
-                        {/*    <div className=" bg-amber-500 rounded-3xl h-[30rem] md:h-[32rem] px-3">*/}
                         <div className={"px-6 py-4 mt-6 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                             {service.map((item,index)=>(
                                     <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
@@ -70,7 +61,6 @@ function Service() {
                 </div>
             </div>
         </div>
-            {/*{addService && <AddService setOpenModal={setaddService} id={id}/>}*/}
         </>
     )
 }
