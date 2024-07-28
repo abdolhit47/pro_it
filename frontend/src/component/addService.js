@@ -20,7 +20,6 @@ export default function AddService({setOpenModal,id}) {
             ...prevValues,
             [name]: value,
         }));
-        console.log(id)
     };
     const closeModalTp = () => {
         setOpenModal(false);

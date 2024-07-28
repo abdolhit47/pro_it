@@ -46,7 +46,6 @@ export default function AddOffice({setOpenModal}) {
     }
     useEffect(() => {
         getaddresses();
-
     }, []);
     const [selectedcity, setSelectedcity] = useState([]);
 
@@ -59,7 +58,6 @@ export default function AddOffice({setOpenModal}) {
         value: item.id,
         label: item.name,
     }));
-    console.log(value)
     async function onSubmit ()  {
         try{
             const res =  await axios.post(baseurl + 'storeoffice', value,{
@@ -67,15 +65,14 @@ export default function AddOffice({setOpenModal}) {
             });
             if(res.status===201){
                 toast.success('تم إضافة الجهة بنجاح');
-                setOpenModal(false);
             }
         }catch (error){
-            if(error?.response?.status === 422){
-                toast.error('----');
+            if(error?.response?.status === 400){
+                toast.error('اسم مستخدم الجهة موجود مسبقا');
             }else{
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }
-        }
+        }setOpenModal(false);
     }
     return (
     <div id="modelConfirm" className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
@@ -143,7 +140,6 @@ export default function AddOffice({setOpenModal}) {
                         </div>
                 </div>
             </div>
-            <ToastContainer position="top-left" />
         </div>
     </div>
   );

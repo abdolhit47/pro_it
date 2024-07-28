@@ -4,12 +4,11 @@ import AddOffice from "../../component/addOffice";
 import {useNavigate} from "react-router-dom";
 import { baseurl } from '../../Baseurl/baseurl';
 import axios from 'axios';
+import {ToastContainer} from "react-toastify";
 function Office() {
-    const [Model, setModel] = useState([]);
+    const role = localStorage.getItem('role');
     const [addOffice, setaddOffice] = useState(false);
-    const handleadd = ()=>{
-        setaddOffice(true)
-    }
+
     const navigate = useNavigate()
 
     const [office, setOffice] = useState([]);
@@ -22,15 +21,17 @@ function Office() {
     }
     useEffect(() => {
         getOffices();
-    }, []);
+    }, [0]);
+    const handleadd = ()=>{
+        setaddOffice(true)
 
+    }
     const handleshow = (index, event) => {
         event.preventDefault();
         if (index) {
             navigate(`/showoffice/${index}/`);
         }
     };
-
     return (
         <>
         <div className="flex h-screen ">
@@ -40,7 +41,8 @@ function Office() {
                     <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto  ">
                         <div class="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 class="text-2xl text-gray-900 text-right">الجهة/المركز</h1>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة جهة</button>
+                            {role === "0" &&<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة جهة</button>}
+
                         </div>
                         <div class="px-6 py-4 flex justify-center">
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">
@@ -51,27 +53,29 @@ function Office() {
                                     <th className="p-3 w-1/5">وصف</th>
                                     <th className="p-3 w-1/5">المسؤول</th>
                                     <th className="p-3 w-1/5">العنوان</th>
-                                    <th className={"p-3 w-1/5"}>العرض</th>
-                                    <th className="p-3 w-1/5">التعديل</th>
+                                    {role !== "0" &&<th className={"p-3 w-1/5"}>العرض</th>}
+                                    {role === "0" &&
+                                        <th className="p-3 w-1/5">التعديل</th>
+                                    }
                                 </tr>
                                 </thead>
                                 <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
                                 {office.map((item, index) => (
                                     <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.name}</td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.description}</td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.employee}</td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">{item.address}</td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">
+                                        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>
+                                        <td className="p-3 w-1/5 flex items-center justify-center truncate text-right">{item.description}</td>
+                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.employee}</td>
+                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>
+                                        {role !== "0" &&<td className="p-3 w-1/5 flex items-center justify-center">
                                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>العرض</button>
-                                        </td>
-                                        <td className="p-3 w-1/6 flex items-center justify-center">
-                                            <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>
-                                        </td>
+                                        </td>}
+                                        {role === "0" &&
+                                            <td className="p-3 w-1/5 flex items-center justify-center">
+                                                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>
+                                            </td>}
                                     </tr>
                                 ))}
-
                                 </tbody>
                             </table>
                         </div>

@@ -81,10 +81,19 @@ function Chats() {
     }
 
 
+    const refreshChats = async () => {
+        try {
+            await getChats();  // Refresh the chat list
+        } catch (error) {
+            console.error('Failed to refresh chats:', error);
+        }
+    };
     const [newMessage, setnewMessage] = useState(false);
-    const handleadd = ()=>{
-        setnewMessage(true)
-    }
+    const handleadd = async () => {
+        setnewMessage(true);
+        console.log(newMessage)
+        await refreshChats();  // Refresh the chat list when the modal opens
+    };
 
     return (
         <>
@@ -168,7 +177,7 @@ function Chats() {
                     </div>
                 </div>
             </div>
-            { newMessage && <NewMessage setOpenModal={setnewMessage}/>}
+            { newMessage && <NewMessage setOpenModal={setnewMessage} />}
         </div>
         </>
     )

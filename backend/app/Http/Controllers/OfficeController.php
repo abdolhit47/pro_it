@@ -44,6 +44,10 @@ class OfficeController extends Controller
                 'user_name' => 'required|string',
                 //'user_email' => 'required|email',
             ]);
+            $user = User::where('name', $request->user_name)->orWhere('email', $request->user_name."@gmail.com")->first();
+            if($user){
+                return response()->json(['success' => "user exist"],400);
+            }
             $office = new Office();
             $office->name = $request->name;
             $office->description = $request->description;
@@ -101,9 +105,24 @@ class OfficeController extends Controller
             error_log($e->getMessage());
             return response()->json(['success' => $e->getMessage()],400);
         }
-
     }
 
+    public function show_mes()
+    {
+        try {
+//            if(Auth::check()){
+//                $user = Auth::user();
+//                if($user->role != 0){
+//                    return response()->json(['success' => "doesn't have permission"],403);
+//                }
+//            }
+            $office = Office::all('id','name');
+            return response()->json($office,200);
+        }catch (Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
     public function getservicesfollow(){
         $services = Service_Follow_Up::with("mwatens","services")->get();
         $service = $services->map(function ($service) {

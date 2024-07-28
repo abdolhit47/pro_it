@@ -20,7 +20,6 @@ class ServiceController extends Controller
 //        }
         $user = Auth::user();
         $services = Service::select('name')->where('ID_office', $user->emplyee->ID_office)->get();
-
         return response()->json($services);
     }
 
@@ -35,12 +34,13 @@ class ServiceController extends Controller
             $request->validate([
                 'name' => 'required',
             ]);
-            if (Auth::check()) {
-                $user = Auth::user();
-                if ($user->role != 1) {
-                    return response()->json(['success' => "doesn't have permission"], 403);
-                }
-            }
+//            if (Auth::check()) {
+//
+//                if ($user->role != 1) {
+//                    return response()->json(['success' => "doesn't have permission"], 403);
+//                }
+//            }
+            $user = Auth::user();
             $service = new Service();
             $service->name = $request->name;
             $service->ID_office = $user->emplyee->ID_office;

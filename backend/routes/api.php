@@ -29,6 +29,7 @@ Route::get("/logout", [AccountController::class, "logout"])->middleware('auth:sa
 Route::get("/showoffice", [OfficeController::class, "index"])->middleware('auth:sanctum');
 Route::get("/showoffice/{id}", [OfficeController::class, "show"])->middleware('auth:sanctum');
 Route::post("/storeoffice", [OfficeController::class, "store"])->middleware('auth:sanctum');
+Route::get('/show_mes', [OfficeController::class, 'show_mes'])->middleware('auth:sanctum');
 #Route::put("/updateoffice/{id}", [OfficeController::class, "update"])->middleware('auth:sanctum');
 
 Route::get("/showservice", [ServiceController::class, "index"])->middleware('auth:sanctum');

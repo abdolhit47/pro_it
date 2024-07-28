@@ -72,12 +72,12 @@ function Sideba() {
                                               <MiscellaneousServicesIcon/>
                                           </Link>
                                       </li>
-                                      <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
-                                          <Link to="/archive" state={{ from: "occupation" }} aria-expanded="false">
-                                              <span className="ml-2 text-sm font-medium mr-4">الأرشيف الطلبات</span>
-                                              <ArchiveIcon/>
-                                          </Link>
-                                      </li>
+                                      {/*<li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">*/}
+                                      {/*    <Link to="/archive" state={{ from: "occupation" }} aria-expanded="false">*/}
+                                      {/*        <span className="ml-2 text-sm font-medium mr-4">الأرشيف الطلبات</span>*/}
+                                      {/*        <ArchiveIcon/>*/}
+                                      {/*    </Link>*/}
+                                      {/*</li>*/}
 
                                       <li className={
                                           //activePath === '/Profile' ? 'border-r-8 border-r-amber-700 rounded-r-md' :

@@ -56,28 +56,17 @@ function ShowOffice() {
                             </div>
 
                             <div className={"overflow-y-auto h-auto max-h-96"}>
-                                <ol className="list-inside list-decimal   m-2">
-                                    {
-                                            // office.services.map((service) => (
-                                            //     <li className={"mr-3 inline-block  relative "}>
-                                            //         <input type={'radio'} id={"test"} name={"test"}/>
-                                            //         <label htmlFor={"test"} className={'mr-2'}>{service.name}</label>
-                                            //     </li>
-                                            // ))
+                                <ol className="list-inside list-decimal mt-6  m-2">
+                                    {office.services &&
+                                        office.services.map((service) => (
+                                            <li className={"mr-5 inline-block  relative "}>
+                                                <input type={'radio'} id={"test"} name={"test"}/>
+                                                <label htmlFor={"test"} className={'mr-2'}>{service.name}</label>
+                                            </li>
+                                        ))
                                     }
-                                    <li className={"mr-3 inline-block  relative "}>
-                                        <input type={'radio'} id={"test"} name={"test"}/>
-                                        <label htmlFor={"test"} className={'mr-2'}>Now this is a story all about how, my life got flipped-turned upside down</label>
-                                    </li>
-
-                                    <li className={"mr-3 inline-block relative "}>
-                                        <input type={'radio'} id={"test2"} name={"test"}/>
-                                        <label htmlFor={"test2"} className={'mr-2'}>Now this is a story all about how, my life got flipped-turned upside down</label>
-                                    </li>
-
                                 </ol>
-
-                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"  >طلب الخدمة</button>
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded"  >طلب الخدمة</button>
                             </div>
 
                         </div>

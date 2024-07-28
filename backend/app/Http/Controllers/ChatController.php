@@ -14,7 +14,6 @@ class ChatController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             if ($user->role == 0 || $user->role == 1|| $user->role == 2) {
-                error_log("123");
                 $chats = Chat::with('messages')->where('ID_office', $user->emplyee->offices->id)
                     ->get();
                 $chat = $chats->map(function ($chat) {
@@ -88,7 +87,6 @@ class ChatController extends Controller
 
     public function show_message($id)#show all messages in chat by admin
     {
-        error_log("asda");
         $user = Auth::user();
 //        if($user->role != 0){
 //            return response()->json(['success' => "doesn't have permission"],403);
@@ -112,7 +110,6 @@ class ChatController extends Controller
 //        }
         try{
             $request->validate([
-                #'mwaten_id' => 'required|numeric',
                 'office' => 'required|numeric',
                 'title' => 'required|string',
                 'message' => 'required|string',
@@ -127,7 +124,7 @@ class ChatController extends Controller
             $chat->save();
             $message = new Message();
             $message->ID_Chat = $chat->id;
-            $message->type = $user->role == 2 ? 'Mwaten' : 'Office';#how sender
+            $message->type = $user->role == 4 ? 'Mwaten' : 'Office';#how sender
             $message->message = $request->message;
             $message->Status = 'Unread';
             $message->Date_send = date('Y-m-d');

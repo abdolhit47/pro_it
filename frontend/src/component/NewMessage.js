@@ -1,33 +1,60 @@
 import { baseurl } from '../Baseurl/baseurl';
 import axios from 'axios';
-import React, { useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify'
+import Select from "react-select";
 
-export default function AddMeassage({setOpenModal,id}) {
+export default function AddMeassage({setOpenModal}) {
     const[value,setValues] = useState({
         office:'',
         title:'',
         message:''
     });
-    // const{
-    //     register,
-    //     handleSubmit,
-    //     watch,
-    //     formState: { errors },
-    // } = useForm()
+    
     const handleChange = (event) => {
         const { name, value } = event.target;
         setValues((prevValues) => ({
             ...prevValues,
             [name]: value,
         }));
-        console.log(id)
+        //console.log(id)
     };
     const closeModalTp = () => {
         setOpenModal(false);
-
     };
+    const [office, setOffice] = useState([]);
+    async function getoffices ()  {
+        try{
+            const res =  await axios.get(baseurl + 'show_mes',{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            if(res.status===200){
+                setOffice(res.data)
+            }
+        }catch (error){
+            if(error?.response?.status === 422){
+                toast.error('------');
+            }else{
+                toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+    }
+    useEffect(() => {
+        getoffices();
+    }, []);
+    const selectInputOfficeRef = useRef();
+    const [selectedOffice, setselectedOffice] = useState([]);
+    const handleSelectChangeOffice = (selectedOptions) => {
+        setselectedOffice(selectedOptions.map((option) => option.value));
+        value.office = selectedOffice;
+    };
+
+    const optionsoffice = office.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+    
     async function onSubmit ()  {
         try{
             const res =  await axios.post(baseurl + 'storechat', value,{
@@ -66,8 +93,25 @@ export default function AddMeassage({setOpenModal,id}) {
                         <div className="flex flex-row-reverse mx-3 mb-4">
                             <div className="basis-full w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="office" className="block mb-2 text-gray-700 font-medium  text-right">الجهة/المركز</label>
-                                <input type="text" id="office"  name="office" value={value.office} onChange={handleChange}
-                                       className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                <Select
+                                    ref={selectInputOfficeRef}
+                                    isSearchable
+                                    isClearable
+                                    value={optionsoffice.find(
+                                        (option) => option.value === selectedOffice[0]
+                                    )}
+                                    onChange={(selectedOption) => {
+                                        handleSelectChangeOffice(
+                                            selectedOption ? [selectedOption] : []
+                                        );
+                                        value.office = selectedOption
+                                            ? selectedOption.value
+                                            : null;
+                                    }}
+                                    options={optionsoffice}
+                                />
+                                {/*<input type="text" id="office"  name="office" value={value.office} onChange={handleChange}*/}
+                                {/*       className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
                                 {/*{errors.name&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>
                         </div>
@@ -86,13 +130,12 @@ export default function AddMeassage({setOpenModal,id}) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                            <button  type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">إضافة</button>
+                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">إضافة</button>
                             <button onClick={closeModalTp} className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 ">رجوع</button>
                         </div>
                     {/*</form>*/}
                 </div>
             </div>
-            <ToastContainer position="top-left" />
         </div>
     </div>
   );
