@@ -46,9 +46,9 @@ function Service() {
                             <h1 className="text-2xl text-gray-900 text-right">الخدمات</h1>
                         </div>
                         <div className=" px-3 mb-6 md:mb-0" dir="rtl">
-                        <input type="text" id="name_model" name="name" value={value.name} onChange={handleChange}
-                               className=" border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={AddService}>اضافة الخدمة</button>
+                            <input type="text" id="name_model" name="name" value={value.name} onChange={handleChange}
+                                   className=" border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={AddService}>اضافة الخدمة</button>
                         </div>
                         <div className={"px-6 py-4 mt-6 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                             {service.map((item,index)=>(
