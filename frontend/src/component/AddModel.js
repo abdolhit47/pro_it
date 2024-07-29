@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify'
 export default function AddModel({setOpenModal}) {
     const[value,setValues] = useState({
         name_model:'',
-        version:'',
         release_date:'',
         documentation:''
     });
@@ -25,13 +24,31 @@ export default function AddModel({setOpenModal}) {
             [name]: value,
         }));
     };
+    const [uploadFile, setUploadFile] = useState([]);
+    const handleFileChange = (event) => {
+        //setUploadFile(event.target.files[0]);console.log(event.target.files);
+        setUploadFile((prevValues) => ({
+            ...prevValues,
+            [event.target.name]: event.target.files,
+        }));
+    }
+    console.log(uploadFile);
     const closeModalTp = () => {
         setOpenModal(false);
 
     };
+    console.log(uploadFile.file)
     async function onSubmit ()  {
+        const formData = new FormData();
+        //formData.append('name_model',value.name_model);
+        //formData.append('release_date',value.release_date);
+        //formData.append('documentation',value.documentation);
+        for (let i = 0; i < uploadFile.file.length; i++) {
+            formData.append('files'+i,uploadFile.file[i]);
+        }
+        console.log(formData)
         try{
-            const res =  await axios.post(baseurl + 'addmodel', value,{
+            const res =  await axios.post(baseurl + 'storefollowup', formData,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
             });
             if(res.status===201){
@@ -61,7 +78,9 @@ export default function AddModel({setOpenModal}) {
             </div>
             <div className="pt-0 text-center">
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)} className="uploader"
+                          encType="multipart/form-data"
+                    >
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label for="name_model" className="block mb-2 text-gray-700 font-medium  text-right">اسم النموذج</label>
@@ -70,9 +89,10 @@ export default function AddModel({setOpenModal}) {
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label for="version" className="block mb-2 text-gray-700 font-medium  text-right">رقم الاصدار</label>
-                                <input type="text" id="version" {...register("version", { required: true })} name="version" value={value.version} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                <label for="files" className="block mb-2 text-gray-700 font-medium  text-right">رقم الاصدار</label>
+                                <input type="file"  id="file" multiple name={'file'} onChange={handleFileChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                <input type="file" id="file" multiple />
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">

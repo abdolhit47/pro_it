@@ -12,6 +12,7 @@ function Order() {
     const handleshow = () => {
         navigate('/showorder/1');
     };
+
     return (
         <>
         <div className="flex h-screen ">

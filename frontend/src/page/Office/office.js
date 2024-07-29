@@ -24,7 +24,6 @@ function Office() {
     }, [0]);
     const handleadd = ()=>{
         setaddOffice(true)
-
     }
     const handleshow = (index, event) => {
         event.preventDefault();
