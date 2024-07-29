@@ -1,19 +1,18 @@
-import React, {useEffect, useState} from 'react'
+import React, { useState} from 'react'
 import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SendIcon from '@mui/icons-material/Send';
-import ArchiveIcon from '@mui/icons-material/Archive';
+// import ArchiveIcon from '@mui/icons-material/Archive';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {Link, useNavigate} from 'react-router-dom'
 
 import 'react-toastify/dist/ReactToastify.css';
-import {Office} from "./index";
-import Service from "./Services/serivce";
+// import {Office} from "./index";
+// import Service from "./Services/serivce";
 function Sideba() {
   const [activePath, setActivePath] = useState(window.location.pathname);
   const navigator = useNavigate();
@@ -21,7 +20,7 @@ function Sideba() {
     setActivePath(path);
     navigator(path);
   };
-  const [open, setOpen] = useState(true);
+  const open = useState(true);
   const [subOpen, setSubOpen] = useState(false);
   return (
       <>
@@ -50,6 +49,14 @@ function Sideba() {
                                   <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
                                       <Link to="/order" aria-expanded="false">
                                               <span className="ml-2 text-sm font-medium mr-4 ">طلبات</span>
+                                              <SendIcon />
+                                      </Link>
+                                  </li>
+                              </div>
+                              <div className={activePath === '/Trackorder' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Trackorder')}>
+                                  <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
+                                      <Link to="/Trackorder" aria-expanded="false">
+                                              <span className="ml-2 text-sm font-medium mr-4 ">تتبع طلبات</span>
                                               <SendIcon />
                                       </Link>
                                   </li>

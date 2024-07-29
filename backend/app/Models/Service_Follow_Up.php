@@ -11,7 +11,7 @@ class Service_Follow_Up extends Model
 
     protected $table = "service_follow_up";
     protected $primaryKey = "id";
-    protected $fillable = ['service_id','file_id','mwaten_id','status'];
+    protected $fillable = ['service_id','file_id','mwaten_id','status','notes','approve','approve_by','date_approve'];
     public $timestamps = true;
 
     public function mwatens(){

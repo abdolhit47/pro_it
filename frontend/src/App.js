@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import './index.css';
 import { Route, BrowserRouter, Routes } from "react-router-dom";
@@ -11,11 +11,14 @@ import{
   TEST,
   Sign_up,
   Showprofile,
-  ShowOffice,
-  ShowOrder,
+
   Office,
-    Service,
-    Order,
+  ShowOffice,
+  Order,
+  ShowOrder,
+  Trackorder,
+
+  Service,
   Archive,
   Chats
 }from './page'
@@ -39,6 +42,7 @@ function App() {
           <Route path="/test" element={<TEST />} />
           <Route path="/order" element={<Order />} />
           <Route path="/showorder/:id" element={<ShowOrder />} />
+          <Route path="/trackorder" element={<Trackorder />} />
           <Route path="/archive" element={<Archive />} />
           <Route path="/chats" element={<Chats />} />
       </Routes>

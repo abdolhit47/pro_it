@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
@@ -44,7 +45,10 @@ Route::put('endchat/{id}', [ChatController::class, 'end_chat'])->middleware('aut
 Route::get('/countMes', [ChatController::class, 'countMes'])->middleware('auth:sanctum');
 Route::put('/update_status2/{id}', [ChatController::class, 'update_status2'])->middleware('auth:sanctum');
 
+
 Route::get('/getaddresses', [AddressController::class, "index"])->middleware('auth:sanctum');
 Route::post('/storeaddress', [AddressController::class, "store"])->middleware('auth:sanctum');
 
 Route::get("/getservicesfollow", [OfficeController::class, "getservicesfollow"]);
+
+Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');
