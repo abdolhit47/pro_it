@@ -24,32 +24,37 @@ export default function AddModel({setOpenModal}) {
             [name]: value,
         }));
     };
-    const [uploadFile, setUploadFile] = useState([]);
-    const handleFileChange = (event) => {
-        //setUploadFile(event.target.files[0]);console.log(event.target.files);
-        setUploadFile((prevValues) => ({
-            ...prevValues,
-            [event.target.name]: event.target.files,
-        }));
-    }
-    console.log(uploadFile);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const handleFileChange = (event)=> {
+        setSelectedFiles(event.target.files);
+    };
     const closeModalTp = () => {
         setOpenModal(false);
 
     };
-    console.log(uploadFile.file)
+    console.log(selectedFiles)
     async function onSubmit ()  {
         const formData = new FormData();
         //formData.append('name_model',value.name_model);
         //formData.append('release_date',value.release_date);
         //formData.append('documentation',value.documentation);
-        for (let i = 0; i < uploadFile.file.length; i++) {
-            formData.append('files'+i,uploadFile.file[i]);
+        //console.log(uploadFile.file.length)
+        // if(uploadFile.file.length > 1){
+        //     for (let i = 0; i < uploadFile.file.length; i++) {
+        //         formData.append('files'+i,uploadFile.file[i]);
+        //     }
+        // }else
+        // {
+        for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('files[]', selectedFiles[i]);
         }
+        // }
+
         console.log(formData)
         try{
             const res =  await axios.post(baseurl + 'storefollowup', formData,{
-                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data',},
             });
             if(res.status===201){
                 toast.success('تم إضافة النموذج بنجاح');
@@ -90,9 +95,9 @@ export default function AddModel({setOpenModal}) {
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label for="files" className="block mb-2 text-gray-700 font-medium  text-right">رقم الاصدار</label>
-                                <input type="file"  id="file" multiple name={'file'} onChange={handleFileChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                {/*<input type="file"  id="file" multiple name={'file'} onChange={handleFileChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
                                 {errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
-                                <input type="file" id="file" multiple />
+                                <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} />
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
