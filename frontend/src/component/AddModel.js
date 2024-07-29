@@ -4,7 +4,7 @@ import React, { useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify'
 
-export default function AddModel({setOpenModal}) {
+export default function AddModel({setOpenModal,id}) {
     const[value,setValues] = useState({
         name_model:'',
         release_date:'',
@@ -16,7 +16,7 @@ export default function AddModel({setOpenModal}) {
         watch,
         formState: { errors },
     } = useForm()
-
+    console.log("id service "+id)
     const handleChange = (event) => {
         const { name, value } = event.target;
         setValues((prevValues) => ({

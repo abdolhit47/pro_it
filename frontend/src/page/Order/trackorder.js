@@ -10,7 +10,7 @@ function Order() {
 
     const navigate = useNavigate();
     const handleshow = () => {
-        navigate('/showorder/1');
+        navigate('/office');
     };
     const [addOffice, setaddOffice] = useState(false);
     const handleadd = ()=>{
@@ -27,7 +27,7 @@ function Order() {
                             <h1 className="text-2xl text-gray-900 text-right">تتبع حالة الطلب </h1>
                             {/*<h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>*/}
                             {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl" onClick={handleadd}>طلب الخدمة<AddIcon/></button>
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl" onClick={handleshow}>طلب الخدمة<AddIcon/></button>
                         </div>
                         {/*<div className="px-6 py-4 flex  " dir={'rtl'}>*/}
                             <div className={"px-6 py-4  gap-3 flex  flex-col overflow-y-auto h-auto max-h-96 max-w-full"} dir={'rtl'}>

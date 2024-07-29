@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import { baseurl } from '../../Baseurl/baseurl';
 import axios from 'axios';
+import Uploadfiles from "../../component/uploadfiles";
 function ShowOffice() {
 
     const { id } = useParams();
@@ -18,7 +19,27 @@ function ShowOffice() {
     useEffect(() => {
         getOffice();
     }, []);
-    console.log(office)
+
+
+    const [uploadfiles, setUploadfiles] = useState(false);
+    const handleadd = ()=>{
+        setUploadfiles(true)
+    }
+
+    const [value, setValue] = useState({
+        id_service: '',
+        name: '',
+        address: '',
+        service: '',
+    });
+    const handleset = (id_service,name) => {
+        setValue({
+            id_service: id_service,
+            name: office.name,
+            address: office.address,
+            service: name,
+        });
+    }
     return (
         <>
         <div className="flex h-screen ">
@@ -30,43 +51,36 @@ function ShowOffice() {
                             <h1 class="text-3xl text-gray-900 text-right">{office.name}</h1>
                         </div>
                         <div class="px-6 py-4" dir={'rtl'}>
-                            <p className={"mr-2 text-right text-xl"}>وصف/معلومات عن الجهة:</p>
+                            <p className={"text-right text-xl"}>وصف/المعلومات عن الجهة:</p>
                             <p className={"mt-4 mr-4"}>{office.description}</p>
+
+                            <div className=" mt-10">
+                                <h1 className="text-xl text-gray-900 text-right">العنوان</h1>
+                            </div>
                             <div className={"px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                                 <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
                                     <input type={'radio'} id={"test"} name={"city"}/>
                                     <label htmlFor={"test"} className={'mr-2'}>{office.address}</label>
                                 </span>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <input type={'radio'} id={"test"} name={"city"}/>
-                                    <label htmlFor={"test"} className={'mr-2'}>المدينة</label>
-                                </span>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <input type={'radio'} id={"test"} name={"city"}/>
-                                    <label htmlFor={"test"} className={'mr-2'}>المدينة</label>
-                                </span>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <input type={'radio'} id={"test"} name={"city"}/>
-                                    <label htmlFor={"test"} className={'mr-2'}>المدينة</label>
-                                </span>
                             </div>
 
                             <div className=" mt-10">
-                                <h1 className="text-2xl text-gray-900 text-right">الخدمات</h1>
+                                <h1 className="text-xl text-gray-900 text-right">الخدمات</h1>
                             </div>
-
                             <div className={"overflow-y-auto h-auto max-h-96"}>
                                 <ol className="list-inside list-decimal mt-6  m-2">
                                     {office.services &&
                                         office.services.map((service) => (
                                             <li className={"mr-5 inline-block  relative "}>
-                                                <input type={'radio'} id={"test"} name={"test"}/>
-                                                <label htmlFor={"test"} className={'mr-2'}>{service.name}</label>
+                                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
+                                                    <input type={'radio'} id={"service"} name={"service"} onClick={()=>handleset(service.id,service.name)}/>
+                                                    <label htmlFor={"service"} className={'mr-2'}>{service.name}</label>
+                                                </span>
                                             </li>
                                         ))
                                     }
                                 </ol>
-                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded"  >طلب الخدمة</button>
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded" onClick={handleadd} >طلب الخدمة</button>
                             </div>
 
                         </div>
@@ -74,6 +88,8 @@ function ShowOffice() {
                 </div>
             </div>
         </div>
+            {uploadfiles && <Uploadfiles setOpenModal={setUploadfiles} id={value}/>}
+
         </>
     )
 }

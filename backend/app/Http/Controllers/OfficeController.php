@@ -96,6 +96,7 @@ class OfficeController extends Controller
                 'address' => $office->addresses->name,
                 'services' => $office->services->map(function ($service) {
                     return (object) [
+                        'id' => $service->id,
                         'name' => $service->name,
                     ];
                 })
