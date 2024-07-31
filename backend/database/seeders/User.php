@@ -20,7 +20,17 @@ class User extends Seeder
             'email'=>'dogy2026@gmail.com',
             'password'=>Hash::make('123456789'),
             'role'=>0
-        ]];
+        ],[
+            'name'=>'test',
+            'email'=>'test@gmail.com',
+            'password'=>Hash::make('123456789'),
+            'role'=>4
+        ],[
+            'name'=>'admin',
+            'email'=>'admin@gmail.com',
+            'password'=>Hash::make('123456789'),
+            'role'=>1
+        ],];
         foreach ($user as $key => $value)
             DB::table("users")->insert($value);
     }

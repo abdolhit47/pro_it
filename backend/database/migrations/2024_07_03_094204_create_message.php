@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("type")->comment('Mwaten, Office');
             $table->string('Message');
             $table->string('Status')->comment('Read, Unread')->default('Unread');
-            $table->date('Date_send');
+            $table->dateTime('Date_send');
             $table->timestamps();
         });
     }

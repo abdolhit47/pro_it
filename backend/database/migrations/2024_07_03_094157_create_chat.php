@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign("ID_office")->references("id")->on("office")->onDelete('cascade')->onUpdate('cascade');
             $table->string('Status')->comment('Active, Inactive')->default('Active');
             $table->date('date_start');
+            $table->date('date_end')->nullable();
             $table->timestamps();
         });
     }

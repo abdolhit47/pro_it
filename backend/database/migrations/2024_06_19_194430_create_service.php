@@ -18,6 +18,7 @@ return new class extends Migration
 //            $table->foreign("add_by")->references("id")->on("users")->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedBigInteger("ID_office");
             $table->foreign("ID_office")->references("id")->on("office")->onDelete('cascade')->onUpdate('cascade');
+            $table->string("description")->nullable();
             $table->timestamps();
         });
     }
