@@ -122,12 +122,50 @@ class FileController extends Controller
             return response()->json(['success' => $e->getMessage()],400);
         }
     }
-    public function show($id)
-    {
-        $file = File::find($id);
-        return response()->json($file);
-    }
 
+//    public function showe_service_id($id){
+//        try {
+//            $service = Service_Follow_Up::with('services','files','mwatens')->where('id',$id)->get();
+//            $service =  $service->map(function ($service) {
+//                return (object) [
+//                    'id' => $service->id,
+//                    'name_mwaten' => $service->mwatens->first_name.' '.$service->mwatens->last_name,
+//                    'name_service' => $service->services->name,
+//                    'name_office' => $service->services->offices->name,
+//                    'date' => $service->created_at->format('Y-m-d'),
+//                ];
+//            });
+//            return response()->json($service,200);
+//        }catch (\Exception $e) {
+//            error_log($e->getMessage());
+//            return response()->json(['success' => $e->getMessage()],400);
+//        }
+//    }
+
+    public function approve($id){
+        try {
+            $service = Service_Follow_Up::find($id);
+            $service->approve = 1;
+            $service->approve_by_wzara = Auth::user()->emplyee->offices->id;
+            $service->save();
+            return response()->json(['message' => 'approved'],200);
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }public function unapprove($id,Request $request){
+        try {
+            $service = Service_Follow_Up::find($id);
+            $service->approve = 2;
+            $service->note = $request->note;
+            $service->approve_by_wzara = Auth::user()->emplyee->offices->id;
+            $service->save();
+            return response()->json(['message' => 'unapproved'],200);
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
 
     public function downloadFile($filename,$id)
     {

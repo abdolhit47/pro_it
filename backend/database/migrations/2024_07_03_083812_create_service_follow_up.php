@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreign("mwaten_id")->references("id")->on("mwaten")->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('status')->comment('تحت العمل=1,تم العمل=2,تم الانتهاء=3,رفض=4')->default(1);#تتبع الخدمة للمواطن
+            $table->boolean('approve')->comment('لا=2,نعم=1,قيد المراجعة=0')->default(0);#موافقة من الوزارة
             $table->string('note')->nullable();#ملاحظات
-            $table->boolean('approve')->comment('نعم=1,لا=0')->default(0);#موافقة من الوزارة
 
             $table->unsignedBigInteger('approve_by_wzara')->nullable(); #موافقة من الوزارة
             $table->foreign('approve_by_wzara')->references("id")->on("office")->onDelete('cascade')->onUpdate('cascade');
