@@ -4,14 +4,33 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { red } from '@mui/material/colors';
 
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {baseurl} from "../../Baseurl/baseurl";
+import axios from "axios";
 
 function Order() {
 
     const navigate = useNavigate();
-    const handleshow = () => {
-        navigate('/showorder/1');
+    const handleshow = (id, event) => {
+        event.preventDefault();
+        if (id) {
+            navigate(`/showorder/${id}/`);
+        }
     };
+    const [serviceFollowUp, getserviceFollowUp] = useState([]);
+
+    async function getfollowup(){
+        const response = await axios.get(baseurl+'getfollowup', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        getserviceFollowUp(response.data);
+    }
+
+    useEffect(() => {
+        getfollowup();
+    }, []);
 
     return (
         <>
@@ -32,30 +51,36 @@ function Order() {
                                     <th className="p-3 items-center w-1/5">الاسم المواطن</th>
                                     <th className="p-3 items-center w-1/5">الجهة/الركز</th>
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
-                                    <th className="p-3 items-center w-1/5">التاريخ الطلب</th>
+                                    <th className="p-3 items-center w-1/5">التاريخ طلب</th>
                                     <th className="p-3 items-center w-1/5">العرض</th>
                                     <th className="p-3 items-center w-1/5">قبول/الرفض</th>
                                     <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
                                 </tr>
                                 </thead>
                                 <tbody className="flex items-center overflow-y-auto h-auto max-h-96">
-                                    <tr className="text-center hover:bg-orange-100 flex w-full px-2">
-                                        <td className="p-3 w-1/8 flex items-center justify-center">1</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">test</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">
-                                            <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded" onClick={handleshow}>العرض</button>
-                                        </td>
-                                        <td className="p-3 w-1/5 flex items-center justify-between">
-                                            <button ><CheckCircleOutlineIcon color="success" fontSize="large"/></button>
-                                            <button  ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>
-                                        </td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">
-                                            <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">إصدار الوثيقة</button>
-                                        </td>
-                                    </tr>
+                                {
+                                    serviceFollowUp.map((item,index)=>(
+                                        <tr className="text-center hover:bg-orange-100 flex w-full px-2">
+                                            <td className="p-3 w-1/8 flex items-center justify-center">{index+1}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.date}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">
+                                                <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
+                                                        onClick={(event)=>handleshow(item.id,event)}>العرض</button>
+                                            </td>
+                                            <td className="p-3 w-1/5 flex items-center justify-between">
+                                                <button ><CheckCircleOutlineIcon color="success" fontSize="large"/></button>
+                                                <button  ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>
+                                            </td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">
+                                                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">إصدار الوثيقة</button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+
                                 </tbody>
                             </table>
                         </div>

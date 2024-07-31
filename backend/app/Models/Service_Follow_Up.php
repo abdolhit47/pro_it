@@ -23,4 +23,7 @@ class Service_Follow_Up extends Model
     public function services(){
         return $this->belongsTo(Service::class,"service_id",'id');
     }
+    public function documents(){
+        return $this->hasOne(Document::class,"ID_service_follow_up",'id');
+    }
 }

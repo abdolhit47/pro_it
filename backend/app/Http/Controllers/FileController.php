@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Barryvdh\Dompdf\Facade as PDF;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -64,6 +65,9 @@ class FileController extends Controller
                 GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service);
                 return response()->json(['message' => 'PDF generation in progress'], 201);
             }else{
+                foreach ($imagePaths as $path) {
+                    Storage::delete($path);
+                }
                 return response()->json(['message' => 'Invalid file type'], 403);
             }
 
@@ -81,7 +85,16 @@ class FileController extends Controller
                 }
             }
             if(Auth::user()->role == 0){
-                $service = Service_Follow_Up::where('approve', 0)->get();
+                $service = Service_Follow_Up::with('services','files','mwatens')->where('approve', 0)->get();
+                $service =  $service->map(function ($service) {
+                    return (object) [
+                        'id' => $service->id,
+                        'name_mwaten' => $service->mwatens->first_name.' '.$service->mwatens->last_name,
+                        'name_service' => $service->services->name,
+                        'name_office' => $service->services->offices->name,
+                        'date' => $service->created_at->format('Y-m-d'),
+                    ];
+                });
                 return response()->json($service,200);
             }
             if(Auth::user()->role == 1 || Auth::user()->role == 2){
@@ -95,18 +108,12 @@ class FileController extends Controller
                             'id' => $service->id,
                             'name_service' => $service->services->name,
                             'name_office' => $service->services->offices->name,
-                            'status' => $service->status,
-                            'notes' => $service->notes,
-                            "id2" =>$service->services->offices->id,
-                            'date' => Document::where('send_by',$service->services->offices->id)
-                                ->where('resev_by',Auth::user()->mwaten->id)
-                                ->first(),
+                            'status' => $service->status == 1 ? 'قيد المراجعة' : ($service->status == 2 ? 'تحت العمل' : ($service->status == 3 ? 'مكتمل' : 'مرفوض')),
+                            'note' => $service->note,
+                            'data' => $service->documents != null ? $service->documents->path_file : null,
+
                         ];
                     });
-                //                $service = [];
-//                foreach ($mwatens as $mwaten){
-//                    $service[] = Service_Follow_Up::where('approve', 1)->where('mwaten_id', $mwaten->id)->get();
-//                }
                 return response()->json($service,200);
             }
 
@@ -122,5 +129,16 @@ class FileController extends Controller
     }
 
 
+    public function downloadFile($filename,$id)
+    {
+        error_log($filename.$id);
+        $path = storage_path('app/' . $filename.'/'.$id);
+
+        if (!file_exists($path)) {
+            return response()->json(['message' => 'File not found.'], 404);
+        }
+
+        return Response::download($path);
+    }
 
 }

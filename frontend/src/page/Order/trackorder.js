@@ -3,8 +3,9 @@ import { useNavigate} from "react-router-dom";
 import AddModel from "../../component/AddModel";
 
 import AddIcon from '@mui/icons-material/Add';
-import React, {useState} from "react";
-import AddOffice from "../../component/addOffice";
+import React, {useEffect, useState} from "react";
+import axios from "axios";
+import {baseurl,urls} from "../../Baseurl/baseurl";
 
 function Order() {
 
@@ -16,6 +17,21 @@ function Order() {
     const handleadd = ()=>{
         setaddOffice(true)
     }
+    const [serviceFollowUp, getserviceFollowUp] = useState([]);
+
+    async function getfollowup(){
+        const response = await axios.get(baseurl+'getfollowup', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        getserviceFollowUp(response.data);
+    }
+
+    useEffect(() => {
+        getfollowup();
+    }, []);
+
     return (
         <>
         <div className="flex h-screen ">
@@ -31,88 +47,30 @@ function Order() {
                         </div>
                         {/*<div className="px-6 py-4 flex  " dir={'rtl'}>*/}
                             <div className={"px-6 py-4  gap-3 flex  flex-col overflow-y-auto h-auto max-h-96 max-w-full"} dir={'rtl'}>
-                                <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الجهة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الخدمة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        حالة طلب
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        سبب الرفض
-                                    </span>
-                                    <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >تحميل الوثيقة</button>
-                                </div>
-                                <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الجهة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الخدمة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        حالة طلب
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        سبب الرفض
-                                    </span>
-                                    <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >تحميل الوثيقة</button>
-                                </div>
-                                <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الجهة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        اسم الخدمة
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        حالة طلب
-                                    </span>
-                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                        {/*سبب الرفض*/}
-                                    </span>
-                                    <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >تحميل الوثيقة</button>
-                                </div>
-
+                                {serviceFollowUp.map((item,index)=>(
+                                        <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
+                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                {item.name_office}
+                                            </span>
+                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                {item.name_service}
+                                            </span>
+                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                {item.status}
+                                            </span>
+                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                {item.note}
+                                            </span>
+                                            {item.data != null ? (
+                                                <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >
+                                                    <a href={`${baseurl}download/${item.data}`} download>تحميل الوثيقة</a>
+                                                </button>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </div>
+                                ))}
                             </div>
-
-
-                            {/*<table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">*/}
-                            {/*    <thead className="flex w-full ">*/}
-                            {/*    <tr className="border-b text-center flex w-full px-2 mb-4">*/}
-                            {/*        <th className="p-3 w-1/8">#</th>*/}
-                            {/*        <th className="p-3 w-1/5">الاسم الجهة</th>*/}
-                            {/*        <th className="p-3 w-1/5">وصف</th>*/}
-                            {/*        <th className="p-3 w-1/5">المسؤول</th>*/}
-                            {/*        <th className="p-3 w-1/5">العنوان</th>*/}
-                            {/*        <th className="p-3 w-1/5">العرض</th>*/}
-                            {/*        <th className="p-3 w-1/5">التعديل</th>*/}
-                            {/*        <th className="p-3 w-1/5">إصدار</th>*/}
-                            {/*    </tr>*/}
-                            {/*    </thead>*/}
-                            {/*    <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">*/}
-                            {/*        <tr className="text-center hover:bg-orange-100 flex w-full px-2">*/}
-                            {/*            <td className="p-3 w-1/8 flex items-center justify-center">1</td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">test</td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">test</td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">test</td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">test</td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">*/}
-                            {/*                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>العرض</button>*/}
-                            {/*            </td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">*/}
-                            {/*                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">التعديل</button>*/}
-                            {/*            </td>*/}
-                            {/*            <td className="p-3 w-1/5 flex items-center justify-center">*/}
-                            {/*                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">إصدار الوثيقة</button>*/}
-                            {/*            </td>*/}
-                            {/*        </tr>*/}
-                            {/*    </tbody>*/}
-                            {/*</table>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
             </div>

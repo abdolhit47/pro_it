@@ -9,14 +9,11 @@ class Document extends Model
 {
     use HasFactory;
     protected $table = "document";
-    protected $fillable =["name_document","resev_by","send_by","date_aprove"];
+    protected $fillable =["name_document","type_document","path_file","date_document","ID_service_follow_up"];
     public $timestamps = true;
 
-    public function office(){
-        return $this->belongsTo(Office::class,"send_by","id");
+    public function documents(){
+        return $this->belongsTo(Service_Follow_Up::class,"ID_service_follow_up","id");
     }
 
-    public function mwaten(){
-        return $this->belongsTo(Mwaten::class,"resev_by","id");
-    }
 }
