@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\File;
+use App\Models\Service_Follow_Up;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,16 +19,18 @@ class GeneratePdfJob implements ShouldQueue
 
     protected $imagePaths;
     protected $destinationPath;
+    protected $id_service;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($imagePaths, $destinationPath)
+    public function __construct($imagePaths, $destinationPath, $id_service)
     {
         $this->imagePaths = $imagePaths;
         $this->destinationPath = $destinationPath;
+        $this->id_service = $id_service;
     }
 
     /**
@@ -66,6 +69,11 @@ class GeneratePdfJob implements ShouldQueue
         $file->path_file = $storedPdfPath; // المسار الذي تم تخزين الملف فيه
         $file->save(); // حفظ سجل الملف في قاعدة البيانات
         // Delete images after PDF is generated
+        $service_follow_up = new Service_Follow_Up();
+        $service_follow_up->file_id = $file->id;
+        $service_follow_up->mwaten_id = 2;
+        $service_follow_up->service_id = $this->id_service;
+        $service_follow_up->save();
         foreach ($this->imagePaths as $path) {
             Storage::delete($path);
         }

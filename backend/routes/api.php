@@ -51,4 +51,5 @@ Route::post('/storeaddress', [AddressController::class, "store"])->middleware('a
 
 Route::get("/getservicesfollow", [OfficeController::class, "getservicesfollow"]);
 
-Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/storefollowup', [FileController::class, 'store']);
+Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');

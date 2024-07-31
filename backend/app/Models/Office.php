@@ -19,7 +19,7 @@ class Office extends Model
     }
 
     public function documents(){
-        return $this->hasMany(Document::class);
+        return $this->hasMany(Document::class,"send_by",'id');
     }
 
     public function chats(){

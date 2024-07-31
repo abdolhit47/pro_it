@@ -19,7 +19,7 @@ class Service extends Model
 
     public function Service_Follow_Up()
     {
-        return $this->hasMany( Service_Follow_Up::class);
+        return $this->hasMany( Service_Follow_Up::class, "service_id", 'id' );
     }
 
 }

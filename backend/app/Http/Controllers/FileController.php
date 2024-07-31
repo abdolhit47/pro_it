@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\GeneratePdfJob;
+use App\Models\Document;
 use App\Models\File;
 use App\Models\Service_Follow_Up;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class FileController extends Controller
                 $file->type = 'application/pdf'; // نوع الملف
                 $file->path_file = $path; // المسار الذي تم تخزين الملف فيه
                 $file->save(); // حفظ سجل الملف في قاعدة البيانات
-                error_log($request->service_id);
+                //error_log($request->service_id);
                 $service_follow_up = new Service_Follow_Up();
                 $service_follow_up->file_id = $file->id;
                 $service_follow_up->mwaten_id = 2;
@@ -60,7 +61,7 @@ class FileController extends Controller
                 }
                 $destinationPath = 'uploads';
                 // Dispatch job to queue with image paths
-                GeneratePdfJob::dispatch($imagePaths, $destinationPath);
+                GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service);
                 return response()->json(['message' => 'PDF generation in progress'], 201);
             }else{
                 return response()->json(['message' => 'Invalid file type'], 403);
@@ -70,6 +71,56 @@ class FileController extends Controller
             return response()->json($e->getMessage(), 403);
         }
     }
+
+    public function showe_service(){
+        try {
+            if(Auth::check()){
+                $user = Auth::user();
+                if($user->role != 0 && $user->role != 1 && $user->role != 2 && $user->role != 4){
+                    return response()->json(['success' => "doesn't have permission"],403);
+                }
+            }
+            if(Auth::user()->role == 0){
+                $service = Service_Follow_Up::where('approve', 0)->get();
+                return response()->json($service,200);
+            }
+            if(Auth::user()->role == 1 || Auth::user()->role == 2){
+                $service = Service_Follow_Up::where('approve', 1)->get();
+                return response()->json($service,200);
+            }
+            if (Auth::user()->role == 4) {
+                $service = Service_Follow_Up::with('services','files','mwatens')->where('mwaten_id', Auth::user()->mwaten->id)->get();
+                $service =  $service->map(function ($service) {
+                        return (object) [
+                            'id' => $service->id,
+                            'name_service' => $service->services->name,
+                            'name_office' => $service->services->offices->name,
+                            'status' => $service->status,
+                            'notes' => $service->notes,
+                            "id2" =>$service->services->offices->id,
+                            'date' => Document::where('send_by',$service->services->offices->id)
+                                ->where('resev_by',Auth::user()->mwaten->id)
+                                ->first(),
+                        ];
+                    });
+                //                $service = [];
+//                foreach ($mwatens as $mwaten){
+//                    $service[] = Service_Follow_Up::where('approve', 1)->where('mwaten_id', $mwaten->id)->get();
+//                }
+                return response()->json($service,200);
+            }
+
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
+    public function show($id)
+    {
+        $file = File::find($id);
+        return response()->json($file);
+    }
+
 
 
 }
