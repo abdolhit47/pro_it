@@ -55,5 +55,8 @@ use Illuminate\Support\Facades\Route;
 
     Route::post('/storefollowup', [FileController::class, 'store']);
     Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');
+    Route::get('/gettrackorder', [FileController::class, 'showe_trackorder'])->middleware('auth:sanctum');
+    Route::put('/approve/{id}', [FileController::class, 'approve'])->middleware('auth:sanctum');
+    Route::post('/unapprove/{id}', [FileController::class, 'unapprove'])->middleware('auth:sanctum');
 
 Route::get('/download/{filename}/{id}', [FileController::class, 'downloadFile']);

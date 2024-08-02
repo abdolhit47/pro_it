@@ -126,6 +126,9 @@ class OfficeController extends Controller
     }
     public function getservicesfollow(){
         $services = Service_Follow_Up::with("mwatens","services")->get();
+        if ($services->count() == 0) {
+            return response()->json(['success' => "no data"], 404);
+        }
         $service = $services->map(function ($service) {
             return [
                 'id' => $service->id,

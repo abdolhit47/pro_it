@@ -94,6 +94,7 @@ export default function AddMeassage({setOpenModal}) {
                             <div className="basis-full w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="office" className="block mb-2 text-gray-700 font-medium  text-right">الجهة/المركز</label>
                                 <Select
+                                    className=" border-gray-300 rounded-md text-gray-700 focus:border-indigo-500 focus:outline-none text-right"
                                     ref={selectInputOfficeRef}
                                     isSearchable
                                     isClearable
@@ -123,8 +124,8 @@ export default function AddMeassage({setOpenModal}) {
                             </div>
                         </div>
                         <div className="flex flex-row-reverse mx-3 mb-4">
-                            <div className="basis-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label htmlFor="message" className="block mb-2 text-gray-700 font-medium  text-right">الوصف</label>
+                            <div className="basis-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
+                                <label htmlFor="message" className="block mb-2 text-gray-700 font-medium  text-right">الرسالة</label>
                                 <textarea  id="message"  name="message" value={value.message} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>

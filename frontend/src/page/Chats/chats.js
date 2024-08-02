@@ -6,8 +6,8 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import SendIcon from '@mui/icons-material/Send';
 import {baseurl} from "../../Baseurl/baseurl";
 import axios from 'axios';
-const role = localStorage.getItem('role');
 function Chats() {
+    const role = localStorage.getItem('role');
 
     const [chats, setChats] = useState([]);
     const [howSend, setHowSend] = useState('');
@@ -18,8 +18,6 @@ function Chats() {
         setChats(res.data[0])
         setHowSend(res.data['send'])
     }
-
-    const [read,setread]=useState('true');
 
     const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
 
@@ -72,12 +70,11 @@ function Chats() {
         const  formdata=new FormData();
         formdata.append('message',value.message);
         formdata.append('ID_Chat',selectedChatId);
-        const res = await axios.post(baseurl+'sendmessage',formdata,{
+        await axios.post(baseurl+'sendmessage',formdata,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
-        setread('false');
         setvalue({message: ''});
-        handleChatClick(selectedChatId)
+        await handleChatClick(selectedChatId)
     }
 
 
@@ -104,7 +101,9 @@ function Chats() {
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
                         <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 className="text-2xl text-gray-900 text-right">الاستفسارات</h1>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة <AddIcon/></button>
+                            {role === 4 &&
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة <AddIcon/></button>
+                            }
                         </div>
                         <div className={"px-6 py-4 flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-screen max-w-full grid grid-cols-4 "} dir={'rtl'}>
                             {chats.length === 0 ?
@@ -140,18 +139,19 @@ function Chats() {
                                             (<>
                                                 {
                                                     messages.map((message, index) => (
-                                                        howSend === message.type &&
-                                                        <div className={`flex items-end flex-row`}  key={index}>
+                                                        (howSend === message.type) ?
+                                                        (<div className={`flex items-end flex-row`}  key={index}>
                                                             <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm border-2 border-sky-500 basis-1/2`} >{message.Message}</p>
-                                                        </div>
-                                                        ||
-                                                        <div className={`flex items-end flex-row-reverse`} key={index}>
-                                                            <p className={`mx-2 p-2 rounded-2xl bg-gray-200 leading-4 text-sm bg-sky-500 basis-1/2`} >{message.Message}</p>
-                                                        </div>
+                                                        </div>)
+                                                        :
+                                                        (<div className={`flex items-end flex-row-reverse`} key={index}>
+                                                            <p className={`mx-2 p-2 rounded-2xl  leading-4 text-sm bg-sky-500 basis-1/2`} >{message.Message}</p>
+                                                        </div>)
                                                     ))
                                                 }<div ref={messagesEndRef} />
                                             </>)
-                                            :""
+                                            :
+                                            ("")
                                         }
                                     </div>
                                 </div>

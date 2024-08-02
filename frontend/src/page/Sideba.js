@@ -9,20 +9,29 @@ import SendIcon from '@mui/icons-material/Send';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {Link, useNavigate} from 'react-router-dom'
-
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 import 'react-toastify/dist/ReactToastify.css';
+import ShowEmployee from "./Employee/showEmployee";
 // import {Office} from "./index";
 // import Service from "./Services/serivce";
+
 function Sideba() {
-  const [activePath, setActivePath] = useState(window.location.pathname);
-  const navigator = useNavigate();
-  const handleLinkClick = (path) => {
+    const role = localStorage.getItem('role');
+    const array = ["0", "4"] // for superadmin and mwaten
+    const array2 = ["0", "1", "2", "3"] // for admin and manager
+    const array3 = ["0", "1"] //superadmin and admin
+
+
+    const [activePath, setActivePath] = useState(window.location.pathname);
+    const navigator = useNavigate();
+    const handleLinkClick = (path) => {
     setActivePath(path);
     navigator(path);
-  };
-  const open = useState(true);
-  const [subOpen, setSubOpen] = useState(false);
-  return (
+    };
+    const open = useState(true);
+    const [subOpen, setSubOpen] = useState(false);
+    console.log(role)
+    return (
       <>
           <div className=" bg-gray-50 flex flex-row-reverse text-right absolute inset-y-14 mt-10 right-7">
               <nav className="  w-64  rounded-3xl bg-yellow-600  flex flex-col justify-between text-white transition duration-150 ease-in-out">
@@ -37,30 +46,37 @@ function Sideba() {
                                       </Link>
                                   </li>
                               </div>
-                              <div className={activePath === '/Office' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Office')}>
-                                  <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer">
-                                      <Link to="/Office" aria-expanded="false">
-                                          <span className="ml-2 text-sm font-medium mr-4">الجهة/المركز</span>
-                                          <BusinessCenterIcon/>
-                                      </Link>
-                                  </li>
-                              </div>
-                              <div className={activePath === '/Order' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Order')}>
-                                  <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
-                                      <Link to="/order" aria-expanded="false">
+                              {array.some(element => element === role) &&
+                                  <div className={activePath === '/Office' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Office')}>
+                                      <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer">
+                                          <Link to="/Office" aria-expanded="false">
+                                              <span className="ml-2 text-sm font-medium mr-4">الجهة/المركز</span>
+                                              <BusinessCenterIcon/>
+                                          </Link>
+                                      </li>
+                                  </div>
+                              }
+                              {array2.some(element => element === role) &&
+                                  <div className={activePath === '/Order' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Order')}>
+                                      <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
+                                          <Link to="/order" aria-expanded="false">
                                               <span className="ml-2 text-sm font-medium mr-4 ">طلبات</span>
                                               <SendIcon />
-                                      </Link>
-                                  </li>
-                              </div>
-                              <div className={activePath === '/Trackorder' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Trackorder')}>
-                                  <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
-                                      <Link to="/Trackorder" aria-expanded="false">
+                                          </Link>
+                                      </li>
+                                  </div>
+                              }
+                              {role === "4" &&
+                                  <div className={activePath === '/Trackorder' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Trackorder')}>
+                                      <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
+                                          <Link to="/Trackorder" aria-expanded="false">
                                               <span className="ml-2 text-sm font-medium mr-4 ">تتبع طلبات</span>
                                               <SendIcon />
-                                      </Link>
-                                  </li>
-                              </div>
+                                          </Link>
+                                      </li>
+                                  </div>
+                              }
+
                               <div /*className={subOpen === true ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''}*/ onClick={() => setSubOpen(!subOpen)}>
                                   <li className="flex-row items-center justify-between px-4 py-2 rounded hover:bg-amber-700 ">
                                       <span className="ml-2 text-sm font-medium mr-4">إعدادات</span>
@@ -68,24 +84,37 @@ function Sideba() {
                                   </li>
                               </div>
                               {open && subOpen && (<>
-                                      <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
-                                          <span className="ml-2 text-sm font-medium mr-4">تعيين الموظف</span>
-                                          <PersonAddIcon/>
-                                      </li>
+                                      {array3.includes(role) &&
+                                          <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
+                                              <Link to="/ShowEmployee" aria-expanded="false">
+                                                  <span className="ml-2 text-sm font-medium mr-4">تعيين الموظف</span>
+                                                  <PersonAddIcon/>
+                                              </Link>
+                                          </li>
+                                      }
+                                      {role === "2" &&
+                                          <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
+                                              <Link to="/Service" aria-expanded="false">
+                                                  <span className="ml-2 text-sm font-medium mr-4">الخدمات</span>
+                                                  <MiscellaneousServicesIcon/>
+                                              </Link>
+                                          </li>
+                                      }
 
-                                      <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
-                                          <Link to="/Service" aria-expanded="false">
-                                              <span className="ml-2 text-sm font-medium mr-4">الخدمات</span>
-                                              <MiscellaneousServicesIcon/>
-                                          </Link>
-                                      </li>
                                       {/*<li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">*/}
                                       {/*    <Link to="/archive" state={{ from: "occupation" }} aria-expanded="false">*/}
                                       {/*        <span className="ml-2 text-sm font-medium mr-4">الأرشيف الطلبات</span>*/}
                                       {/*        <ArchiveIcon/>*/}
                                       {/*    </Link>*/}
                                       {/*</li>*/}
-
+                                      {role === "0" &&
+                                          <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
+                                              <Link to="" state={{from: "occupation"}} aria-expanded="false">
+                                                  <span className="ml-2 text-sm font-medium mr-4">المدن</span>
+                                                  <LocationCityIcon/>
+                                              </Link>
+                                          </li>
+                                      }
                                       <li className={
                                           //activePath === '/Profile' ? 'border-r-8 border-r-amber-700 rounded-r-md' :
                                           'flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700'} onClick={() => handleLinkClick('/Profile')}>
@@ -107,11 +136,10 @@ function Sideba() {
                   </div>
               </nav>
           </div>
-  </>
-	
+    </>
 
-  );
 
+    );
 }
 
 export default Sideba;

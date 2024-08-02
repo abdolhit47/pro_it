@@ -20,12 +20,22 @@ function Order() {
     const [serviceFollowUp, getserviceFollowUp] = useState([]);
 
     async function getfollowup(){
-        const response = await axios.get(baseurl+'getfollowup', {
+        await axios.get(baseurl+'gettrackorder', {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             }
-        });
-        getserviceFollowUp(response.data);
+        }).then((response) => {
+            getserviceFollowUp(response.data);
+        }).catch((error) => {
+            console.log(error);
+
+        })
+        // if(response.states === 200){
+        //     getserviceFollowUp(response.data);
+        // }else if(response.states === 404){
+        //     getserviceFollowUp([]);
+        // }
+
     }
 
     useEffect(() => {
@@ -47,20 +57,33 @@ function Order() {
                         </div>
                         {/*<div className="px-6 py-4 flex  " dir={'rtl'}>*/}
                             <div className={"px-6 py-4  gap-3 flex  flex-col overflow-y-auto h-auto max-h-96 max-w-full"} dir={'rtl'}>
-                                {serviceFollowUp.map((item,index)=>(
+
+                                {
+                                    serviceFollowUp.length === 0 ? (
+                                        <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
+                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                لا يوجد طلبات
+                                            </span>
+                                        </div>
+                                    ):
+                                    serviceFollowUp.map((item,index)=>(
                                         <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
                                             <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
                                                 {item.name_office}
                                             </span>
-                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+
+                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
                                                 {item.name_service}
                                             </span>
-                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+
+                                            <span className={`${item.status === "مرفوض" ? "bg-gray-100 border-red-500 text-black border-r-8 rounded-md px-3 py-2 w-1/6" : (item.status === "مكتمل" ? "bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6" : "bg-gray-100  text-black border-r-8 border-amber-500 rounded-md px-3 py-2 w-1/6")}`}>
                                                 {item.status}
                                             </span>
-                                                    <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+
+                                            <span className={`${item.note == null ? "  px-3 py-2 w-1/6" : "bg-gray-100  text-black border-2 border-red-500 rounded-md px-3 py-2 w-1/6"}`}>
                                                 {item.note}
                                             </span>
+
                                             {item.data != null ? (
                                                 <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >
                                                     <a href={`${baseurl}download/${item.data}`} download>تحميل الوثيقة</a>
@@ -70,6 +93,7 @@ function Order() {
                                             )}
                                         </div>
                                 ))}
+
                             </div>
                     </div>
                 </div>

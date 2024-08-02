@@ -1,29 +1,27 @@
 import Navbar from "../Navbar";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import AddOffice from "../../component/addOffice";
 import {useNavigate} from "react-router-dom";
-import { baseurl } from '../../Baseurl/baseurl';
-import axios from 'axios';
-import {ToastContainer} from "react-toastify";
+import useFollowUp from "../../component/search";
+
 function Office() {
+    const {
+        Data,
+        filteredData,
+        filter,
+        setFilter,
+        DataFilter,
+        setDataFilter,
+        applyFilters,
+        //getFollowUp
+    } = useFollowUp("Office");
     const role = localStorage.getItem('role');
     const [addOffice, setaddOffice] = useState(false);
 
     const navigate = useNavigate()
 
-    const [office, setOffice] = useState([]);
-
-    async function getOffices() {
-        const res =  await axios.get(baseurl + 'showoffice', {
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-        });
-        setOffice(res.data)
-    }
-    useEffect(() => {
-        getOffices();
-    }, [0]);
     const handleadd = ()=>{
-        setaddOffice(true)
+        setaddOffice(true);
     }
     const handleshow = (index, event) => {
         event.preventDefault();
@@ -31,6 +29,19 @@ function Office() {
             navigate(`/showoffice/${index}/`);
         }
     };
+
+    const handleFilterChange = (e) => {
+        const value = e.target.value;
+        setFilter(value);
+        applyFilters(value, DataFilter);
+    };
+
+    const handleOfficeFilterChange = (e) => {
+        const value = e.target.value;
+        setDataFilter(value);
+        applyFilters(filter, value);
+    };
+    const uniqueOffices = [...new Set(Data.map(item => item.address))];
     return (
         <>
         <div className="flex h-screen ">
@@ -41,7 +52,26 @@ function Office() {
                         <div class="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 class="text-2xl text-gray-900 text-right">الجهة/المركز</h1>
                             {role === "0" &&<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة جهة</button>}
-
+                        </div>
+                        <div className="px-6 py-4 flex  " dir={'rtl'}>
+                            <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
+                            <input
+                                type="text"
+                                className="border-2 border-gray-300 p-2 rounded ml-3"
+                                placeholder="Filter"
+                                value={filter}
+                                onChange={handleFilterChange}
+                            />
+                            <select
+                                className="border-2 border-gray-300 p-2 rounded ml-2"
+                                value={DataFilter}
+                                onChange={handleOfficeFilterChange}
+                            >
+                                <option value="">جميع المدن</option>
+                                {uniqueOffices.map((office, index) => (
+                                    <option key={index} value={office}>{office}</option>
+                                ))}
+                            </select>
                         </div>
                         <div class="px-6 py-4 flex justify-center">
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">
@@ -52,14 +82,14 @@ function Office() {
                                     <th className="p-3 w-1/5">وصف</th>
                                     <th className="p-3 w-1/5">المسؤول</th>
                                     <th className="p-3 w-1/5">العنوان</th>
-                                    {role !== "0" &&<th className={"p-3 w-1/5"}>العرض</th>}
+                                    {role === "4" &&<th className={"p-3 w-1/5"}>العرض</th>}
                                     {role === "0" &&
                                         <th className="p-3 w-1/5">التعديل</th>
                                     }
                                 </tr>
                                 </thead>
                                 <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
-                                {office.map((item, index) => (
+                                {filteredData.map((item, index) => (
                                     <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
                                         <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>

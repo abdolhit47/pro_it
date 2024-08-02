@@ -10,19 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Barryvdh\Dompdf\Facade as PDF;
+//use Barryvdh\Dompdf\Facade as PDF;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\error;
 
 class FileController extends Controller
 {
-    public function index()
-    {
-        $files = File::all();
-        return response()->json($files);
-    }
-
     public function store(Request $request)
     {
         try{
@@ -39,7 +34,6 @@ class FileController extends Controller
 
             $files = $request->file('files');
             $imagePaths = [];
-            //dd($files[0]->getClientMimeType());
             if($files[0]->getClientMimeType() == 'application/pdf'){
                 $path = $files[0]->store('uploads');
                 $file = new File();
@@ -61,7 +55,6 @@ class FileController extends Controller
                     $imagePaths[] = $path;
                 }
                 $destinationPath = 'uploads';
-                // Dispatch job to queue with image paths
                 GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service);
                 return response()->json(['message' => 'PDF generation in progress'], 201);
             }else{
@@ -70,7 +63,6 @@ class FileController extends Controller
                 }
                 return response()->json(['message' => 'Invalid file type'], 403);
             }
-
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 403);
         }
@@ -78,48 +70,61 @@ class FileController extends Controller
 
     public function showe_service(){
         try {
+            if(Auth::check()) {
+                $user = Auth::user();
+                if ($user->role != 0 && $user->role != 1 && $user->role != 2) {
+                    return response()->json(['success' => "doesn't have permission"], 403);
+                }
+                if (Auth::user()->role == 0) {
+                    $service = Service_Follow_Up::with('services', 'files', 'mwatens')->where('approve', 0)->get();
+                    $service = $service->map(function ($service) {
+                        return (object)[
+                            'id' => $service->id,
+                            'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
+                            'name_service' => $service->services->name,
+                            'name_office' => $service->services->offices->name,
+                            'date' => $service->created_at->format('Y-m-d'),
+                        ];
+                    });
+                    return response()->json($service, 200);
+                }
+                if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+                    $service = Service_Follow_Up::where('approve', 1)->get();
+                    return response()->json($service, 200);
+                }
+            }
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['worning' => $e->getMessage()],400);
+        }
+    }
+    public function showe_trackorder(){
+        try {
             if(Auth::check()){
                 $user = Auth::user();
-                if($user->role != 0 && $user->role != 1 && $user->role != 2 && $user->role != 4){
+                if($user->role != 4){
                     return response()->json(['success' => "doesn't have permission"],403);
                 }
             }
-            if(Auth::user()->role == 0){
-                $service = Service_Follow_Up::with('services','files','mwatens')->where('approve', 0)->get();
-                $service =  $service->map(function ($service) {
+            $service = Service_Follow_Up::with('services','files','mwatens')->where('mwaten_id', Auth::user()->mwaten->id)->get();
+            if($service->count() == 0){
+                return response()->json(['success' => "no data"], 404);
+            }
+            $service =  $service->map(function ($service) {
                     return (object) [
                         'id' => $service->id,
-                        'name_mwaten' => $service->mwatens->first_name.' '.$service->mwatens->last_name,
                         'name_service' => $service->services->name,
                         'name_office' => $service->services->offices->name,
-                        'date' => $service->created_at->format('Y-m-d'),
+                        'status' => $service->status == 1 ? 'قيد المراجعة' : ($service->status == 2 ? 'تحت العمل' : ($service->status == 3 ? 'مكتمل' : 'مرفوض')),
+                        'note' => $service->note,
+                        'data' => $service->documents != null ? $service->documents->path_file : null,
+
                     ];
                 });
-                return response()->json($service,200);
-            }
-            if(Auth::user()->role == 1 || Auth::user()->role == 2){
-                $service = Service_Follow_Up::where('approve', 1)->get();
-                return response()->json($service,200);
-            }
-            if (Auth::user()->role == 4) {
-                $service = Service_Follow_Up::with('services','files','mwatens')->where('mwaten_id', Auth::user()->mwaten->id)->get();
-                $service =  $service->map(function ($service) {
-                        return (object) [
-                            'id' => $service->id,
-                            'name_service' => $service->services->name,
-                            'name_office' => $service->services->offices->name,
-                            'status' => $service->status == 1 ? 'قيد المراجعة' : ($service->status == 2 ? 'تحت العمل' : ($service->status == 3 ? 'مكتمل' : 'مرفوض')),
-                            'note' => $service->note,
-                            'data' => $service->documents != null ? $service->documents->path_file : null,
-
-                        ];
-                    });
-                return response()->json($service,200);
-            }
-
+            return response()->json($service,200);
         }catch (\Exception $e) {
             error_log($e->getMessage());
-            return response()->json(['success' => $e->getMessage()],400);
+            return response()->json(['worning' => $e->getMessage()],400);
         }
     }
 
@@ -145,17 +150,28 @@ class FileController extends Controller
     public function approve($id){
         try {
             $service = Service_Follow_Up::find($id);
+            if($service->approve == 1){
+                return response()->json(['message' => 'already approved'],200);
+            }
+            $service->status = 2;
             $service->approve = 1;
             $service->approve_by_wzara = Auth::user()->emplyee->offices->id;
+            $service->data_approve = date('Y-m-d');
             $service->save();
             return response()->json(['message' => 'approved'],200);
         }catch (\Exception $e) {
             error_log($e->getMessage());
             return response()->json(['success' => $e->getMessage()],400);
         }
-    }public function unapprove($id,Request $request){
+    }
+    public function unapprove($id,Request $request){
         try {
+
             $service = Service_Follow_Up::find($id);
+            if($service->approve == 2 || $service->approve == 1){
+                return response()->json(['message' => 'already unapproved'],200);
+            }
+            $service->status = 4;
             $service->approve = 2;
             $service->note = $request->note;
             $service->approve_by_wzara = Auth::user()->emplyee->offices->id;

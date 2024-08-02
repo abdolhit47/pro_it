@@ -3,13 +3,28 @@ import { useNavigate} from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { red } from '@mui/material/colors';
-
-import React, {useEffect, useState} from "react";
+import {  toast } from 'react-toastify'
+import React, {useState} from "react";
 import {baseurl} from "../../Baseurl/baseurl";
 import axios from "axios";
+import Unapprove from "../../component/unapproved";
+//import Select from "react-select";
+import useFollowUp from "../../component/search";
 
 function Order() {
+    const {
+        Data,
+        filteredData,
+        filter,
+        setFilter,
+        DataFilter,
+        setDataFilter,
+        applyFilters,
+        getFollowUp
+    } = useFollowUp("Order");
 
+    const role = localStorage.getItem('role');
+    const array = ["0", "1", "2", "3"];
     const navigate = useNavigate();
     const handleshow = (id, event) => {
         event.preventDefault();
@@ -17,20 +32,46 @@ function Order() {
             navigate(`/showorder/${id}/`);
         }
     };
-    const [serviceFollowUp, getserviceFollowUp] = useState([]);
 
-    async function getfollowup(){
-        const response = await axios.get(baseurl+'getfollowup', {
+     async function approve ($id){
+        console.log($id)
+        await axios.put(baseurl+'approve/'+$id,{}, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             }
-        });
-        getserviceFollowUp(response.data);
+        }).then((response) => {
+            if(response.data.message === "approved"){
+                toast.success("تم الموافقة بنجاح");
+                getFollowUp();
+            }else if(response.data.message === 'already approved'){
+                toast.success("تم الموافقة مسبقا");
+                getFollowUp();
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
-    useEffect(() => {
-        getfollowup();
-    }, []);
+    const [unapprove, setunapprove] = useState(false);
+     const [value, setvalue] = useState(0);
+    const handleUnapprove = ($id,event)=>{
+        event.preventDefault();
+        setvalue($id)
+        setunapprove(true)
+    }
+
+    const handleFilterChange = (e) => {
+        const value = e.target.value;
+        setFilter(value);
+        applyFilters(value, DataFilter);
+    };
+
+    const handleOfficeFilterChange = (e) => {
+        const value = e.target.value;
+        setDataFilter(value);
+        applyFilters(filter, value);
+    };
+    const uniqueOffices = [...new Set(Data.map(item => item.name_office))];
 
     return (
         <>
@@ -43,23 +84,49 @@ function Order() {
                             <h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>
                             {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
                         </div>
+                        {array.some(element => element === role) &&
+                            <div className="px-6 py-4 flex  " dir={'rtl'}>
+                                <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
+                                <input
+                                    type="text"
+                                    className="border-2 border-gray-300 p-2 rounded ml-3"
+                                    placeholder="Filter"
+                                    value={filter}
+                                    onChange={handleFilterChange}
+                                />
+                                <select
+                                    className="border-2 border-gray-300 p-2 rounded ml-2"
+                                    value={DataFilter}
+                                    onChange={handleOfficeFilterChange}
+                                >
+                                    <option value="">جميع الجهات</option>
+                                    {uniqueOffices.map((office, index) => (
+                                        <option key={index} value={office}>{office}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        }
                         <div className="px-6 py-4 flex  " dir={'rtl'}>
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-4xl" dir="rtl">
                                 <thead className="flex w-full items-center ">
                                 <tr className="border-b text-center flex w-full px-2 mb-4">
                                     <th className="p-3 items-center w-1/8">#</th>
                                     <th className="p-3 items-center w-1/5">الاسم المواطن</th>
-                                    <th className="p-3 items-center w-1/5">الجهة/الركز</th>
+                                    <th className="p-3 items-center w-1/5">الجهة/المركز</th>
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
                                     <th className="p-3 items-center w-1/5">التاريخ طلب</th>
                                     <th className="p-3 items-center w-1/5">العرض</th>
-                                    <th className="p-3 items-center w-1/5">قبول/الرفض</th>
-                                    <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
+                                    {role.includes("0") &&
+                                        <th className="p-3 items-center w-1/5">قبول/الرفض</th>
+                                    }
+                                    {role.includes("2")  &&
+                                        <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
+                                    }
                                 </tr>
                                 </thead>
-                                <tbody className="flex items-center overflow-y-auto h-auto max-h-96">
+                                <tbody className=" items-center overflow-y-auto h-auto max-h-96">
                                 {
-                                    serviceFollowUp.map((item,index)=>(
+                                    filteredData.map((item,index)=>(
                                         <tr className="text-center hover:bg-orange-100 flex w-full px-2">
                                             <td className="p-3 w-1/8 flex items-center justify-center">{index+1}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
@@ -70,17 +137,20 @@ function Order() {
                                                 <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
                                                         onClick={(event)=>handleshow(item.id,event)}>العرض</button>
                                             </td>
-                                            <td className="p-3 w-1/5 flex items-center justify-between">
-                                                <button ><CheckCircleOutlineIcon color="success" fontSize="large"/></button>
-                                                <button  ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>
-                                            </td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">
-                                                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">إصدار الوثيقة</button>
-                                            </td>
+                                            {role.includes("0") &&<td className="p-3 w-1/5 flex items-center justify-between">
+                                                <button onClick={()=>approve(item.id)}><CheckCircleOutlineIcon color="success" fontSize="large"/></button>
+                                                <button onClick={(event)=>handleUnapprove(item.id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>
+                                            </td>}
+                                            {role.includes("2") &&
+                                                <td className="p-3 w-1/5 flex items-center justify-center">
+                                                    <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+                                                        إصدار الوثيقة
+                                                    </button>
+                                                </td>
+                                            }
                                         </tr>
                                     ))
                                 }
-
                                 </tbody>
                             </table>
                         </div>
@@ -88,7 +158,7 @@ function Order() {
                 </div>
             </div>
         </div>
-
+            {unapprove && <Unapprove setOpenModal={setunapprove} id={value} />}
         </>
     )
 }

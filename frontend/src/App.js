@@ -11,7 +11,7 @@ import{
   TEST,
   Sign_up,
   Showprofile,
-
+  ShowEmployee,
   Office,
   ShowOffice,
   Order,
@@ -45,6 +45,7 @@ function App() {
           <Route path="/trackorder" element={<Trackorder />} />
           <Route path="/archive" element={<Archive />} />
           <Route path="/chats" element={<Chats />} />
+        <Route path="/showemployee" element={<ShowEmployee />} />
       </Routes>
     </BrowserRouter>
   );
