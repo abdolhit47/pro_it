@@ -36,7 +36,7 @@ function Chats() {
          const lastMessage = res.data[0].messages.slice(-1)[0]; // الحصول على آخر رسالة
          const lastMessageType = lastMessage.type;
          const isLastMessageFromOffice = lastMessageType === 'Office';
-         const isCurrentUserOffice = role in ['0', '1', '2'];
+         const isCurrentUserOffice = role in ['0', '1', '2','3'];
          console.log(isCurrentUserOffice)
 
          // تنفيذ الكود بناءً على الشروط
@@ -101,7 +101,7 @@ function Chats() {
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
                         <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 className="text-2xl text-gray-900 text-right">الاستفسارات</h1>
-                            {role === 4 &&
+                            {role === "4" &&
                                 <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleadd}>اضافة <AddIcon/></button>
                             }
                         </div>
@@ -116,9 +116,18 @@ function Chats() {
                                             <>
                                             <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={index}  onClick={() => handleChatClick(chat.id)}>
                                                 <p className="relative inline-flex p-1">{chat.user}
-                                                    {chat.messages.Status === 'Unread'? <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>:''}
+                                                    {role ==='4' && chat.messages.Status === 'Unread' &&  chat.messages.type === 'Office' ?
+                                                         <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>
+                                                            :(role in ['0', '1', '2','3'] && chat.messages.Status === 'Unread' &&  chat.messages.type === 'Mwaten' ?
+                                                            <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>
+                                                            :'')
+                                                    }
                                                 </p>
-                                                <p className={chat.messages.Status === 'Unread'?`text-gray-500 font-bold text-sm p-1 truncate `:`text-gray-500 font-thin text-sm p-1 truncate `}>{chat.messages.Message}</p>
+                                                <p className={role ==='4' && chat.messages.Status === 'Unread' &&  chat.messages.type === 'Office'?`text-gray-500 font-bold text-sm p-1 truncate `
+                                                    :(role in ['0', '1', '2','3'] && chat.messages.Status === 'Unread' &&  chat.messages.type === 'Mwaten' ?`text-gray-500 font-bold text-sm p-1 truncate `
+                                                        :`text-gray-500 font-thin text-sm p-1 truncate`)}>
+
+                                                    {chat.messages.Message}</p>
                                             </div>
                                             </>
                                         ))}

@@ -7,10 +7,5 @@ use Illuminate\Http\Request;
 
 class MwatenController extends Controller
 {
-    public function index()
-    {
-        
-        $mwaten = Mwaten::all();
-        return response()->json($mwaten);
-    }
+
 }

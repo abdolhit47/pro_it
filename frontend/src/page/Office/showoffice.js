@@ -59,7 +59,7 @@ function ShowOffice() {
                             </div>
                             <div className={"px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                                 <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <input type={'radio'} id={"test"} name={"city"}/>
+                                    {/*<input type={'radio'} id={"test"} name={"city"}/>*/}
                                     <label htmlFor={"test"} className={'mr-2'}>{office.address}</label>
                                 </span>
                             </div>
@@ -71,18 +71,18 @@ function ShowOffice() {
                                 <ol className="list-inside list-decimal mt-6  m-2">
                                     {office.services &&
                                         office.services.map((service) => (
-                                            <li className={"mr-5 inline-block  relative "}>
-                                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
+                                            <li className={"mr-5 inline-block  relative  h-fit"}>
+                                                <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5 inline">
                                                     <input type={'radio'} id={"service"} name={"service"} onClick={()=>handleset(service.id,service.name)}/>
-                                                    <label htmlFor={"service"} className={'mr-2'}>{service.name}</label>
-                                                </span>
+                                                    <label htmlFor={"service"} className={'mr-2 inline-block font-bold'}>{service.name}</label>
+                                                    <p className={"mr-5 text-sm"}>{service.description}</p></div>
+
                                             </li>
                                         ))
                                     }
                                 </ol>
-                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded" onClick={handleadd} >طلب الخدمة</button>
                             </div>
-
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded" onClick={handleadd} >طلب الخدمة</button>
                         </div>
                     </div>
                 </div>

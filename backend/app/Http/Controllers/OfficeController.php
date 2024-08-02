@@ -33,7 +33,7 @@ class OfficeController extends Controller
         try {
             if(Auth::check()){
                 $user = Auth::user();
-                if($user->role != 0){
+                if($user->role != 0 || $user->role != 1){
                     return response()->json(['success' => "doesn't have permission"],403);
                 }
             }
@@ -98,6 +98,7 @@ class OfficeController extends Controller
                     return (object) [
                         'id' => $service->id,
                         'name' => $service->name,
+                        'description' => $service->description
                     ];
                 })
             ];
@@ -112,10 +113,10 @@ class OfficeController extends Controller
     {
         try {
 //            if(Auth::check()){
-//                $user = Auth::user();
-//                if($user->role != 0){
-//                    return response()->json(['success' => "doesn't have permission"],403);
-//                }
+                $user = Auth::user();
+                if(!in_array($user->role, [0, 1, 2, 3, 4])){
+                    return response()->json(['success' => "doesn't have permission"],403);
+                }
 //            }
             $office = Office::all('id','name');
             return response()->json($office,200);

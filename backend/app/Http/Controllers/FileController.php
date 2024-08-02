@@ -21,12 +21,10 @@ class FileController extends Controller
     public function store(Request $request)
     {
         try{
-//            if(Auth::check()){
-//                $user = Auth::user();
-//                if($user->role != 0){
-//                    return response()->json(['success' => "doesn't have permission"],403);
-//                }
-//            }
+            $user = Auth::user();
+            if($user->role != 4){
+                return response()->json(['success' => "doesn't have permission"],403);
+            }
             $request->validate([
                 'files' => 'required|array|max:2048',
                 'files.*' => 'required|mimes:pdf,jpg,jpeg,png|max:2048'
@@ -72,10 +70,10 @@ class FileController extends Controller
         try {
             if(Auth::check()) {
                 $user = Auth::user();
-                if ($user->role != 0 && $user->role != 1 && $user->role != 2) {
+                if (!in_array($user->role, [0, 1, 2, 3])){
                     return response()->json(['success' => "doesn't have permission"], 403);
                 }
-                if (Auth::user()->role == 0) {
+                if (Auth::user()->role == 0 || Auth::user()->role == 1) {
                     $service = Service_Follow_Up::with('services', 'files', 'mwatens')->where('approve', 0)->get();
                     $service = $service->map(function ($service) {
                         return (object)[
@@ -88,7 +86,7 @@ class FileController extends Controller
                     });
                     return response()->json($service, 200);
                 }
-                if (Auth::user()->role == 1 || Auth::user()->role == 2) {
+                if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $service = Service_Follow_Up::where('approve', 1)->get();
                     return response()->json($service, 200);
                 }
@@ -149,6 +147,11 @@ class FileController extends Controller
 
     public function approve($id){
         try {
+            $user = Auth::user();
+            if(!in_array($user->role, [0, 1])){
+                return response()->json(['success' => "doesn't have permission"], 403);
+            }
+
             $service = Service_Follow_Up::find($id);
             if($service->approve == 1){
                 return response()->json(['message' => 'already approved'],200);
@@ -166,7 +169,10 @@ class FileController extends Controller
     }
     public function unapprove($id,Request $request){
         try {
-
+            $user = Auth::user();
+            if(!in_array($user->role, [0, 1])){
+                return response()->json(['success' => "doesn't have permission"], 403);
+            }
             $service = Service_Follow_Up::find($id);
             if($service->approve == 2 || $service->approve == 1){
                 return response()->json(['message' => 'already unapproved'],200);
@@ -185,7 +191,10 @@ class FileController extends Controller
 
     public function downloadFile($filename,$id)
     {
-        error_log($filename.$id);
+        $user = Auth::user();
+        if($user->role != 4){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
         $path = storage_path('app/' . $filename.'/'.$id);
 
         if (!file_exists($path)) {

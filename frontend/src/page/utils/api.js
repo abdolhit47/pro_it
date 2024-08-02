@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 export async function getCount(setCountMes) {
     try {
         const res = await axios.get(baseurl + 'countMes', {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         });
         if (res.status === 200) {
              setCountMes(res.data);

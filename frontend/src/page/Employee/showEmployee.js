@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import AddOffice from "../../component/addOffice";
 import {useNavigate} from "react-router-dom";
 import useFollowUp from "../../component/search";
-
+import AddIcon from "@mui/icons-material/Add";
 function ShowEmployee() {
     // const {
     //     Data,
@@ -42,8 +42,8 @@ function ShowEmployee() {
     //     applyFilters(filter, value);
     // };
     // const uniqueOffices = [...new Set(Data.map(item => item.address))];
-
-
+    const [show, setShow] = useState(false);
+    const handlshow = () => setShow(!show);
     return (
         <>
             <div className="flex h-screen ">
@@ -51,15 +51,22 @@ function ShowEmployee() {
                     <Navbar />
                     <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
                         <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto  ">
-                            <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
-                                <h1 className="text-2xl text-gray-900 text-right">عرض الموظفين</h1>
-                                {role === "0" &&<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                                        // onClick={handleadd}
-                                >
-                                    تعيين الموظف</button>}
+                            <div className="p-4 px-10 flex content-center justify-start  mt-2" dir="rtl">
+                                <h1 className="text-2xl text-gray-900 text-right ml-5">عرض الموظفين</h1>
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold rounded-xl py-1 px-1"
+                                     ><AddIcon onClick={handlshow}/></button>
                             </div>
-                            <div className="px-6 py-4 flex  " dir={'rtl'}>
-                                <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
+                            {role === "0" &&
+                                ( <div className={`${show ? "block" : "hidden"} flex justify-start h-10 mt-3 mr-5`}  dir="rtl">
+                                        <input type={"text"} className={"border-2 border-gray-300 p-2 rounded ml-5"} placeholder={"اسم الموظف"}/>
+                                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                            // onClick={handleadd}
+                                        >إضافة الموظف</button>
+                                </div>)
+                            }
+
+                            <div className="px-6 py-4 flex mt-5 " dir={'rtl'}>
+                               <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
                                 <input
                                     type="text"
                                     className="border-2 border-gray-300 p-2 rounded ml-3"
@@ -77,18 +84,19 @@ function ShowEmployee() {
                                     {/*    <option key={index} value={office}>{office}</option>*/}
                                     {/*))}*/}
                                 </select>
+
                             </div>
 
                             <div className="px-6 py-4 flex justify-center">
                                 <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-3xl" dir="rtl">
                                     <thead className="flex w-full ">
                                     <tr className="border-b text-center flex w-full px-2 mb-4">
-                                        <th className="p-3 w-1/8">#</th>
-                                        <th className="p-3 w-1/5">الاسم الموظف</th>
-                                        <th className="p-3 w-1/5">العنوان</th>
-                                        <th className="p-3 w-1/5">حالة الموظف</th>
-                                        <th className="p-3 w-1/5">العرض</th>
-                                        <th className="p-3 w-1/5">التعديل</th>
+                                        <th className="p-3 w-1/7">#</th>
+                                        <th className="p-3 w-1/4">الاسم الموظف</th>
+                                        <th className="p-3 w-1/4">الاسم مستخدم</th>
+                                        <th className="p-3 w-1/4">العنوان</th>
+                                        <th className="p-3 w-1/4">حالة الموظف</th>
+                                        <th className="p-3 w-1/4">التعديل</th>
                                     </tr>
                                     </thead>
                                     <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
@@ -96,11 +104,9 @@ function ShowEmployee() {
                                     {/*    <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>*/}
                                     {/*        <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>*/}
                                     {/*        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>*/}
+                                    {/*        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.username}</td>*/}
                                     {/*        <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>*/}
                                     {/*        <td className="p-3 w-1/5 flex items-center justify-center">{item.status}</td>*/}
-                                    {/*        <td className="p-3 w-1/5 flex items-center justify-center">*/}
-                                    {/*            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>العرض</button>*/}
-                                    {/*        </td>*/}
                                     {/*        <td className="p-3 w-1/5 flex items-center justify-center">*/}
                                     {/*            <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>*/}
                                     {/*        </td>*/}
