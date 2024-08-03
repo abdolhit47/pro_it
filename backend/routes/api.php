@@ -27,7 +27,9 @@ use Illuminate\Support\Facades\Route;
 
     Route::post("/login", [AccountController::class, "login"]);
     Route::get("/logout", [AccountController::class, "logout"])->middleware('auth:sanctum');
-
+    Route::get("/Showemployee", [AccountController::class, "user"])->middleware('auth:sanctum');
+    Route::post('/addEmployee', [AccountController::class, 'addEmployee'])->middleware('auth:sanctum');
+    Route::put('/update/{id}', [AccountController::class, 'updateStatus'])->middleware('auth:sanctum');
 
     Route::get("/showoffice", [OfficeController::class, "index"])->middleware('auth:sanctum');
     Route::get("/showoffice/{id}", [OfficeController::class, "show"])->middleware('auth:sanctum');

@@ -19,7 +19,7 @@ function Sideba() {
     const role = localStorage.getItem('role');
     const array = ["0", "4"] // for superadmin and mwaten
     const array2 = ["0", "1", "2", "3"] // for admin and manager
-    const array3 = ["0", "1"] //superadmin and admin
+    const array3 = ["0", "2"] //superadmin and admin
 
 
     const [activePath, setActivePath] = useState(window.location.pathname);

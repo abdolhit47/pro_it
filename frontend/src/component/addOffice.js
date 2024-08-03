@@ -123,13 +123,13 @@ export default function AddOffice({setOpenModal}) {
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label form="user_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم موظف الجهة</label>
+                                <label form="user_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم مستخدم</label>
                                 <input type="text" id="user_name" name="user_name" value={value.user_name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
-                                <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف</label>
+                                <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف الجهة</label>
                                 <textarea  id="description" name="description" value={value.description} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                             </div>

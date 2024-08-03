@@ -26,7 +26,7 @@ const useFollowUp = ($id) => {
 
     const applyFilters = (nameFilter, DataFilter) => {
         let filteredData = Data;
-        if($id==="Office"){
+        if($id==="Office" || $id==="Employee"){
             if (nameFilter) {
                 filteredData = filteredData.filter(item =>
                     item.name.includes(nameFilter)||

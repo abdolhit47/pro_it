@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
@@ -33,5 +37,78 @@ class AccountController extends Controller
         return response()->json(['message' => 'Logout successfully'], 200);
     }
 
+    public function user()
+    {
+        $user = Auth::user();
+        if(!in_array($user->role, [0, 2])){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
+        $users = Employee::with('users')->where('ID_office',$user->emplyee->ID_office)->where('id','!=',$user->emplyee->id)->get();
+        $users = $users->map(function ($users){
+            return(object) [
+                'id' => $users->id,
+            'name' => $users->first_name . " " . $users->last_name,
+                'address' => $users->address,
+             'user' => $users->users->name,
+                'status' => $users->users->status == 1 ? 'مفعل' : 'غير مفعل',
+            ];
+        });
+        return response()->json($users,200);
+    }
+
+//    public function store(Request $request){
+//        $user = Auth::user();
+//        if(!in_array($user->role, [0, 2])){
+//            return response()->json(['success' => "doesn't have permission"],403);
+//        }
+//        $request->validate([
+//            'name' => 'required',
+//            'email' => 'required',
+//            'password' => 'required',
+//            'role' => 'required',
+//            'ID_office' => 'required',
+//        ]);
+//        $user = new User();
+//        $user->name = $request->name;
+//        $user->email = $request->email;
+//        $user->password = bcrypt($request->password);
+//        $user->role = $request->role;
+//        $user->ID_office = $request->ID_office;
+//        $user->save();
+//        return response()->json(['message' => 'User created successfully'], 200);
+//    }
+
+    public function addEmployee(Request $request){
+        $user = Auth::user();
+        if(!in_array($user->role, [0, 2])){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+
+        $users = new User();
+        $users->name = $request->name;
+        $users->password = Hash::make("123456789");
+        $users->role = $user->role == 0 ? 1 : 3;
+
+        $users->save();
+        $employee = new Employee();
+        $employee->ID_office = $user->emplyee->ID_office;
+        $users->emplyee()->save($employee);
+        return response()->json(['message' => 'User created successfully'], 200);
+    }
+    public function updateStatus($id){
+        $user = Auth::user();
+        if(!in_array($user->role, [0, 2])){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
+        $user = User::find($id);
+
+        $user->status = $user->status==0 ? 1 : 0;
+        $user->save();
+        return response()->json(['message' => 'User updated successfully'], 200);
+    }
 
 }
