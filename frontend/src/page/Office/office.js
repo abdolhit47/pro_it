@@ -80,7 +80,7 @@ function Office() {
                                     <th className="p-3 w-1/8">#</th>
                                     <th className="p-3 w-1/5">الاسم الجهة</th>
                                     <th className="p-3 w-1/5">وصف</th>
-                                    <th className="p-3 w-1/5">المسؤول</th>
+                                    {role === "0" &&<th className="p-3 w-1/5">المسؤول</th>}
                                     <th className="p-3 w-1/5">العنوان</th>
                                     {role === "4" &&<th className={"p-3 w-1/5"}>العرض</th>}
                                     {role === "0" &&
@@ -94,7 +94,7 @@ function Office() {
                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
                                         <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>
                                         <td className="p-3 w-1/5 flex items-center justify-center truncate text-right">{item.description}</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.employee}</td>
+                                        {role === "0" &&<td className="p-3 w-1/5 flex items-center justify-center">{item.employee}</td>}
                                         <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>
                                         {role !== "0" &&<td className="p-3 w-1/5 flex items-center justify-center">
                                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>العرض</button>

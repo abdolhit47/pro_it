@@ -45,7 +45,7 @@ function ShowOffice() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-16">
                     <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4 h-auto">
                         <div class="p-4 px-5 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 class="text-3xl text-gray-900 text-right">{office.name}</h1>
@@ -64,18 +64,19 @@ function ShowOffice() {
                                 </span>
                             </div>
 
-                            <div className=" mt-10">
+                            <div className=" mt-5">
                                 <h1 className="text-xl text-gray-900 text-right">الخدمات</h1>
                             </div>
                             <div className={"overflow-y-auto h-auto max-h-96"}>
                                 <ol className="list-inside list-decimal mt-6  m-2">
                                     {office.services &&
                                         office.services.map((service) => (
-                                            <li className={"mr-5 inline-block  relative  h-fit"}>
-                                                <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5 inline">
+                                            <li className={"ml-6  relative h-auto w-1/6 md:w-1/4  flex-shrink-0 flex-col inline-flex"}>
+                                                <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-full">
                                                     <input type={'radio'} id={"service"} name={"service"} onClick={()=>handleset(service.id,service.name)}/>
-                                                    <label htmlFor={"service"} className={'mr-2 inline-block font-bold'}>{service.name}</label>
-                                                    <p className={"mr-5 text-sm"}>{service.description}</p></div>
+                                                    <label htmlFor={"service"} className={'mr-2 font-bold inline-flex'}>{service.name}</label>
+                                                    <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{service.description}</p>
+                                                </div>
 
                                             </li>
                                         ))
