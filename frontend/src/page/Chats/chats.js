@@ -67,6 +67,9 @@ function Chats() {
         }));
     };
     async function send_message(){
+        if(value.message===''){
+            return;
+        }
         const  formdata=new FormData();
         formdata.append('message',value.message);
         formdata.append('ID_Chat',selectedChatId);
@@ -77,19 +80,14 @@ function Chats() {
         await handleChatClick(selectedChatId)
     }
 
-
-    const refreshChats = async () => {
-        try {
-            await getChats();  // Refresh the chat list
-        } catch (error) {
-            console.error('Failed to refresh chats:', error);
-        }
-    };
     const [newMessage, setnewMessage] = useState(false);
     const handleadd = async () => {
         setnewMessage(true);
-        console.log(newMessage)
-        await refreshChats();  // Refresh the chat list when the modal opens
+    };
+
+    const handleCloseNewMessage = () => {
+        setnewMessage(false);
+        getChats();
     };
 
     return (
@@ -170,15 +168,15 @@ function Chats() {
                                    ( <div className="flex w-4/5 my-2 mx-1">
                                         <textarea id="message" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
                                               name={'message'} value={value.message} onChange={handleChange}   placeholder="Your message..."></textarea>
-                                        <button className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer hover:bg-green-200"
+                                        <button className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer"
                                             onClick={send_message} type="submit" >
                                             <SendIcon/>
                                         </button>
-                                        <button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce"
+                                        {role !== "4" &&<button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce"
                                         //onClick={}
                                         >
                                             <CheckCircleOutlineIcon/>
-                                        </button>
+                                        </button>}
                                     </div>):""
                                 }
                             </div>
@@ -186,7 +184,7 @@ function Chats() {
                     </div>
                 </div>
             </div>
-            { newMessage && <NewMessage setOpenModal={setnewMessage} />}
+            { newMessage && <NewMessage setOpenModal={handleCloseNewMessage} />}
         </div>
         </>
     )

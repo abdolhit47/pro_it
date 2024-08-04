@@ -13,7 +13,7 @@ function Office() {
         DataFilter,
         setDataFilter,
         applyFilters,
-        //getFollowUp
+        getFollowUp
     } = useFollowUp("Office");
     const role = localStorage.getItem('role');
     const [addOffice, setaddOffice] = useState(false);
@@ -23,6 +23,11 @@ function Office() {
     const handleadd = ()=>{
         setaddOffice(true);
     }
+    const handleCloseAddOffice = () => {
+        setaddOffice(false);
+        // Fetch data again after AddService closes for guaranteed update
+        getFollowUp();
+    };
     const handleshow = (index, event) => {
         event.preventDefault();
         if (index) {
@@ -67,7 +72,7 @@ function Office() {
                                 value={DataFilter}
                                 onChange={handleOfficeFilterChange}
                             >
-                                <option value="">جميع المدن</option>
+                                <option value="">كل البلديات</option>
                                 {uniqueOffices.map((office, index) => (
                                     <option key={index} value={office}>{office}</option>
                                 ))}
@@ -81,7 +86,7 @@ function Office() {
                                     <th className="p-3 w-1/5">الاسم الجهة</th>
                                     <th className="p-3 w-1/5">وصف</th>
                                     {role === "0" &&<th className="p-3 w-1/5">المسؤول</th>}
-                                    <th className="p-3 w-1/5">العنوان</th>
+                                    <th className="p-3 w-1/5">البلدية</th>
                                     {role === "4" &&<th className={"p-3 w-1/5"}>العرض</th>}
                                     {role === "0" &&
                                         <th className="p-3 w-1/5">التعديل</th>
@@ -112,7 +117,7 @@ function Office() {
                 </div>
             </div>
         </div>
-            {addOffice && <AddOffice setOpenModal={setaddOffice}/>}
+            {addOffice && <AddOffice onClose={handleCloseAddOffice}/>}
         </>
     )
 }

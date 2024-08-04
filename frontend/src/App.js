@@ -17,7 +17,7 @@ import{
   Order,
   ShowOrder,
   Trackorder,
-
+  City,
   Service,
   Archive,
   Chats
@@ -46,6 +46,7 @@ function App() {
           <Route path="/archive" element={<Archive />} />
           <Route path="/chats" element={<Chats />} />
         <Route path="/showemployee" element={<ShowEmployee />} />
+        <Route path="/city" element={<City />} />
       </Routes>
     </BrowserRouter>
   );

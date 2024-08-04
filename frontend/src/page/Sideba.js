@@ -109,8 +109,8 @@ function Sideba() {
                                       {/*</li>*/}
                                       {role === "0" &&
                                           <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
-                                              <Link to="" state={{from: "occupation"}} aria-expanded="false">
-                                                  <span className="ml-2 text-sm font-medium mr-4">المدن</span>
+                                              <Link to="/city" state={{from: "occupation"}} aria-expanded="false">
+                                                  <span className="ml-2 text-sm font-medium mr-4">البلدية</span>
                                                   <LocationCityIcon/>
                                               </Link>
                                           </li>

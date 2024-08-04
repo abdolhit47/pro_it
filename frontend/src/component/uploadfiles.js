@@ -22,6 +22,7 @@ export default function Uploadfiles({setOpenModal,id}) {
 
     };
 
+
     async function onSubmit ()  {
         const formData = new FormData();
         //formData.append('name_model',value.name_model);

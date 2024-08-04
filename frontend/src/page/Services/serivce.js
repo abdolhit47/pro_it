@@ -3,9 +3,18 @@ import React, {useState} from "react";
 import axios from "axios";
 import {baseurl} from "../../Baseurl/baseurl";
 import {toast} from "react-toastify";
-
+import AddService from "../../component/addservice";
 function Service() {
     const [service, setservice] = useState([]);
+    const [addService, setAddService] = useState(false);
+    const handleAdd = () => {
+        setAddService(true);
+    };
+    const handleCloseAddService = () => {
+        setAddService(false);
+        // Fetch data again after AddService closes for guaranteed update
+        getServices();
+    };
     async function getServices() {
         const res = await axios.get(baseurl + "showservice", {
             headers: {
@@ -18,23 +27,7 @@ function Service() {
     React.useEffect(() => {
         getServices();
     }, []);
-    const [value,setvalue] = useState({name: '',});
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setvalue((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
-    };
-    async function AddService  (){
-        const res = await axios.post(baseurl+"storeservice",value,{
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-        })
-        if(res.status===201){
-            toast.success('تم إضافة الخدمة بنجاح');
-            getServices();
-        }
-    }
+
     return (
         <>
         <div className="flex h-screen">
@@ -46,21 +39,28 @@ function Service() {
                             <h1 className="text-2xl text-gray-900 text-right">الخدمات</h1>
                         </div>
                         <div className=" px-3 mb-6 md:mb-0" dir="rtl">
-                            <input type="text" id="name_model" name="name" value={value.name} onChange={handleChange}
-                                   className=" border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={AddService}>اضافة الخدمة</button>
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={handleAdd}>اضافة الخدمة</button>
                         </div>
                         <div className={"px-6 py-4 mt-6 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
-                            {service.map((item,index)=>(
-                                    <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                        {item.name}
-                                    </span>
-                            ))}
+                            {service.map((item,index)=>(<>
+                                {/*    <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">*/}
+                                {/*        {item.name}*/}
+                                {/*    </span>*/}
+                                {/*<p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{item.description}</p>*/}
+                                <div className={"ml-6  relative h-auto w-1/6 md:w-1/4  flex-shrink-0 flex-col inline-flex"}>
+                                    <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-full">
+                                        <label htmlFor={"service"} className={'mr-2 font-bold inline-flex'}>{item.name}</label>
+                                        <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{item.description}</p>
+                                    </div>
+
+                                </div>
+                    </>))}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+            {addService && <AddService onClose={handleCloseAddService} />}
         </>
     )
 }

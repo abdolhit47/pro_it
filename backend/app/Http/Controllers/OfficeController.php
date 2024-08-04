@@ -31,12 +31,12 @@ class OfficeController extends Controller
 
     public function store(Request $request){
         try {
-            if(Auth::check()){
+//            if(Auth::check()){
                 $user = Auth::user();
-                if($user->role != 0 || $user->role != 1){
+                if(!in_array($user->role,[0,2])){
                     return response()->json(['success' => "doesn't have permission"],403);
                 }
-            }
+//            }
             $request->validate([
                 'name' => 'required|string',
                 'description' => 'required|string',

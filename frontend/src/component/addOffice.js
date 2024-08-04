@@ -4,7 +4,7 @@ import React, { useEffect, useState,useRef} from "react";
 import { ToastContainer, toast } from 'react-toastify'
 import Select from "react-select";
 
-export default function AddOffice({setOpenModal}) {
+export default function AddOffice({onClose}) {
     const[value,setValues] = useState({
         name:'',
         description:'',
@@ -21,7 +21,7 @@ export default function AddOffice({setOpenModal}) {
         }));
     };
     const closeModalTp = () => {
-        setOpenModal(false);
+        onClose(false);
 
     };
 
@@ -72,7 +72,7 @@ export default function AddOffice({setOpenModal}) {
             }else{
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }
-        }setOpenModal(false);
+        }onClose(false);
     }
     return (
     <div id="modelConfirm" className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">

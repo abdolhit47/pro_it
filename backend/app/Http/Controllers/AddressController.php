@@ -20,14 +20,21 @@ class AddressController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
-        if ($user->role != 0 && $user->role != 1) {
-            return response()->json(['success' => "doesn't have permission"], 403);
+        try{
+            $user = Auth::user();
+            if ($user->role != 0) {
+                return response()->json(['success' => "doesn't have permission"], 403);
+            }
+            $request->validate([
+                'name' => 'required',
+            ]);
+            $address = new Address();
+            $address->name = $request->name;
+            $address->save();
+            return response()->json(['success' => true],201);
+        }catch (\Exception $e) {
+            return response()->json(['worning' => $e->getMessage()], 500);
         }
-        $request->validate([
-            'name' => 'required',
-        ]);
-        $address = Address::create($request->name);
-        return response()->json(['success' => true],201);
+
     }
 }

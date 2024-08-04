@@ -10,7 +10,7 @@ class Service extends Model
     use HasFactory;
     protected $table = "service";
     protected $primaryKey = "id";
-    protected $fillable = ["name","ID_office"];
+    protected $fillable = ["name","description","ID_office"];
     public $timestamps = true;
 
     public function offices(){
@@ -20,6 +20,11 @@ class Service extends Model
     public function Service_Follow_Up()
     {
         return $this->hasMany( Service_Follow_Up::class, "service_id", 'id' );
+    }
+
+    public function req_documents()
+    {
+        return $this->hasOne( Req_Document::class, "service_id", 'id' );
     }
 
 }

@@ -13,6 +13,7 @@ export {default as Trackorder} from './Order/trackorder';
 export {default as Archive} from './Archive';
 export {default as Chats} from './Chats/chats';
 export {default as ShowEmployee} from './Employee/showEmployee';
+export {default as City} from './City/showCity';
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";
 export { default as TEST } from "./test";
