@@ -86,8 +86,6 @@ class AccountController extends Controller
         $request->validate([
             'name' => 'required',
         ]);
-
-
         $users = new User();
         $users->name = $request->name;
         $users->password = Hash::make("123456789");

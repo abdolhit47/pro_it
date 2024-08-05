@@ -19,8 +19,13 @@ export default function Unapproved({setOpenModal,id}) {
     const closeModalTp = () => {
         setOpenModal(false);
     };
-    console.log(value)
+    const [errors,setErrors] = useState(false)
     async function onSubmit ()  {
+        if(value.note===''){
+            toast.error('يجب عليك كتابة السبب');
+            setErrors(true)
+            return
+        }
         const formData = new FormData();
         formData.append('note', value.note);
         try{
@@ -63,7 +68,7 @@ export default function Unapproved({setOpenModal,id}) {
                                 <label form="note" className="block mb-2 text-gray-700 font-medium  text-right">سبب الرفض :</label>
                                 <textarea  id="note" name="note" value={value.note} onChange={handleChange}
                                            className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {errors&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
 

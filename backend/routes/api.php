@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Route;
     Route::put('endchat/{id}', [ChatController::class, 'end_chat'])->middleware('auth:sanctum');
     Route::get('/countMes', [ChatController::class, 'countMes'])->middleware('auth:sanctum');
     Route::put('/update_status2/{id}', [ChatController::class, 'update_status2'])->middleware('auth:sanctum');
-
+    Route::put('/end_chat/{id}', [ChatController::class, 'end_chat'])->middleware('auth:sanctum');
 
     Route::get('/getaddresses', [AddressController::class, "index"])->middleware('auth:sanctum');
     Route::post('/storeaddress', [AddressController::class, "store"])->middleware('auth:sanctum');

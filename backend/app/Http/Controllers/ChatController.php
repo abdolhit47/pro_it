@@ -29,7 +29,7 @@ class ChatController extends Controller
             }
             if ($user->role == 4) {
                 $chats = Chat::with('messages','offices')->where('mwaten_id', $user->mwaten->id)
-                    ->where('Status', 'Active')->get();
+                    ->get();
                 $chat = $chats->map(function ($chat) {
                     return [
                         'id' => $chat->id,
@@ -70,16 +70,7 @@ class ChatController extends Controller
         }
     }
 
-    public function update_status($id){
-        $user = Auth::user();
-        if($user->role != 0 || $user->role != 1|| $user->role != 2|| $user->role != 4){
-            return response()->json(['success' => "doesn't have permission"],403);
-        }
-        $chat = Chat::find($id);
-        $chat->Status = 'Inactive';
-        $chat->save();
-        return response()->json(['success' => true]);
-    }
+
 
     public function update_status2($id){
         try {

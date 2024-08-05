@@ -20,13 +20,13 @@ function Chats() {
     }
 
     const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
-
+const [indexchat, setIndexchat] = useState(null);
     const [messages, setMessage] = useState('');
     const [title, setTitle] = useState('');
     const [updateCount, setUpdateCount] = useState(false);
-     const  handleChatClick = async(chatId) => {
+     const  handleChatClick = async(chatId,index) => {
         setSelectedChatId(chatId); // Update selected chat ID on click
-
+         setIndexchat(index)
         const res = await axios.get(baseurl + 'getmessages/' + chatId , {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         });
@@ -37,7 +37,7 @@ function Chats() {
          const lastMessageType = lastMessage.type;
          const isLastMessageFromOffice = lastMessageType === 'Office';
          const isCurrentUserOffice = role in ['0', '1', '2','3'];
-         console.log(isCurrentUserOffice)
+         //console.log(isCurrentUserOffice)
 
          // تنفيذ الكود بناءً على الشروط
          if ((isLastMessageFromOffice && !isCurrentUserOffice) ||
@@ -90,6 +90,13 @@ function Chats() {
         getChats();
     };
 
+    const handlestop = async () => {
+        await axios.put(baseurl + 'end_chat/' + selectedChatId, {}, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        getChats();
+    }
+
     return (
         <>
         <div className="flex h-screen">
@@ -112,7 +119,7 @@ function Chats() {
                                     <div className={' flex flex-col md:w-11/12 h-fit pr-2 pt-2 items-start scroll-p-15'} >
                                         {chats.map((chat, index) => (
                                             <>
-                                            <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={index}  onClick={() => handleChatClick(chat.id)}>
+                                            <div className=" w-full rounded-xl border-2 my-2 hover:bg-gray-300" key={index}  onClick={() => handleChatClick(chat.id,index)}>
                                                 <p className="relative inline-flex p-1">{chat.user}
                                                     {role ==='4' && chat.messages.Status === 'Unread' &&  chat.messages.type === 'Office' ?
                                                          <span className="animate-ping absolute inline-flex h-2 w-2 bg-red-500 rounded-full top-0 right-0"></span>
@@ -164,20 +171,20 @@ function Chats() {
                                 </div>
                             </div>
                             <div className="flex col-span-3 items-center justify-center h-12">
-                                {messages.length>0?
-                                   ( <div className="flex w-4/5 my-2 mx-1">
-                                        <textarea id="message" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                                              name={'message'} value={value.message} onChange={handleChange}   placeholder="Your message..."></textarea>
-                                        <button className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer"
-                                            onClick={send_message} type="submit" >
-                                            <SendIcon/>
-                                        </button>
-                                        {role !== "4" &&<button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce"
-                                        //onClick={}
-                                        >
-                                            <CheckCircleOutlineIcon/>
-                                        </button>}
-                                    </div>):""
+                                {chats[indexchat]  ? (chats[indexchat]?.Status !== 'Active' ? <p className="font-bold text-sm p-1 truncate">الرسالة مغلقة</p>
+                                    : (messages.length > 0 ? (
+                                        <div className="flex w-4/5 my-2 mx-1">
+                                            <textarea id="message" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                                        name="message" value={value.message} onChange={handleChange} placeholder="Your message..." />
+                                            <button className="flex justify-center items-center aspect-square h-9 hover:animate-pulse p-2 rounded-full cursor-pointer"
+                                                onClick={send_message} type="submit" >  <SendIcon /> </button>
+                                            {role !== "4" &&
+                                                <button type="submit" className="flex justify-center items-center aspect-square h-9 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:animate-bounce"
+                                                        onClick={() => handlestop()} > <CheckCircleOutlineIcon /> </button>
+                                            }
+                                        </div>
+                                    ): "")
+                                    ): ""
                                 }
                             </div>
                         </div>
