@@ -61,7 +61,7 @@ function Order() {
                                 {
                                     serviceFollowUp.length === 0 ? (
                                         <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-5/6 text-3xl">
                                                 لا يوجد طلبات
                                             </span>
                                         </div>

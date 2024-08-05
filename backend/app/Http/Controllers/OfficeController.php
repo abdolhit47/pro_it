@@ -125,28 +125,5 @@ class OfficeController extends Controller
             return response()->json(['success' => $e->getMessage()],400);
         }
     }
-    public function getservicesfollow(){
-        $services = Service_Follow_Up::with("mwatens","services")->get();
-        if ($services->count() == 0) {
-            return response()->json(['success' => "no data"], 404);
-        }
-        $service = $services->map(function ($service) {
-            return [
-                'id' => $service->id,
-                'name_services' => $service->services->name,
-                'name_mwaten' => $service->mwatens->first_name." ".$service->mwatens->last_name,
-                'name_office' => $service->services->office->name,
-                'name_file' => $service->files->name,
-                'status' => $service->status,
 
-            ];
-        });
-//        $service = $services->map(function ($service) {
-//            return [
-//                'id' => $service->id,
-//                'name' => $service->name,
-//            ];
-//        });
-        return response()->json($service);
-    }
 }

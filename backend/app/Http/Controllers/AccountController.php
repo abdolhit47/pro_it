@@ -109,4 +109,14 @@ class AccountController extends Controller
         return response()->json(['message' => 'User updated successfully'], 200);
     }
 
+    public function show_profile(){
+        $user = Auth::user();
+        if(!in_array($user->role, [0, 1, 2, 3, 4])){
+            return response()->json(['success' => "doesn't have permission"],403);
+        }
+        
+
+        return response()->json($user,200);
+    }
+
 }

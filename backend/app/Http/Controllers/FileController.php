@@ -22,6 +22,7 @@ class FileController extends Controller
     {
         try{
             $user = Auth::user();
+
             if($user->role != 4){
                 return response()->json(['success' => "doesn't have permission"],403);
             }
@@ -189,6 +190,44 @@ class FileController extends Controller
         }
     }
 
+    public function getservicesfollow($id){
+        $services = Service_Follow_Up::with("mwatens","services","files")->where('id',$id)->first();
+        if ($services->count() == 0) {
+            return response()->json(['success' => "no data"], 404);
+        }
+
+        $services = (object)[
+            'id' => $services->id,
+            'name_mwaten' => $services->mwatens->first_name." ".$services->mwatens->last_name,
+            'name_service' => $services->services->name,
+            'name_office' => $services->services->offices->name,
+            'city' => $services->services->offices->addresses->name,
+            'date' => $services->created_at->format('Y-m-d'),
+            'name_file' => $services->files->path_file,
+            'status' => $services->status == 1 ? 'قيد المراجعة' : ($services->status == 2 ? 'تحت العمل' : ($services->status == 3 ? 'مكتمل' : 'مرفوض')),
+
+        ];
+
+
+//        $service = $services->map(function ($service) {
+//             return (object)[
+//                'id' => $service->id,
+//                'name_services' => $service->services->name,
+//                'name_mwaten' => $service->mwatens->first_name." ".$service->mwatens->last_name,
+//                'name_office' => $service->services->offices->name,
+//                'name_file' => $service->files->path_file,
+//                'status' => $service->status,
+//
+//            ];
+//        });
+//        $service = $services->map(function ($service) {
+//            return [
+//                'id' => $service->id,
+//                'name' => $service->name,
+//            ];
+//        });
+        return response()->json($services);
+    }
     public function downloadFile($filename,$id)
     {
         $user = Auth::user();
@@ -203,5 +242,6 @@ class FileController extends Controller
 
         return Response::download($path);
     }
+
 
 }

@@ -54,8 +54,14 @@ export default function AddMeassage({setOpenModal}) {
         value: item.id,
         label: item.name,
     }));
-    
+    console.log(value)
+    const [errors, setErrors] = useState(false);
     async function onSubmit ()  {
+        if (value.office === '' || value.title === '' || value.message === '') {
+            toast.error('يجب عليك تعبئة جميع الحقول');
+            setErrors(true)
+            return;
+        }
         try{
             const res =  await axios.post(baseurl + 'storechat', value,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -111,23 +117,21 @@ export default function AddMeassage({setOpenModal}) {
                                     }}
                                     options={optionsoffice}
                                 />
-                                {/*<input type="text" id="office"  name="office" value={value.office} onChange={handleChange}*/}
-                                {/*       className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                                {/*{errors.name&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {errors&& value.office === null&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse mx-3 mb-4">
                             <div className="basis-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="title" className="block mb-2 text-gray-700 font-medium  text-right">العنوان الموضوع</label>
                                 <input type="text" id="title" name="title" value={value.title} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {errors&& value.title === ''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse mx-3 mb-4">
                             <div className="basis-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
                                 <label htmlFor="message" className="block mb-2 text-gray-700 font-medium  text-right">الرسالة</label>
                                 <textarea  id="message"  name="message" value={value.message} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {errors&& value.message === ''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">

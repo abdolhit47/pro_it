@@ -1,7 +1,68 @@
 import Navbar from "../Navbar";
-import React, {useState} from "react";
-import AddOffice from "../../component/addOffice";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {baseurl} from "../../Baseurl/baseurl";
+import axios from "axios";
+import Showfile from "../../component/showfiles";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelIcon from "@mui/icons-material/Cancel";
+import {red} from "@mui/material/colors";
+import {ToastContainer,toast} from "react-toastify";
+import Unapprove from "../../component/unapproved";
+
 function ShowOrder() {
+    const { id } = useParams();
+    const [Order, setOrder] = useState([]);
+    const role = localStorage.getItem('role');
+    async function getOffice() {
+        const res =  await axios.get(baseurl + 'getservicesfollow/' + id, {
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        });
+        setOrder(res.data)
+    }
+    useEffect(() => {
+        getOffice();
+    }, []);
+
+    const [OpenModal, setOpenModal] = useState(false);
+    const handleShow = ()=>{
+        setOpenModal(true);
+    }
+    async function approve ($id){
+        await axios.put(baseurl+'approve/'+$id,{}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        }).then((response) => {
+            if(response.data.message === "approved"){
+                toast.success("تم الموافقة بنجاح");
+                setTimeout(() => {
+                    navigate('/Order');
+                }, 1000);
+            }else if(response.data.message === 'already approved'){
+                toast.success("تم الموافقة مسبقا");
+                setTimeout(() => {
+                    navigate('/Order');
+                }, 1000);
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+
+    }
+
+    const [unapprove, setunapprove] = useState(false);
+    const [value, setvalue] = useState(0);
+    const handleUnapprove = ($id,event)=>{
+        event.preventDefault();
+        setvalue($id)
+        setunapprove(true)
+    }
+    const navigate = useNavigate();
+    const handleshow = () => {
+            navigate(`/Order`);
+
+    };
 
     return (
         <>
@@ -9,34 +70,41 @@ function ShowOrder() {
             <div className="flex-grow bg-gray-100">
                 <Navbar />
                 <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
-                    <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4 h-auto">
-                        <div class="p-4 px-5 flex content-center justify-between  mt-2" dir="rtl">
-                            <h1 class="text-3xl text-gray-900 text-right">اسم مواطن</h1>
+                    <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4 h-auto">
+                        <div className="p-4 px-5 flex content-center justify-between  mt-2" dir="rtl">
+                            <h1 className="text-3xl text-gray-900 text-right">{Order.name_mwaten}</h1>
                         </div>
-                        <div class="px-6 py-4" dir={'rtl'}>
+                        <div className="px-6 py-4" dir={'rtl'}>
                             <p className={"mr-4"}>وصف/معلومات:</p>
-                            <p className={"mr-4 mt-6"}>اتقدم أنا المواطن/ة ...........بالطلب خدمة ...... التي تتبع الجهة .... الواقع في المنطقة ....</p>
-                            <div className={"my-16 px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
+                            <p className={"mr-4 mt-6"}>اتقدم أنا المواطن/ة  <span className={"mx-2 font-bold"}>{Order.name_mwaten}</span>
+                                بالطلب خدمة <span className={"mx-2 font-bold"}>{Order.name_service}</span>
+                                التي تتبع الجهة <span className={"mx-2 font-bold"}>{Order.name_office}</span>
+                                الواقع في المنطقة <span className={"mx-2 font-bold"}>{Order.city}</span>
+                            </p>
+                            <div className={"my-16 px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 w-2/6 "} dir={'rtl'}>
                                 <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <label className={'mr-2'}>الملف</label>
+                                    <label className={'mr-2'}>عرض الملف</label>
+                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"  onClick={handleShow}>عرض</button>
                                 </span>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <label className={'mr-2'}>الملف</label>
-                                </span>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
-                                    <label className={'mr-2'}>الملف</label>
-                                </span>
+
                             </div>
-                            <p className={"my-10 mr-4"}>وعليه تم قبول طلبه من قبل الوزارة والرجاء من الجهة المعنية تنفيد الطلب. </p>
+                            {/*<p className={"my-10 mr-4"}>وعليه تم قبول طلبه من قبل الوزارة والرجاء من الجهة المعنية تنفيد الطلب. </p>*/}
                             <div className="flex flex-row justify-center items-center mt-4 ">
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"  >إصدار الوثيقة</button>
-                            <button className="mr-44 py-2 px-4 font-bold border-solid border-2 border-amber-700 hover:bg-amber-700 hover:text-white rounded-md ">رجوع</button>
+                                {role.includes("0") &&<div className="p-3 w-1/5 flex items-center justify-between">
+                                    <button onClick={()=>approve(id)}><CheckCircleOutlineIcon color="success" fontSize="large"/>القبول</button>
+                                    <button onClick={(event)=>handleUnapprove(id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/>الرفض</button>
+                                </div>}
+                                {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"  >إصدار الوثيقة</button>*/}
+                                <button className="mr-44 py-2 px-4 font-bold border-solid border-2 border-amber-700 hover:bg-amber-700 hover:text-white rounded-md " onClick={handleshow} >رجوع</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {/*<ToastContainer  position="top-left" />*/}
         </div>
+            {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file}/>}
+            {unapprove && <Unapprove setOpenModal={setunapprove} id={value} />}
         </>
     )
 }

@@ -5,35 +5,23 @@ import { ToastContainer, toast } from 'react-toastify'
 
 export default function Uploadfiles({setOpenModal,id}) {
 
-    console.log(id)
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        // setValues((prevValues) => ({
-        //     ...prevValues,
-        //     [name]: value,
-        // }));
-    };
     const [selectedFiles, setSelectedFiles] = useState([]);
     const handleFileChange = (event)=> {
         setSelectedFiles(event.target.files);
     };
     const closeModalTp = () => {
         setOpenModal(false);
-
     };
-
-
     async function onSubmit ()  {
+        if(selectedFiles.length===0){
+            toast.error('يجب عليك تحميل وثيقة/وثائق');
+            return
+        }
         const formData = new FormData();
-        //formData.append('name_model',value.name_model);
-        //formData.append('release_date',value.release_date);
-        //formData.append('documentation',value.documentation);
         formData.append('id_service',id.id_service);
         for (let i = 0; i < selectedFiles.length; i++) {
             formData.append('files[]', selectedFiles[i]);
         }
-
-        console.log(formData)
         try{
             const res =  await axios.post(baseurl + 'storefollowup', formData,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -44,8 +32,8 @@ export default function Uploadfiles({setOpenModal,id}) {
                 setOpenModal(false);
             }
         }catch (error){
-            if(error?.response?.status === 422){
-                toast.error('----------');
+            if(error?.response?.status === 403){
+                toast.error('يجب تحميل صيغة pdf او الصورة');
             }else{
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }
@@ -59,51 +47,28 @@ export default function Uploadfiles({setOpenModal,id}) {
                     className="top-right text-red-400 bg-transparent hover:bg-gray-200 hover:text-red-700 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"></path>
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
                     </svg>
                 </button>
             </div>
             <div className="pt-0 text-center">
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
-                    {/*<form onSubmit={handleSubmit(onSubmit)} className="uploader"*/}
-                    {/*      encType="multipart/form-data"*/}
-                    {/*>*/}
                     <h1 className="text-2xl text-gray-900 text-right">{id.name} - {id.address}</h1>
                     <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>الخدمة: {id.service}</h1>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
-                            {/*<div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">*/}
-                            {/*    <label for="name_model" className="block mb-2 text-gray-700 font-medium  text-right">اسم النموذج</label>*/}
-                            {/*    <input type="text" id="name_model"  name="name_model"  onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                            {/*    /!*{errors.name_model&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*!/*/}
-                            {/*</div>*/}
-
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
                                 <label for="files" className="block mb-2 text-gray-700 font-medium  text-right">رفع الوثائق:</label>
-                                {/*<input type="file"  id="file" multiple name={'file'} onChange={handleFileChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
-                                <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} />
+                                <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
 
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
-                            {/*<div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">*/}
-                            {/*    <label for="release_date" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الاصدار</label>*/}
-                            {/*    <input type="date" id="release_date"  name="release_date"  onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                            {/*    /!*{errors.release_date&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*!/*/}
-                            {/*</div>*/}
-
-                            {/*<div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">*/}
-                            {/*    <label for="documentation" className="block mb-2 text-gray-700 font-medium  text-right">التوثيق(رابط)</label>*/}
-                            {/*    <input type="text" id="documentation"  name="documentation"  onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                            {/*    /!*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*!/*/}
-                            {/*</div>*/}
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
                             <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]">إضافة</button>
                             <button onClick={closeModalTp} className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 ">رجوع</button>
                         </div>
-                    {/*</form>*/}
                 </div>
             </div>
         </div>

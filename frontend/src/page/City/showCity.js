@@ -26,7 +26,14 @@ function City() {
             [name]: value,
         }));
     };
+    const [error, setErrors] = useState(false);
+
     async function Addcity  (){
+        if (!value.name) {
+            setErrors(true);
+            toast.error('يجب عليك تعبئة جميع الحقول');
+            return;
+        }
         const res = await axios.post(baseurl+"storeaddress",value,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
@@ -50,6 +57,7 @@ function City() {
                                 <input type="text" id="name_model" name="name" value={value.name} onChange={handleChange}
                                        className=" border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={Addcity}>اضافة البلدية</button>
+                            {error&& value.name===''&&<p className="block text-red-500 text-xs mr-4 mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                             <div className={"px-6 py-4 mt-6 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                                 {city.map((item,index)=>(
@@ -58,6 +66,7 @@ function City() {
                                     </span>
                                 ))}
                             </div>
+
                         </div>
                     </div>
                 </div>

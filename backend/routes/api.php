@@ -24,23 +24,33 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-
+    /***Account****/
     Route::post("/login", [AccountController::class, "login"]);
     Route::get("/logout", [AccountController::class, "logout"])->middleware('auth:sanctum');
     Route::get("/Showemployee", [AccountController::class, "user"])->middleware('auth:sanctum');
     Route::post('/addEmployee', [AccountController::class, 'addEmployee'])->middleware('auth:sanctum');
     Route::put('/update/{id}', [AccountController::class, 'updateStatus'])->middleware('auth:sanctum');
+    Route::get('/show_profile', [AccountController::class, 'show_profile'])->middleware('auth:sanctum');
+    /****End Account****/
 
+
+    /****Office****/
     Route::get("/showoffice", [OfficeController::class, "index"])->middleware('auth:sanctum');
     Route::get("/showoffice/{id}", [OfficeController::class, "show"])->middleware('auth:sanctum');
     Route::post("/storeoffice", [OfficeController::class, "store"])->middleware('auth:sanctum');
     Route::get('/show_mes', [OfficeController::class, 'show_mes'])->middleware('auth:sanctum');
     #Route::put("/updateoffice/{id}", [OfficeController::class, "update"])->middleware('auth:sanctum');
+    /****End Office****/
 
+
+    /****Service****/
     Route::get("/showservice", [ServiceController::class, "index"])->middleware('auth:sanctum');
     #Route::get("/showservice/{id}", [ServiceController::class, "show"])->middleware('auth:sanctum');
     Route::post("/storeservice", [ServiceController::class, "store"])->middleware('auth:sanctum');
+    /****End Service****/
 
+
+    /****Message Chat****/
     Route::get("/showchat", [ChatController::class, "index"])->middleware('auth:sanctum');
     Route::post("/storechat", [ChatController::class, "new_chat"])->middleware('auth:sanctum');
     Route::post("/sendmessage", [ChatController::class, "sendmessage"])->middleware('auth:sanctum');
@@ -49,16 +59,20 @@ use Illuminate\Support\Facades\Route;
     Route::get('/countMes', [ChatController::class, 'countMes'])->middleware('auth:sanctum');
     Route::put('/update_status2/{id}', [ChatController::class, 'update_status2'])->middleware('auth:sanctum');
     Route::put('/end_chat/{id}', [ChatController::class, 'end_chat'])->middleware('auth:sanctum');
+    /****End Message Chat****/
 
+
+    /****City****/
     Route::get('/getaddresses', [AddressController::class, "index"])->middleware('auth:sanctum');
     Route::post('/storeaddress', [AddressController::class, "store"])->middleware('auth:sanctum');
+    /****End City****/
 
-    Route::get("/getservicesfollow", [OfficeController::class, "getservicesfollow"]);
 
-    Route::post('/storefollowup', [FileController::class, 'store']);
+
+    Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');
     Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');
     Route::get('/gettrackorder', [FileController::class, 'showe_trackorder'])->middleware('auth:sanctum');
     Route::put('/approve/{id}', [FileController::class, 'approve'])->middleware('auth:sanctum');
     Route::post('/unapprove/{id}', [FileController::class, 'unapprove'])->middleware('auth:sanctum');
-
-Route::get('/download/{filename}/{id}', [FileController::class, 'downloadFile']);
+    Route::get("/getservicesfollow/{id}", [FileController::class, "getservicesfollow"])->middleware('auth:sanctum');
+    Route::get('/download/{filename}/{id}', [FileController::class, 'downloadFile']);

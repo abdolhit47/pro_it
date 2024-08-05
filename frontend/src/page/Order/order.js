@@ -1,14 +1,10 @@
 import Navbar from "../Navbar";
 import { useNavigate} from "react-router-dom";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { red } from '@mui/material/colors';
-import {  toast } from 'react-toastify'
+
+import { ToastContainer, toast } from 'react-toastify'
 import React, {useState} from "react";
 import {baseurl} from "../../Baseurl/baseurl";
 import axios from "axios";
-import Unapprove from "../../component/unapproved";
-//import Select from "react-select";
 import useFollowUp from "../../component/search";
 
 function Order() {
@@ -34,7 +30,7 @@ function Order() {
     };
 
      async function approve ($id){
-        console.log($id)
+        //console.log($id)
         await axios.put(baseurl+'approve/'+$id,{}, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -51,15 +47,6 @@ function Order() {
             console.log(error);
         })
     }
-
-    const [unapprove, setunapprove] = useState(false);
-     const [value, setvalue] = useState(0);
-    const handleUnapprove = ($id,event)=>{
-        event.preventDefault();
-        setvalue($id)
-        setunapprove(true)
-    }
-
     const handleFilterChange = (e) => {
         const value = e.target.value;
         setFilter(value);
@@ -116,9 +103,9 @@ function Order() {
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
                                     <th className="p-3 items-center w-1/5">التاريخ طلب</th>
                                     <th className="p-3 items-center w-1/5">العرض</th>
-                                    {role.includes("0") &&
-                                        <th className="p-3 items-center w-1/5">قبول/الرفض</th>
-                                    }
+                                    {/*{role.includes("0") &&*/}
+                                    {/*    <th className="p-3 items-center w-1/5">قبول/الرفض</th>*/}
+                                    {/*}*/}
                                     {role.includes("2")  &&
                                         <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
                                     }
@@ -137,10 +124,10 @@ function Order() {
                                                 <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
                                                         onClick={(event)=>handleshow(item.id,event)}>العرض</button>
                                             </td>
-                                            {role.includes("0") &&<td className="p-3 w-1/5 flex items-center justify-between">
-                                                <button onClick={()=>approve(item.id)}><CheckCircleOutlineIcon color="success" fontSize="large"/></button>
-                                                <button onClick={(event)=>handleUnapprove(item.id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>
-                                            </td>}
+                                            {/*{role.includes("0") &&<td className="p-3 w-1/5 flex items-center justify-between">*/}
+                                            {/*    <button onClick={()=>approve(item.id)}><CheckCircleOutlineIcon color="success" fontSize="large"/></button>*/}
+                                            {/*    <button onClick={(event)=>handleUnapprove(item.id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>*/}
+                                            {/*</td>}*/}
                                             {role.includes("2") &&
                                                 <td className="p-3 w-1/5 flex items-center justify-center">
                                                     <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
@@ -157,8 +144,8 @@ function Order() {
                     </div>
                 </div>
             </div>
+            <ToastContainer  position="top-left"/>
         </div>
-            {unapprove && <Unapprove setOpenModal={setunapprove} id={value} />}
         </>
     )
 }

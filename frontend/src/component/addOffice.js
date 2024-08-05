@@ -58,7 +58,13 @@ export default function AddOffice({onClose}) {
         value: item.id,
         label: item.name,
     }));
+    const [error, setErrors] = useState(false);
     async function onSubmit ()  {
+        if(!value.name || !value.description || !value.address || !value.user_name){
+            setErrors(true);
+            toast.error('يجب عليك تعبئة جميع الحقول');
+            return;
+        }
         try{
             const res =  await axios.post(baseurl + 'storeoffice', value,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -95,13 +101,12 @@ export default function AddOffice({onClose}) {
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الجهة</label>
                                 <input type="text" id="name" name="name" value={value.name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.name_model&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {error&& value.name===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="version" className="block mb-2 text-gray-700 font-medium  text-right">العنوان</label>
                                 {/*<input type="text" id="version" name="version" value={value.version} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
                                 <Select
                                     ref={selectInputCityRef}
                                     isSearchable
@@ -119,19 +124,20 @@ export default function AddOffice({onClose}) {
                                     }}
                                     options={optionscity}
                                 />
+                                {error&& value.address ===null&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="user_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم مستخدم</label>
                                 <input type="text" id="user_name" name="user_name" value={value.user_name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.version&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {error&& value.user_name===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
 
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف الجهة</label>
                                 <textarea  id="description" name="description" value={value.description} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {error&& value.description===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">

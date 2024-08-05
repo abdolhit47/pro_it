@@ -4,6 +4,7 @@ import {useParams} from "react-router-dom";
 import { baseurl } from '../../Baseurl/baseurl';
 import axios from 'axios';
 import Uploadfiles from "../../component/uploadfiles";
+import {toast} from "react-toastify";
 function ShowOffice() {
 
     const { id } = useParams();
@@ -23,6 +24,10 @@ function ShowOffice() {
 
     const [uploadfiles, setUploadfiles] = useState(false);
     const handleadd = ()=>{
+        if(value.id_service===''){
+            toast.error('يجب عليك تحديد خدمة')
+            return
+        }
         setUploadfiles(true)
     }
 
