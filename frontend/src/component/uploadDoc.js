@@ -56,11 +56,10 @@ export default function UploadDoc({onClose,id}) {
             </div>
             <div className="pt-0 text-center">
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
-                    <h1 className="text-2xl text-gray-900 text-right">{id.name} - {id.address}</h1>
-                    <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>الخدمة: {id.service}</h1>
+                    <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>TEST</h1>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
-                                <label form="files" className="block mb-2 text-gray-700 font-medium  text-right">رفع الوثائق:</label>
+                                <label form="files" className="block mb-2 text-gray-700 font-medium  text-right">رفع وثيقة/الوثائق:</label>
                                 <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
 
                             </div>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id');
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string("first_name");
-            $table->string("miden_name");
+            $table->string("middle_name");
             $table->string("last_name");
             $table->integer("phone");
             $table->integer("gender")->comment('ذكر= 1, أنثى=2 ');/*الجنس*/

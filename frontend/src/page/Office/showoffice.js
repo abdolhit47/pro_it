@@ -11,6 +11,7 @@ function ShowOffice() {
     const { id } = useParams();
     const [office, setOffice] = useState([]);
 
+    const access = localStorage.getItem('access_token');
 
     async function getOffice() {
         const res =  await axios.get(baseurl + 'showoffice/' + id, {
@@ -19,7 +20,9 @@ function ShowOffice() {
         setOffice(res.data)
     }
     useEffect(() => {
-        getOffice();
+        if (access === "0") {
+            navigate('/profile');
+        }getOffice();
     }, []);
 
 

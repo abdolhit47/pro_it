@@ -6,15 +6,17 @@ import axios from 'axios'
 import {baseurl} from "../Baseurl/baseurl";
 
 function Profile() {
+    const access = localStorage.getItem('access_token');
 
     const [user, setUser] = useState({
         first_name:'',
-        miden_name:'',
+        middle_name:'',
         last_name:'',
         phone:'',
-        dateOfBirth:'',
-        gender:'',
         address:'',
+        gender:'',
+        maritalStatus:'',
+        dateOfBirth:'',
         name:'',
         email:'',
         password:'',
@@ -50,10 +52,11 @@ function Profile() {
 
     async function onSubmit ()  {
         try{
-            const res =  await axios.post(baseurl + 'update_profile', user);
+            const res =  await axios.post(baseurl + `update_profile/${user.id}`, user,{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
             if(res.status===201 ){
                 toast.success('تم تحديث بياناتك بنجاح');
-                navigate("/Dashboard");
             }
 
         }catch (error){
@@ -72,6 +75,8 @@ function Profile() {
                 <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-10">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
                         <div className="flex flex-col p-8 max-w-3xl">
+                            {access === "0" && <h1 className="text-2xl text-red-900 text-center mb-6">يجيب ملء جميع الحقول حتى تتمكن من
+                                استخدام النظام</h1>}
                             <h1 className="text-2xl text-gray-900 text-right mb-6">بياناتي الشخصية</h1>
                                 <div>
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
@@ -81,8 +86,8 @@ function Profile() {
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                            <label for="miden_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الأب</label>
-                                            <input type="text" id="miden_name" name='miden_name' value={user.miden_name}  onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <label for="middle_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الأب</label>
+                                            <input type="text" id="middle_name" name='middle_name' value={user.middle_name}  onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -111,12 +116,29 @@ function Profile() {
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="gender" className="block mb-2 text-gray-700 font-medium  text-right">الجنس</label>
-                                            <input type="text" id="gender" name="gender" value={user.gender} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {/*<input type="text" id="gender" name="gender" value={user.gender} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
+                                            <select className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right"
+                                                    name="gender" id="gender"
+                                                    value={user.gender} onChange={handelChange}>
+                                                <option value="1">ذكر</option>
+                                                <option value="2">انثي</option>
+                                            </select>
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="address" className="block mb-2 text-gray-700 font-medium  text-right">عنوان السكن</label>
                                             <input type="text" id="address" name="address" value={user.address} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                        </div>
+                                        <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                            <label htmlFor="maritalStatus" className="block mb-2 text-gray-700 font-medium  text-right">حالة الإجتماعية</label>
+                                            <select className={'w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right'}
+                                                id='maritalStatus' name='maritalStatus'
+                                                value={user.maritalStatus} onChange={handelChange} >
+                                                <option value="1">أعزب</option>
+                                                <option value="2">متزوج</option>
+                                                <option value="3">مطلق</option>
+                                                <option value="4">أرمل</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -145,14 +167,14 @@ function Profile() {
                                     </div>
                                 </div>
                             <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                                <button className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]">تعديل</button>
+                                <button className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]" onClick={onSubmit}>تعديل</button>
                                 <button className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 " onClick={handelback}>رجوع</button>
                             </div>
 
                         </div>
                     </div>
                 </div>
-            </div><ToastContainer position="top-left" />
+            </div>
         </div>
 
         </>

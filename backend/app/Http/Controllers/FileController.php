@@ -205,10 +205,10 @@ class FileController extends Controller
     }
     public function downloadFile($filename,$id)
     {
-        $user = Auth::user();
-        if($user->role != 4){
-            return response()->json(['success' => "doesn't have permission"],403);
-        }
+//        $user = Auth::user();
+//        if($user->role != 4){
+//            return response()->json(['success' => "doesn't have permission"],403);
+//        }
         $path = storage_path('app/' . $filename.'/'.$id);
 
         if (!file_exists($path)) {

@@ -16,5 +16,4 @@ export {default as ShowEmployee} from './Employee/showEmployee';
 export {default as City} from './City/showCity';
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";
-export { default as TEST } from "./test";
 //export {default as Chackemail} from './chackemail';

@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import {baseurl} from "../../Baseurl/baseurl";
 import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 function City() {
     const [city, setcity] = useState([]);
@@ -14,9 +15,13 @@ function City() {
         });
         setcity(res.data);
     }
+    const access = localStorage.getItem('access_token');
+    const navigate = useNavigate();
 
     React.useEffect(() => {
-        getcitys();
+        if (access === "0") {
+            navigate('/profile');
+        }getcitys();
     }, []);
     const [value,setvalue] = useState({name: '',});
     const handleChange = (event) => {

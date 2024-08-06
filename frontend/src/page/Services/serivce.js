@@ -2,11 +2,14 @@ import Navbar from "../Navbar";
 import React, {useState} from "react";
 import axios from "axios";
 import {baseurl} from "../../Baseurl/baseurl";
-import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 import AddService from "../../component/addservice";
 function Service() {
     const [service, setservice] = useState([]);
     const [addService, setAddService] = useState(false);
+    const access = localStorage.getItem('access_token');
+    const navigate = useNavigate()
+
     const handleAdd = () => {
         setAddService(true);
     };
@@ -25,6 +28,9 @@ function Service() {
     }
 
     React.useEffect(() => {
+        if (access === "0") {
+            navigate("/profile");
+        }
         getServices();
     }, []);
 

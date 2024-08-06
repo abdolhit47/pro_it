@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('gender')->nullable();
-            $table->date('date_of_birth')->nullable();
+            $table->date('dateOfBirth')->nullable();
             $table->string('marital_status')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();

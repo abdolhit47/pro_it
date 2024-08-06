@@ -1,5 +1,5 @@
 import Navbar from "../Navbar";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AddOffice from "../../component/addOffice";
 import {useNavigate} from "react-router-dom";
 import useFollowUp from "../../component/search";
@@ -17,9 +17,13 @@ function Office() {
     } = useFollowUp("Office");
     const role = localStorage.getItem('role');
     const [addOffice, setaddOffice] = useState(false);
-
-    const navigate = useNavigate()
-
+    const access = localStorage.getItem('access_token');
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if (access === "0") {
+            navigate('/profile');
+        }
+    },[])
     const handleadd = ()=>{
         setaddOffice(true);
     }

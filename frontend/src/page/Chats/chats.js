@@ -6,9 +6,12 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import SendIcon from '@mui/icons-material/Send';
 import {baseurl} from "../../Baseurl/baseurl";
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+
 function Chats() {
     const role = localStorage.getItem('role');
-
+    const access = localStorage.getItem('access_token');
     const [chats, setChats] = useState([]);
     const [howSend, setHowSend] = useState('');
     async function getChats() {
@@ -50,8 +53,11 @@ const [indexchat, setIndexchat] = useState(null);
      };
 
     const messagesEndRef = useRef(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
+        if (access === "0") {
+            navigate('/profile');
+        }
         getChats();
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });

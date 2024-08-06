@@ -8,7 +8,6 @@ import{
   Login,
   Profile,
   User,
-  TEST,
   Sign_up,
   Showprofile,
   ShowEmployee,
@@ -39,7 +38,6 @@ function App() {
           <Route path="/office" element={<Office />} />
           <Route path={"/service"} element={<Service/>} />
           <Route path="/showoffice/:id" element={<ShowOffice />} />
-          <Route path="/test" element={<TEST />} />
           <Route path="/order" element={<Order />} />
           <Route path="/showorder/:id" element={<ShowOrder />} />
           <Route path="/trackorder" element={<Trackorder />} />

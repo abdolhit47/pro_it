@@ -2,7 +2,7 @@ import Navbar from "../Navbar";
 import { useNavigate} from "react-router-dom";
 
 import { ToastContainer, toast } from 'react-toastify'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {baseurl} from "../../Baseurl/baseurl";
 import axios from "axios";
 import useFollowUp from "../../component/search";
@@ -22,6 +22,12 @@ function Order() {
     const role = localStorage.getItem('role');
     const array = ["0", "1", "2", "3"];
     const navigate = useNavigate();
+    const access = localStorage.getItem('access_token');
+    useEffect(()=>{
+        if (access === "0") {
+            navigate('/profile');
+        }
+    })
     const handleshow = (id, event) => {
         event.preventDefault();
         if (id) {

@@ -17,6 +17,8 @@ function ShowOrder() {
     const [Order, setOrder] = useState([]);
     const role = localStorage.getItem('role');
     const array = ["2", "3"];
+    const access = localStorage.getItem('access_token');
+
     async function getOffice() {
         const res =  await axios.get(baseurl + 'getservicesfollow/' + id, {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -24,6 +26,9 @@ function ShowOrder() {
         setOrder(res.data)
     }
     useEffect(() => {
+        if (access === "0") {
+            navigate('/profile');
+        }
         getOffice();
     }, []);
 

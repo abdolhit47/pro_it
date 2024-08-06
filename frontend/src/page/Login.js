@@ -10,7 +10,7 @@ import {Link} from 'react-router-dom'
 
 function Login() {
     const [value,setValues] = useState({
-        email:'',
+        login:'',
         password:''
     });
       
@@ -57,8 +57,8 @@ function Login() {
             <div className="bg-gray-100 shadow-md rounded-lg px-8 py-6 w-full max-w-md">
                 <h1 className="text-2xl font-bold text-center mb-4 text-gray-900" dir="rtl">مرحبا بك!</h1>
                     <div className="mb-4"  dir="rtl">
-                        <label form="email" className="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
-                        <input type="text" id="email" name='email' value={value.email} onChange={handleChange} className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ahmed, Ali...etc"/>
+                        <label form="login" className="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
+                        <input type="text" id="login" name='login' value={value.login} onChange={handleChange} className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ahmed, Ali...etc"/>
                         {/* {errors.userName&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>} */}
                     </div>
                     <div className="mb-4"  dir="rtl">

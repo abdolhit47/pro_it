@@ -76,6 +76,7 @@ function ShowEmployee() {
     const [checkedItems, setCheckedItems] = useState({});
 
     useEffect(() => {
+
         // Initialize checkedItems based on filteredData
         const initialCheckedItems = {};
         filteredData.forEach(item => {

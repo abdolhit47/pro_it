@@ -8,7 +8,7 @@ import axios from "axios";
 import {baseurl,urls} from "../../Baseurl/baseurl";
 
 function Order() {
-
+    const access = localStorage.getItem('access_token');
     const navigate = useNavigate();
     const handleshow = () => {
         navigate('/office');
@@ -39,6 +39,9 @@ function Order() {
     }
 
     useEffect(() => {
+        if (access ==='0') {
+            navigate('/profile');
+        }
         getfollowup();
     }, []);
 
