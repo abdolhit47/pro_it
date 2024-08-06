@@ -89,6 +89,15 @@ class FileController extends Controller
                 }
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $service = Service_Follow_Up::where('approve', 1)->get();
+                    $service = $service->map(function ($service) {
+                        return (object)[
+                            'id' => $service->id,
+                            'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
+                            'name_service' => $service->services->name,
+                            'name_office' => $service->services->offices->name,
+                            'date' => $service->created_at->format('Y-m-d'),
+                        ];
+                    });
                     return response()->json($service, 200);
                 }
             }

@@ -43,7 +43,7 @@ function ShowOrder() {
                 toast.success("تم الموافقة مسبقا");
                 setTimeout(() => {
                     navigate('/Order');
-                }, 1000);
+                }, 1250);
             }
         }).catch((error) => {
             console.log(error);
@@ -61,9 +61,11 @@ function ShowOrder() {
     const navigate = useNavigate();
     const handleshow = () => {
             navigate(`/Order`);
-
     };
-
+    const handleClose= () => {
+        setunapprove(false);
+        navigate(`/Order`);
+    };
     return (
         <>
         <div className="flex h-screen ">
@@ -104,7 +106,7 @@ function ShowOrder() {
             {/*<ToastContainer  position="top-left" />*/}
         </div>
             {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file}/>}
-            {unapprove && <Unapprove setOpenModal={setunapprove} id={value} />}
+            {unapprove && <Unapprove onClose={handleClose}  id={value} />}
         </>
     )
 }

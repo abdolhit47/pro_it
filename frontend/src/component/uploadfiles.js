@@ -2,16 +2,34 @@ import { baseurl } from '../Baseurl/baseurl';
 import axios from 'axios';
 import React, { useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify'
+import {useNavigate, useParams} from "react-router-dom";
 
-export default function Uploadfiles({setOpenModal,id}) {
-
+export default function Uploadfiles({onClose,id}) {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const handleFileChange = (event)=> {
         setSelectedFiles(event.target.files);
     };
     const closeModalTp = () => {
-        setOpenModal(false);
+        onClose(false);
     };
+
+    const [reqDocs, setReqDocs] = useState([]);
+    async function getReqDocs ()  {
+        try{
+            const res =  await axios.get(baseurl + 'show_req_document/'+id.id_service,{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            setReqDocs(res.data);
+        }catch (error){
+            toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
+        }
+    }
+
+    useEffect(() => {
+        getReqDocs();
+    }, []);
+    const navigate = useNavigate();
+
     async function onSubmit ()  {
         if(selectedFiles.length===0){
             toast.error('يجب عليك تحميل وثيقة/وثائق');
@@ -29,7 +47,11 @@ export default function Uploadfiles({setOpenModal,id}) {
             });
             if(res.status===201){
                 toast.success('تم تحميل وثيقة/وثائق بنجاح');
-                setOpenModal(false);
+
+                setTimeout(() => {
+                    onClose(false);
+                    navigate(`/Trackorder`);
+                }, 1250);
             }
         }catch (error){
             if(error?.response?.status === 403){
@@ -56,7 +78,16 @@ export default function Uploadfiles({setOpenModal,id}) {
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
                     <h1 className="text-2xl text-gray-900 text-right">{id.name} - {id.address}</h1>
                     <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>الخدمة: {id.service}</h1>
-                        <div className="flex flex-row-reverse -mx-3 mb-4">
+                    <h1 className=" text-gray-900 text-right my-2 font-bold" dir={"rtl"}>أوراق مطلوبة: </h1>
+                    <ol className="text-gray-900 text-right my-2 flex flex-col gap-2 grid grid-cols-2">
+                        {reqDocs.ID_card===1 ? <li key={reqDocs.id}>بطاقة الشخصية</li>:null}
+                        {reqDocs.birth_certificate === 1 ? <li key={reqDocs.id}>شهادة الميلاد</li> : null}
+                        {reqDocs.license === 1 ? <li key={reqDocs.id}>رخصة القيادة</li> : null}
+                        {reqDocs.passport === 1 ? <li key={reqDocs.id}>جواز سفر</li> : null}
+                        {reqDocs.medical_certificate === 1 ? <li key={reqDocs.id}>شهادة صحية</li> : null}
+                        {reqDocs.family_status_certificate === 1 ? <li key={reqDocs.id}>شهادة وضع العائلة</li> : null}
+                    </ol>
+                        <div className="flex flex-row-reverse mt-2 -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
                                 <label for="files" className="block mb-2 text-gray-700 font-medium  text-right">رفع الوثائق:</label>
                                 <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>

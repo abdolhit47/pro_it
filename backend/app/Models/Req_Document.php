@@ -21,7 +21,7 @@ class Req_Document extends Model
         'family_status_certificate',
         'service_id',
     ];
-    public $timestamps = false;
+    public $timestamps = true;
 
 
     public function service()

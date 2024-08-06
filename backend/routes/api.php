@@ -68,7 +68,7 @@ use Illuminate\Support\Facades\Route;
     /****End City****/
 
 
-
+    /****File && Service Follow Up****/
     Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');
     Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');
     Route::get('/gettrackorder', [FileController::class, 'showe_trackorder'])->middleware('auth:sanctum');
@@ -76,3 +76,10 @@ use Illuminate\Support\Facades\Route;
     Route::post('/unapprove/{id}', [FileController::class, 'unapprove'])->middleware('auth:sanctum');
     Route::get("/getservicesfollow/{id}", [FileController::class, "getservicesfollow"])->middleware('auth:sanctum');
     Route::get('/download/{filename}/{id}', [FileController::class, 'downloadFile']);
+    /****End File && Service Follow Up****/
+
+
+    /****Req Document****/
+    Route::get('/show_req_document/{id}', [ServiceController::class, 'show_req_document'])->middleware('auth:sanctum');
+    /****End Req Document****/
+

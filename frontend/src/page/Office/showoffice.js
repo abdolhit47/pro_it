@@ -1,10 +1,11 @@
 import Navbar from "../Navbar";
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate,useParams} from "react-router-dom";
 import { baseurl } from '../../Baseurl/baseurl';
 import axios from 'axios';
 import Uploadfiles from "../../component/uploadfiles";
 import {toast} from "react-toastify";
+
 function ShowOffice() {
 
     const { id } = useParams();
@@ -30,7 +31,12 @@ function ShowOffice() {
         }
         setUploadfiles(true)
     }
+    const navigate = useNavigate();
 
+    const handleClose = () => {
+        setUploadfiles(false);
+        navigate(`/Trackorder`);
+    };
     const [value, setValue] = useState({
         id_service: '',
         name: '',
@@ -94,7 +100,7 @@ function ShowOffice() {
                 </div>
             </div>
         </div>
-            {uploadfiles && <Uploadfiles setOpenModal={setUploadfiles} id={value}/>}
+            {uploadfiles && <Uploadfiles onClose={handleClose} id={value}/>}
 
         </>
     )

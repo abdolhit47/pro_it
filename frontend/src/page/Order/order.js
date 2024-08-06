@@ -96,22 +96,22 @@ function Order() {
                         <div className="px-6 py-4 flex  " dir={'rtl'}>
                             <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-4xl" dir="rtl">
                                 <thead className="flex w-full items-center ">
-                                <tr className="border-b text-center flex w-full px-2 mb-4">
-                                    <th className="p-3 items-center w-1/8">#</th>
-                                    <th className="p-3 items-center w-1/5">الاسم المواطن</th>
-                                    <th className="p-3 items-center w-1/5">الجهة/المركز</th>
-                                    <th className="p-3 items-center w-1/5">نوع خدمة</th>
-                                    <th className="p-3 items-center w-1/5">التاريخ طلب</th>
-                                    <th className="p-3 items-center w-1/5">العرض</th>
-                                    {/*{role.includes("0") &&*/}
-                                    {/*    <th className="p-3 items-center w-1/5">قبول/الرفض</th>*/}
-                                    {/*}*/}
-                                    {role.includes("2")  &&
-                                        <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
-                                    }
-                                </tr>
+                                    <tr className="border-b text-center flex w-full px-2 mb-4">
+                                        <th className="p-3 items-center w-1/8">#</th>
+                                        <th className="p-3 items-center w-1/5">الاسم المواطن</th>
+                                        <th className="p-3 items-center w-1/5">الجهة/المركز</th>
+                                        <th className="p-3 items-center w-1/5">نوع خدمة</th>
+                                        <th className="p-3 items-center w-1/5">التاريخ طلب</th>
+                                        <th className="p-3 items-center w-1/5">العرض</th>
+                                        {/*{role.includes("0") &&*/}
+                                        {/*    <th className="p-3 items-center w-1/5">قبول/الرفض</th>*/}
+                                        {/*}*/}
+                                        {role.includes("2")  &&
+                                            <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
+                                        }
+                                    </tr>
                                 </thead>
-                                <tbody className=" items-center overflow-y-auto h-auto max-h-96">
+                                <tbody className=" items-center overflow-y-auto h-auto max-h-80">
                                 {
                                     filteredData.map((item,index)=>(
                                         <tr className="text-center hover:bg-orange-100 flex w-full px-2">

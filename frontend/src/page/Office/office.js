@@ -93,7 +93,7 @@ function Office() {
                                     }
                                 </tr>
                                 </thead>
-                                <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-96">
+                                <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-80">
                                 {filteredData.map((item, index) => (
                                     <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>

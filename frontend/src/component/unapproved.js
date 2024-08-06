@@ -2,8 +2,9 @@ import { baseurl } from '../Baseurl/baseurl';
 import axios from 'axios';
 import React, { useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify'
+import {useNavigate, useParams} from "react-router-dom";
 
-export default function Unapproved({setOpenModal,id}) {
+export default function Unapproved({onClose,id}) {
 
     const [value,setValues] = useState({
         note:'',
@@ -17,7 +18,7 @@ export default function Unapproved({setOpenModal,id}) {
     };
 
     const closeModalTp = () => {
-        setOpenModal(false);
+        onClose(false);
     };
     const [errors,setErrors] = useState(false)
     async function onSubmit ()  {
@@ -35,7 +36,10 @@ export default function Unapproved({setOpenModal,id}) {
             });
             if(res.status===200){
                 toast.success('تم رفض الطلب بنجاح');
-                setOpenModal(false);
+                setTimeout(() => {
+                    onClose(false);
+                }, 1250);
+
             }
         }catch (error){
             if(error?.response?.status === 422){

@@ -62,4 +62,20 @@ class ServiceController extends Controller
             return response()->json(['success' => false],400);
         }
     }
+
+
+    public function show_req_document($id)
+    {
+        try {
+            $user = Auth::user();
+            if ($user->role != 4) {
+                return response()->json(['success' => "doesn't have permission"], 403);
+            }
+            $req_document = Req_Document::all()->where('service_id', $id)->first();
+            return response()->json($req_document);
+        }catch (Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => false],400);
+        }
+    }
 }
