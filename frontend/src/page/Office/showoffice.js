@@ -37,6 +37,9 @@ function ShowOffice() {
         setUploadfiles(false);
         navigate(`/Trackorder`);
     };
+    const handleback = () => {
+        navigate(`/office`);
+    };
     const [value, setValue] = useState({
         id_service: '',
         name: '',
@@ -94,7 +97,11 @@ function ShowOffice() {
                                     }
                                 </ol>
                             </div>
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-6 rounded" onClick={handleadd} >طلب الخدمة</button>
+                            <div className="flex justify-between">
+                                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={handleadd} >طلب الخدمة</button>
+                                <button className="py-2 px-4 font-medium border-solid border-2 border-amber-700 rounded-md ml-6" onClick={handleback}>رجوع</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
