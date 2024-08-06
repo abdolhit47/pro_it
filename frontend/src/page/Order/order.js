@@ -103,12 +103,7 @@ function Order() {
                                         <th className="p-3 items-center w-1/5">نوع خدمة</th>
                                         <th className="p-3 items-center w-1/5">التاريخ طلب</th>
                                         <th className="p-3 items-center w-1/5">العرض</th>
-                                        {/*{role.includes("0") &&*/}
-                                        {/*    <th className="p-3 items-center w-1/5">قبول/الرفض</th>*/}
-                                        {/*}*/}
-                                        {role.includes("2")  &&
-                                            <th className="p-3 items-center w-1/5">إصدار الوثيقة</th>
-                                        }
+
                                     </tr>
                                 </thead>
                                 <tbody className=" items-center overflow-y-auto h-auto max-h-80">
@@ -124,17 +119,6 @@ function Order() {
                                                 <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
                                                         onClick={(event)=>handleshow(item.id,event)}>العرض</button>
                                             </td>
-                                            {/*{role.includes("0") &&<td className="p-3 w-1/5 flex items-center justify-between">*/}
-                                            {/*    <button onClick={()=>approve(item.id)}><CheckCircleOutlineIcon color="success" fontSize="large"/></button>*/}
-                                            {/*    <button onClick={(event)=>handleUnapprove(item.id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/></button>*/}
-                                            {/*</td>}*/}
-                                            {role.includes("2") &&
-                                                <td className="p-3 w-1/5 flex items-center justify-center">
-                                                    <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
-                                                        إصدار الوثيقة
-                                                    </button>
-                                                </td>
-                                            }
                                         </tr>
                                     ))
                                 }

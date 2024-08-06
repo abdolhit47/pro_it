@@ -41,6 +41,11 @@ return [
             'root' => public_path('uploads'),
             'throw' => false,
         ],
+        'Document' => [
+            'driver' => 'local',
+            'root' => public_path('Document'),
+            'throw' => false,
+        ],
 
         'images' => [
             'driver' => 'local',
@@ -84,6 +89,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('uploads') => storage_path('app/uploads'),
+        public_path('Document') => storage_path('app/Document'),
     ],
 
 ];

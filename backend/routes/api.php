@@ -27,10 +27,13 @@ use Illuminate\Support\Facades\Route;
     /***Account****/
     Route::post("/login", [AccountController::class, "login"]);
     Route::get("/logout", [AccountController::class, "logout"])->middleware('auth:sanctum');
+    Route::post('/register', [AccountController::class, 'register']);
     Route::get("/Showemployee", [AccountController::class, "user"])->middleware('auth:sanctum');
     Route::post('/addEmployee', [AccountController::class, 'addEmployee'])->middleware('auth:sanctum');
     Route::put('/update/{id}', [AccountController::class, 'updateStatus'])->middleware('auth:sanctum');
     Route::get('/show_profile', [AccountController::class, 'show_profile'])->middleware('auth:sanctum');
+    Route::put('/update_profile/{id}', [AccountController::class, 'update_profile'])->middleware('auth:sanctum');
+
     /****End Account****/
 
 
@@ -69,13 +72,14 @@ use Illuminate\Support\Facades\Route;
 
 
     /****File && Service Follow Up****/
-    Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');
+    Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');//upload file and store service follow up
     Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');
     Route::get('/gettrackorder', [FileController::class, 'showe_trackorder'])->middleware('auth:sanctum');
     Route::put('/approve/{id}', [FileController::class, 'approve'])->middleware('auth:sanctum');
     Route::post('/unapprove/{id}', [FileController::class, 'unapprove'])->middleware('auth:sanctum');
     Route::get("/getservicesfollow/{id}", [FileController::class, "getservicesfollow"])->middleware('auth:sanctum');
     Route::get('/download/{filename}/{id}', [FileController::class, 'downloadFile']);
+    Route::post('/uploaddoc/{id}',[FileController::class,'uploadDoc'])->middleware('auth:sanctum');
     /****End File && Service Follow Up****/
 
 

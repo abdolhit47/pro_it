@@ -19,9 +19,9 @@ function Sign_up() {
         gender:'',
         maritalStatus:'',
         address:'',
-        birthday:'',
+        dateOfBirth:'',
         //placeOfBirth:'',
-        userName:'',
+        name:'',
         email:'',
         password:'',
         confirmpassword:'',
@@ -51,7 +51,7 @@ function Sign_up() {
             const res =  await axios.post(baseurl + 'register', value);
             if(res.status===201 ){
                 toast.success('تم تسجيلك بنجاح');
-                navigate("/chackemail");
+                navigate("/login");
             }
 
         }catch (error){
@@ -94,9 +94,9 @@ function Sign_up() {
 
                 <div className=" flex flex-row-reverse -mx-3 mb-4">
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                        <label for="birthday" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
-                        <input type="date" id="birthday" name="birthday" {...register("birthday",{required:true})} value={value.birthday} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
-                    {errors.birthday&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                        <label for="dateOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" {...register("dateOfBirth",{required:true})} value={value.dateOfBirth} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
+                    {errors.dateOfBirth&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
                     <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label for="placeOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">مكان الميلاد</label>
@@ -151,9 +151,9 @@ function Sign_up() {
                 <div className="flex flex-col justify-between ">
                     <div className="flex flex-row-reverse -mx-3 mb-4 justify-between">
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label for="userName" className="block mb-2 text-gray-700 font-medium  text-right">اسم المستخدم</label>
-                            <input type="text" id="userName" name="userName" {...register("userName",{required:true})} value={value.userName} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 text-right" />
-                        {errors.userName&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                            <label for="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم المستخدم</label>
+                            <input type="text" id="name" name="name" {...register("name",{required:true})} value={value.name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 text-right" />
+                        {errors.name&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                         </div>
                         <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label for="email" className="block mb-2 text-gray-700 font-medium  text-right">البريد الإلكتروني</label>

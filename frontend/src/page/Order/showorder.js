@@ -9,11 +9,14 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import {red} from "@mui/material/colors";
 import {ToastContainer,toast} from "react-toastify";
 import Unapprove from "../../component/unapproved";
+import Uploadfiles from "../../component/uploadfiles";
+import UploadDoc from "../../component/uploadDoc";
 
 function ShowOrder() {
     const { id } = useParams();
     const [Order, setOrder] = useState([]);
     const role = localStorage.getItem('role');
+    const array = ["2", "3"];
     async function getOffice() {
         const res =  await axios.get(baseurl + 'getservicesfollow/' + id, {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -58,6 +61,12 @@ function ShowOrder() {
         setvalue($id)
         setunapprove(true)
     }
+    const [uploaddocs, setuploaddocs] = useState(false); //uploaddocs
+    const handleUploadDoc = ($id,event)=>{
+        event.preventDefault();
+        setvalue($id)
+        setuploaddocs(true)
+    }
     const navigate = useNavigate();
     const handleshow = () => {
             navigate(`/Order`);
@@ -96,7 +105,9 @@ function ShowOrder() {
                                     <button onClick={()=>approve(id)}><CheckCircleOutlineIcon color="success" fontSize="large"/>القبول</button>
                                     <button onClick={(event)=>handleUnapprove(id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/>الرفض</button>
                                 </div>}
-                                {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"  >إصدار الوثيقة</button>*/}
+                                {array.includes(role) &&<button
+                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event)=>handleUploadDoc(id,event)}>إصدار
+                                    الوثيقة</button>}
                                 <button className="mr-44 py-2 px-4 font-bold border-solid border-2 border-amber-700 hover:bg-amber-700 hover:text-white rounded-md " onClick={handleshow} >رجوع</button>
                             </div>
                         </div>
@@ -107,6 +118,7 @@ function ShowOrder() {
         </div>
             {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file}/>}
             {unapprove && <Unapprove onClose={handleClose}  id={value} />}
+            {uploaddocs && <UploadDoc onClose={handleClose} id={value}/>}
         </>
     )
 }

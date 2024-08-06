@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Mwaten;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AccountController extends Controller
 {
@@ -55,7 +58,72 @@ class AccountController extends Controller
         });
         return response()->json($users,200);
     }
+    public function register(Request $request){
+        try {
+            $validator =Validator::make($request->all(),[
+                'firstName' => 'required|string',
+                'middleName' => 'required|string',
+                'lastName' => 'required|string',
+                'phone' => 'required|unique:mwaten',
+                'dateOfBirth' => 'required|Date',
+                //'placeOfBirth' => 'required|string',
+                'gender' => 'required|string',
+                'address' => 'required|string',
 
+                'name' => 'required|string|unique:users',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:8',
+            ],[
+                'required' => 'هذا الحقل مطلوب',
+                'unique' => 'هذا مستعمل بالفعل',
+            ]);
+            if ($validator->fails()) {
+                error_log($validator->errors());
+                return response()->json(['error' => $validator->errors()], 422);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 4,
+            ]);
+            $mwaten = Mwaten::create([
+                'first_name' => $request->firstName,
+                'miden_name' => $request->middleName,
+                'last_name' => $request->lastName,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'gender' => $request->gender,
+                'maritalStatus' => $request->maritalStatus,
+                'dateOfBirth' => $request->dateOfBirth,
+                'placeOfBirth' => $request->placeOfBirth,
+            ]);
+            $mwaten->first_name = $request->firstName;
+            $mwaten->miden_name = $request->middleName;
+            $mwaten->last_name = $request->lastName;
+            $mwaten->phone = $request->phone;
+            $mwaten->address = $request->address;
+            $mwaten->gender = $request->gender;
+            $mwaten->maritalStatus = $request->maritalStatus;
+            $mwaten->dateOfBirth = $request->dateOfBirth;
+            //$mwaten->placeOfBirth = $request->placeOfBirth;
+            $mwaten->save();
+            $token = Str::uuid();
+            $user->verification_token = $token;
+            $user->mwaten()->save($mwaten);
+
+            if($user == null) {
+                return response()->json(['message' => 'البيانات غير صحيحة'], 400);
+            }
+//            $type = 'verifyemail';
+//            Mail::to($user->email)->send(new UserVerificationEmail($user,$type));
+
+            return response()->json(['message' => 'تمت الاضافة'], 201);
+        }catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
 //    public function store(Request $request){
 //        $user = Auth::user();
 //        if(!in_array($user->role, [0, 2])){
@@ -114,7 +182,27 @@ class AccountController extends Controller
         if(!in_array($user->role, [0, 1, 2, 3, 4])){
             return response()->json(['success' => "doesn't have permission"],403);
         }
-        
+        if($user->role == 4){
+            $user = User::with('mwaten')->find($user->id);
+            $user = (object)[
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+
+                'first_name' => $user->mwaten->first_name,
+                'miden_name' => $user->mwaten->miden_name,
+                'last_name' => $user->mwaten->last_name,
+                'phone' => $user->mwaten->phone,
+                'address' => $user->mwaten->address,
+                'gender' => $user->mwaten->gender==1 ? "ذكر" : "انثى",
+                'maritalStatus' => $user->mwaten->maritalStatus==2 ? "متزوج" : "مطلق",
+                'dateOfBirth' => $user->mwaten->dateOfBirth,
+
+
+            ];
+        }else{
+            $user = User::with('emplyee')->find($user->id);
+        }
 
         return response()->json($user,200);
     }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Jobs\GeneratePdfJob;
 use App\Models\Document;
 use App\Models\File;
+use App\Models\Req_Document;
 use App\Models\Service_Follow_Up;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Dompdf\Dompdf;
@@ -14,6 +16,7 @@ use Dompdf\Options;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Mockery\Exception;
 use function Laravel\Prompts\error;
 
 class FileController extends Controller
@@ -88,7 +91,7 @@ class FileController extends Controller
                     return response()->json($service, 200);
                 }
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
-                    $service = Service_Follow_Up::where('approve', 1)->get();
+                    $service = Service_Follow_Up::where('approve', 1)->where('status','!=',3)->get();
                     $service = $service->map(function ($service) {
                         return (object)[
                             'id' => $service->id,
@@ -135,25 +138,6 @@ class FileController extends Controller
             return response()->json(['worning' => $e->getMessage()],400);
         }
     }
-
-//    public function showe_service_id($id){
-//        try {
-//            $service = Service_Follow_Up::with('services','files','mwatens')->where('id',$id)->get();
-//            $service =  $service->map(function ($service) {
-//                return (object) [
-//                    'id' => $service->id,
-//                    'name_mwaten' => $service->mwatens->first_name.' '.$service->mwatens->last_name,
-//                    'name_service' => $service->services->name,
-//                    'name_office' => $service->services->offices->name,
-//                    'date' => $service->created_at->format('Y-m-d'),
-//                ];
-//            });
-//            return response()->json($service,200);
-//        }catch (\Exception $e) {
-//            error_log($e->getMessage());
-//            return response()->json(['success' => $e->getMessage()],400);
-//        }
-//    }
 
     public function approve($id){
         try {
@@ -217,24 +201,6 @@ class FileController extends Controller
 
         ];
 
-
-//        $service = $services->map(function ($service) {
-//             return (object)[
-//                'id' => $service->id,
-//                'name_services' => $service->services->name,
-//                'name_mwaten' => $service->mwatens->first_name." ".$service->mwatens->last_name,
-//                'name_office' => $service->services->offices->name,
-//                'name_file' => $service->files->path_file,
-//                'status' => $service->status,
-//
-//            ];
-//        });
-//        $service = $services->map(function ($service) {
-//            return [
-//                'id' => $service->id,
-//                'name' => $service->name,
-//            ];
-//        });
         return response()->json($services);
     }
     public function downloadFile($filename,$id)
@@ -252,5 +218,38 @@ class FileController extends Controller
         return Response::download($path);
     }
 
+    public function uploadDoc($id,Request $request){
+        try{
+            $user = Auth::user();
+            if(!in_array($user->role,[2,3])){
+                return response()->json(['success' => "doesn't have permission"],403);
+            }
+             $request->validate([
+                'files' => 'required|array|max:2048',
+                'files.*' => 'required|mimes:pdf,jpg,jpeg,png|max:2048'
+            ]);
+            $files = $request->file('files');
+            $path = $files[0]->store('Document');
 
+
+            $service = Service_Follow_Up::find($id);
+            $service->status = 3;
+            $service->save();
+            ///storage file
+
+            $doc = new Document();
+            $doc->name_document = basename($path);;
+            $doc->type_document = 'application/pdf';
+            $doc->path_file = $path;
+            $doc->date_document = date('Y-m-d');
+            $doc->ID_service_follow_up  = $id;
+            $doc->save();
+
+
+            return response()->json(['message' => 'uploaded'],201);
+        }catch (Exception $e){
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
 }
