@@ -88,17 +88,18 @@ class AccountController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => 4,
             ]);
-            $mwaten = Mwaten::create([
-                'first_name' => $request->firstName,
-                'miden_name' => $request->middleName,
-                'last_name' => $request->lastName,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'gender' => $request->gender,
-                'maritalStatus' => $request->maritalStatus,
-                'dateOfBirth' => $request->dateOfBirth,
-                'placeOfBirth' => $request->placeOfBirth,
-            ]);
+//            $mwaten = Mwaten::create([
+//                'first_name' => $request->firstName,
+//                'miden_name' => $request->middleName,
+//                'last_name' => $request->lastName,
+//                'phone' => $request->phone,
+//                'address' => $request->address,
+//                'gender' => $request->gender,
+//                'maritalStatus' => $request->maritalStatus,
+//                'dateOfBirth' => $request->dateOfBirth,
+//                'placeOfBirth' => $request->placeOfBirth,
+//            ]);
+            $mwaten = new Mwaten();
             $mwaten->first_name = $request->firstName;
             $mwaten->miden_name = $request->middleName;
             $mwaten->last_name = $request->lastName;
@@ -205,6 +206,70 @@ class AccountController extends Controller
         }
 
         return response()->json($user,200);
+    }
+
+    public function update_profile($id,Request $request){
+        try {
+            $user = Auth::user();
+            if(!in_array($user->role, [0, 1, 2, 3, 4])){
+                return response()->json(['success' => "doesn't have permission"],403);
+            }
+           // dd($request->first_name);
+            $request->validate([
+                'first_name' => 'required|string',
+                'miden_name' => 'required|string',
+                'last_name' => 'required|string',
+                'phone' => 'required|unique:mwaten,phone,' . $user->mwaten->id . ',id|unique:employee,phone', // Assuming phone is unique in both tables
+                'dateOfBirth' => 'required|Date',
+                //'placeOfBirth' => 'required|string',
+                'gender' => 'required|string',
+                'address' => 'required|string',
+
+                'name' => 'required|string|unique:users,name,' . $user->id . ',id',
+                'email' => 'required|email|unique:users,email,' . $user->id . ',id',
+                'password' => 'required|min:8',
+            ]);
+            if($user->role == 4){
+                $user = User::with('mwaten')->find($id);
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->save();
+                $mwaten = Mwaten::find($user->mwaten->id);
+                // dd($mwaten);
+                $mwaten->first_name = $request->first_name;
+                $mwaten->miden_name = $request->miden_name;
+                $mwaten->last_name = $request->last_name;
+                $mwaten->phone = $request->phone;
+                $mwaten->address = $request->address;
+                $mwaten->gender = $request->gender;
+                $mwaten->maritalStatus = $request->maritalStatus;
+                $mwaten->dateOfBirth = $request->dateOfBirth;
+                $user->mwaten()->save($mwaten);
+            }else{
+                $user = User::with('emplyee')->find($id);
+                $user->name = $request->name;
+                $user->email = $request->email;
+                $user->password = Hash::make($request->password);
+                $user->save();
+                $employee = Employee::find($user->emplyee->id);
+                $employee->first_name = $request->first_name;
+                $employee->miden_name = $request->miden_name;
+                $employee->last_name = $request->last_name;
+                $employee->phone = $request->phone;
+                $employee->address = $request->address;
+                $employee->gender = $request->gender;
+                $employee->maritalStatus = $request->maritalStatus;
+                $employee->dateOfBirth = $request->dateOfBirth;
+                $user->emplyee()->save($employee);
+            }
+
+            return response()->json(['message' => 'User updated successfully'], 201);
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+
     }
 
 }

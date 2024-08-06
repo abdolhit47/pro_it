@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/addEmployee', [AccountController::class, 'addEmployee'])->middleware('auth:sanctum');
     Route::put('/update/{id}', [AccountController::class, 'updateStatus'])->middleware('auth:sanctum');
     Route::get('/show_profile', [AccountController::class, 'show_profile'])->middleware('auth:sanctum');
-    Route::put('/update_profile/{id}', [AccountController::class, 'update_profile'])->middleware('auth:sanctum');
+    Route::post('/update_profile/{id}', [AccountController::class, 'update_profile'])->middleware('auth:sanctum');
 
     /****End Account****/
 

@@ -7,8 +7,26 @@ import {baseurl} from "../Baseurl/baseurl";
 
 function Profile() {
 
-    const [user, setUser] = useState({})
-
+    const [user, setUser] = useState({
+        first_name:'',
+        miden_name:'',
+        last_name:'',
+        phone:'',
+        dateOfBirth:'',
+        gender:'',
+        address:'',
+        name:'',
+        email:'',
+        password:'',
+        confirmpassword:'',
+    })
+    const handelChange = (e) => {
+        const { name, value } = e.target
+        setUser({
+            ...user,
+            [name]: value
+        })
+    }
     async function getUser() {
         const response = await axios.get(baseurl+'show_profile',{
             headers: {
@@ -28,6 +46,24 @@ function Profile() {
     const handelback = () => {
         navigate(`/Dashboard`);
     }
+    console.log(user)
+
+    async function onSubmit ()  {
+        try{
+            const res =  await axios.post(baseurl + 'update_profile', user);
+            if(res.status===201 ){
+                toast.success('تم تحديث بياناتك بنجاح');
+                navigate("/Dashboard");
+            }
+
+        }catch (error){
+            if(error?.response?.status === 401){
+                toast.warning('تحقق من كلمة المرور او اسم المستخدم');
+            }else  if(error.response.status===422){
+                toast.warning('تحقق من البيانات المدخلة');
+            }
+        }
+    }
     return (
         <>
         <div className="flex h-screen ">
@@ -40,30 +76,30 @@ function Profile() {
                                 <div>
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                            <label for="firstName" className="block mb-2 text-gray-700 font-medium  text-right">الاسم</label>
-                                            <input type="text" id="firstName" name='firstName' value={user.first_name} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
+                                            <label for="first_name" className="block mb-2 text-gray-700 font-medium  text-right">الاسم</label>
+                                            <input type="text" id="first_name" name='first_name' value={user.first_name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                            <label for="middleName" className="block mb-2 text-gray-700 font-medium  text-right">اسم الأب</label>
-                                            <input type="text" id="middleName" name='middleName' value={user.miden_name}  className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <label for="miden_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الأب</label>
+                                            <input type="text" id="miden_name" name='miden_name' value={user.miden_name}  onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                            <label for="lastName" className="block mb-2 text-gray-700 font-medium  text-right">اللقب</label>
-                                            <input type="text" id="lastName" name="lastName" value={user.last_name} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <label for="last_name" className="block mb-2 text-gray-700 font-medium  text-right">اللقب</label>
+                                            <input type="text" id="last_name" name="last_name" value={user.last_name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
                                     </div>
 
                                     <div className=" flex flex-row-reverse -mx-3 mb-4">
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="phone" className="block mb-2 text-gray-700 font-medium  text-right">رقم الهاتف</label>
-                                            <input type="text" id="phone" name="phone" value={user.phone} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <input type="text" id="phone" name="phone" value={user.phone} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                            <label for="birthday" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
-                                            <input type="date" id="birthday" name="birthday" value={user.dateOfBirth} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <label for="dateOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
+                                            <input type="date" id="dateOfBirth" name="dateOfBirth" value={user.dateOfBirth} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
 
                                         {/*<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">*/}
@@ -75,12 +111,12 @@ function Profile() {
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="gender" className="block mb-2 text-gray-700 font-medium  text-right">الجنس</label>
-                                            <input type="text" id="gender" name="gender" value={user.gender} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <input type="text" id="gender" name="gender" value={user.gender} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="address" className="block mb-2 text-gray-700 font-medium  text-right">عنوان السكن</label>
-                                            <input type="text" id="address" name="address" value={user.address} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            <input type="text" id="address" name="address" value={user.address} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                         </div>
                                     </div>
 
@@ -88,12 +124,12 @@ function Profile() {
                                     <div className="flex flex-col">
                                         <div className="flex flex-row-reverse -mx-3 mb-4">
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                                                <label for="userName" className="block mb-2 text-gray-700 font-medium  text-right">اسم المستخدم</label>
-                                                <input type="text" id="userName" name="userName" value={user.name} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                <label for="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم المستخدم</label>
+                                                <input type="text" id="name" name="name" value={user.name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                             </div>
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="email" className="block mb-2 text-gray-700 font-medium  text-right">البريد الإلكتروني</label>
-                                                <input type="text" id="email" name="email" value={user.email} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                <input type="text" id="email" name="email" value={user.email} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                             </div>
                                         </div>
                                         <div className=" flex flex-row-reverse -mx-3 mb-4">
