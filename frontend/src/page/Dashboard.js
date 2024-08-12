@@ -28,6 +28,7 @@ function Dashboard() {
     })
 
     const [count, setCount] = useState(null);
+    const [count2, setCount2] = useState(null);
     const [filter, setFilter] = useState({ filterType: "month" });
     const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 const handleFilterChange = (event) => {
@@ -49,13 +50,14 @@ const handleFilterChange = (event) => {
         const response = await axios.get(`${baseurl}show_filterServiceFollowUp`,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         });
-        setCount(response.data);
+        setCount2(response.data);
     }
     useEffect(() => {
         if(role==="2")
             filterCount();
         if(role==="0")
             getCount();
+        filterCount()
     }, []);
     useEffect(() => {
         if (count) {
@@ -137,30 +139,33 @@ const handleFilterChange = (event) => {
     };
 
     //const data = processChartData(count, filter.filterType);
+
+
+    const test = count2?.map((item, index) =>
+        ({
+            label: item.office_name, // Label for the dataset
+            data: [item.total_requests], // Data for each office's total requests
+            backgroundColor:`rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`||[], // Background color for each bar
+            borderColor: `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`||[], // Border color for each bar
+            borderWidth: 1, // Width of the border around each bar
+         })
+    )||[];
     const data = {
-        labels: count.map(item => item.office_name), // Labels for each office
-        datasets: [
-            {
-                label: 'Total Requests', // Label for the dataset
-                data: count.map(item => item.total_requests), // Data for each office's total requests
-                backgroundColor: count.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`), // Background color for each bar
-                borderColor: count.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`), // Border color for each bar
-                borderWidth: 1, // Width of the border around each bar
-            },
-            {
-                label: 'Total Requests2', // Label for the dataset
-                data: [2], // Data for each office's total requests
-                backgroundColor: count.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`), // Background color for each bar
-                borderColor: count.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`), // Border color for each bar
-                borderWidth: 1, // Width of the border around each bar
-            },
-        ]
+        labels: count2?.map(item => item.office_name)||[], // Labels for each office
+        datasets: test
+        // [
+        //     {
+        //         label: 'Total Requests', // Label for the dataset
+        //         data: count?.map(item => item.total_requests)||[], // Data for each office's total requests
+        //         backgroundColor: count?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`)||[], // Background color for each bar
+        //         borderColor: count?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`)||[], // Border color for each bar
+        //         borderWidth: 1, // Width of the border around each bar
+        //     }
+        // ]
     };
-
-
-
-
+    console.log(chartData)
     console.log(data)
+    //console.log(test)
     return (
     <>
         <div className="flex h-screen ">
