@@ -87,31 +87,31 @@ function Office() {
                                 <thead className="flex w-full ">
                                 <tr className="border-b text-center flex w-full px-2 mb-4">
                                     <th className="p-3 w-1/8">#</th>
-                                    <th className="p-3 w-1/5">الاسم الجهة</th>
-                                    <th className="p-3 w-1/5">وصف</th>
-                                    {role === "0" &&<th className="p-3 w-1/5">المسؤول</th>}
-                                    <th className="p-3 w-1/5">البلدية</th>
-                                    {role === "4" &&<th className={"p-3 w-1/5"}>العرض</th>}
-                                    {role === "0" &&
-                                        <th className="p-3 w-1/5">التعديل</th>
-                                    }
+                                    <th className="p-3 w-1/4">الاسم الجهة</th>
+                                    <th className="p-3 w-1/4" dir={'rtl'}>وصف</th>
+                                    {role === "0" &&<th className="p-3 w-1/4">المسؤول</th>}
+                                    <th className="p-3 w-1/4">البلدية</th>
+                                    {role === "4" &&<th className={"p-3 w-1/4"}>العرض</th>}
+                                    {/*{role === "0" &&*/}
+                                    {/*    <th className="p-3 w-1/5">التعديل</th>*/}
+                                    {/*}*/}
                                 </tr>
                                 </thead>
                                 <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-80">
                                 {filteredData.map((item, index) => (
                                     <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>
-                                        <td className="p-3 w-1/5 flex items-center justify-center truncate text-right">{item.description}</td>
-                                        {role === "0" &&<td className="p-3 w-1/5 flex items-center justify-center">{item.employee}</td>}
-                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>
-                                        {role !== "0" &&<td className="p-3 w-1/5 flex items-center justify-center">
+                                        <td className="p-3 w-1/4 flex items-center justify-center text-ellipsis">{item.name}</td>
+                                        <td className="p-3 w-1/4 flex items-center justify-center truncate text-right">{item.description}</td>
+                                        {role === "0" &&<td className="p-3 w-1/4 flex items-center justify-center">{item.employee}</td>}
+                                        <td className="p-3 w-1/4 flex items-center justify-center">{item.address}</td>
+                                        {role !== "0" &&<td className="p-3 w-1/4 flex items-center justify-center">
                                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>العرض</button>
                                         </td>}
-                                        {role === "0" &&
-                                            <td className="p-3 w-1/5 flex items-center justify-center">
-                                                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>
-                                            </td>}
+                                        {/*{role === "0" &&*/}
+                                        {/*    <td className="p-3 w-1/5 flex items-center justify-center">*/}
+                                        {/*        <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>*/}
+                                        {/*    </td>}*/}
                                     </tr>
                                 ))}
                                 </tbody>

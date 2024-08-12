@@ -63,6 +63,7 @@ function ShowEmployee() {
             if (res.status === 200) {
                 toast.success('تمت العملية بنجاح');
                 getFollowUp()
+                setShow(false);
             }
         } catch (error) {
             if (error?.response?.status === 422) {
@@ -122,7 +123,7 @@ function ShowEmployee() {
                             <div className="p-4 px-10 flex content-center justify-start  mt-2" dir="rtl">
                                 <h1 className="text-2xl text-gray-900 text-right ml-5">عرض الموظفين</h1>
                                 {(role === "0" || role === "2") &&<button className="bg-green-500 hover:bg-green-700 text-white font-bold rounded-xl py-1 px-1"
-                                     ><AddIcon onClick={handlshow}/></button>}
+                                     >إضافة<AddIcon onClick={handlshow}/></button>}
                             </div>
                             {(role === "0" || role === "2") &&
                                 ( <div className={`${show ? "block" : "hidden"} flex justify-start h-10 mt-3 mr-5`}  dir="rtl">

@@ -2,6 +2,11 @@ import axios from 'axios';
 import { baseurl } from '../../Baseurl/baseurl';
 import { toast } from 'react-toastify';
 export async function getCount(setCountMes) {
+    const access = localStorage.getItem('access_token');
+    if (access === '0') {
+        toast.warning('رجاء تعبية بيانات الدخول');
+        return;
+    }
     try {
         const res = await axios.get(baseurl + 'countMes', {
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},

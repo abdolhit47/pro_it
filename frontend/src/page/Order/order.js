@@ -77,7 +77,7 @@ function Order() {
                             <h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>
                             {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
                         </div>
-                        {array.some(element => element === role) &&
+                        {filteredData.length > 0 && array.some(element => element === role) &&
                             <div className="px-6 py-4 flex  " dir={'rtl'}>
                                 <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
                                 <input
@@ -99,37 +99,44 @@ function Order() {
                                 </select>
                             </div>
                         }
-                        <div className="px-6 py-4 flex  " dir={'rtl'}>
-                            <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-4xl" dir="rtl">
+                        <div className="px-6 py-4 flex justify-center " dir={'rtl'}>
+                            {filteredData.length > 0 ?
+                                <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-4xl"
+                                    dir="rtl">
                                 <thead className="flex w-full items-center ">
-                                    <tr className="border-b text-center flex w-full px-2 mb-4">
-                                        <th className="p-3 items-center w-1/8">#</th>
-                                        <th className="p-3 items-center w-1/5">الاسم المواطن</th>
-                                        <th className="p-3 items-center w-1/5">الجهة/المركز</th>
-                                        <th className="p-3 items-center w-1/5">نوع خدمة</th>
-                                        <th className="p-3 items-center w-1/5">التاريخ طلب</th>
-                                        <th className="p-3 items-center w-1/5">العرض</th>
+                                <tr className="border-b text-center flex w-full px-2 mb-4">
+                                    <th className="p-3 items-center w-1/8">#</th>
+                                    <th className="p-3 items-center w-1/5">الاسم المواطن</th>
+                                    <th className="p-3 items-center w-1/5">الجهة/المركز</th>
+                                    <th className="p-3 items-center w-1/5">نوع خدمة</th>
+                                    <th className="p-3 items-center w-1/5">التاريخ طلب</th>
+                                    <th className="p-3 items-center w-1/5">العرض</th>
 
-                                    </tr>
+                                </tr>
                                 </thead>
                                 <tbody className=" flex flex-col items-center overflow-y-auto h-auto max-h-80">
                                 {
-                                    filteredData.map((item,index)=>(
+                                    filteredData.map((item, index) => (
                                         <tr className="text-center hover:bg-orange-100 flex w-full px-2">
-                                            <td className="p-3 w-1/8 flex items-center justify-center">{index+1}</td>
+                                            <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.date}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">
-                                                <button className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
-                                                        onClick={(event)=>handleshow(item.id,event)}>العرض</button>
+                                                <button
+                                                    className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
+                                                    onClick={(event) => handleshow(item.id, event)}>العرض
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
                                 }
                                 </tbody>
-                            </table>
+                            </table>:
+                                <p className=" text-2xl ">لايوجد بيانات لعرضها</p>
+
+                            }
                         </div>
                     </div>
                 </div>

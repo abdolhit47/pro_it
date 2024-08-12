@@ -16,21 +16,12 @@ class User extends Seeder
     {
         DB::table("users")->delete();
         $user =[[
+            'id'=>'1',
             'name'=>'abdolhit',
             'email'=>'dogy2026@gmail.com',
             'password'=>Hash::make('123456789'),
             'role'=>0
-        ],[
-            'name'=>'test',
-            'email'=>'test@gmail.com',
-            'password'=>Hash::make('123456789'),
-            'role'=>4
-        ],[
-            'name'=>'admin',
-            'email'=>'admin@gmail.com',
-            'password'=>Hash::make('123456789'),
-            'role'=>1
-        ],];
+        ]];
         foreach ($user as $key => $value)
             DB::table("users")->insert($value);
     }

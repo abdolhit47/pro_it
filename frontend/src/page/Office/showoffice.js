@@ -85,9 +85,9 @@ function ShowOffice() {
                                 <h1 className="text-xl text-gray-900 text-right">الخدمات</h1>
                             </div>
                             <div className={"overflow-y-auto h-auto max-h-96"}>
-                                <ol className="list-inside list-decimal mt-6  m-2">
-                                    {office.services &&
-                                        office.services.map((service) => (
+                                <ol className="list-inside list-decimal mt-4 mb-5 m-2">
+                                    {office.services !== null ?
+                                        office.services?.map((service) => (
                                             <li className={"ml-6  relative h-auto w-1/6 md:w-1/4  flex-shrink-0 flex-col inline-flex"}>
                                                 <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-full">
                                                     <input type={'radio'} id={"service"} name={"service"} onClick={()=>handleset(service.id,service.name)}/>
@@ -97,6 +97,8 @@ function ShowOffice() {
 
                                             </li>
                                         ))
+                                        :
+                                        <p className="text-right ">لا توجد خدمات حاليا</p>
                                     }
                                 </ol>
                             </div>

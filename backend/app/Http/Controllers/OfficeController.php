@@ -17,7 +17,14 @@ class OfficeController extends Controller
 {
     public function index()
     {
-        $offices = Office::with('employees','addresses')->get();
+        $user = Auth::user();
+        if($user->role == 4){
+            $offices = Office::with('employees','addresses')->where('id','!=','1')->get();
+        }else{
+            $offices = Office::with('employees','addresses')->get();
+
+        }
+
         $office = $offices->map(function ($office) {
             return [
                 'id' => $office->id,
@@ -57,9 +64,10 @@ class OfficeController extends Controller
 
             $user = New User();
             $user->name = $request->user_name;
-            $user->email = $request->user_name."@gmail.com";
+            //$user->email = $request->user_name."@gmail.com";
             $user->role = 2;
             $user->password = Hash::make("123456789");
+            $user->status = 0;
             $user->save();
 
             $employee = new Employee();

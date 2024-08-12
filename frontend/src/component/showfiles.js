@@ -20,9 +20,9 @@ export default function Showfiles({setOpenModal,path_file}) {
                     </svg>
                 </button>
             </div>
-            <div className="pt-0 text-center ">
-                <div className="flex flex-col">
-                        <div className="flex fflex-row-reverse justify-center items-center px-4">
+            <div className="pt-0 text-center  ">
+                <div className="flex flex-row-reverse gap-3">
+                        <div className="flex flex-row  w-full px-4">
                                 <object
                                         data=
                                             {urls+path_file}
@@ -32,6 +32,24 @@ export default function Showfiles({setOpenModal,path_file}) {
                                 >
                                 </object>
                         </div>
+                    <div className={'flex flex-col justify-center items-center w-full gap-6'}>
+                        <div className={'flex flex-col items-center'}>
+                            <label htmlFor="name" className={'mb-2'}>بحث في سجل المدني</label>
+                            <div className={'flex'}>
+                                <input type='text' className={'border-2 border-black mr-2'} />
+                                <button className={'border-2 border-black-200 px-2'}>بحث</button>
+                            </div>
+                            <span className={'mt-2 text-green-700'}>موجود</span>
+                        </div><div className={'flex flex-col items-center'}>
+                            <label htmlFor="name" className={'mb-2'}>بحث في المالية</label>
+                            <div className={'flex'}>
+                                <input type='text' className={'border-2 border-black mr-2'} />
+                                <button className={'border-2 border-black-200 px-2'}>بحث</button>
+                            </div>
+                            <span className={'mt-2  text-green-700'}>غير موجود</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div className="pt-0 text-center justify-center">

@@ -165,7 +165,7 @@ class AccountController extends Controller
         $users->name = $request->name;
         $users->password = Hash::make("123456789");
         $users->role = $user->role == 0 ? 1 : 3;
-
+        $users->status = 0;
         $users->save();
         $employee = new Employee();
         $employee->ID_office = $user->emplyee->ID_office;
@@ -210,14 +210,14 @@ class AccountController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'first_name' => $user->emplyee->first_name,
-                'middle_name' => $user->emplyee->middle_name,
-                'last_name' => $user->emplyee->last_name,
-                'phone' => $user->emplyee->phone,
-                'address' => $user->emplyee->address,
-                'gender' => $user->emplyee->gender,
-                'maritalStatus' => $user->emplyee->maritalStatus,
-                'dateOfBirth' => $user->emplyee->dateOfBirth,
+                'first_name' => $user->emplyee->first_name??'',
+                'middle_name' => $user->emplyee->middle_name??'',
+                'last_name' => $user->emplyee->last_name??'',
+                'phone' => $user->emplyee->phone??'',
+                'address' => $user->emplyee->address??'',
+                'gender' => $user->emplyee->gender??'',
+                'maritalStatus' => $user->emplyee->marital_status??'',
+                'dateOfBirth' => $user->emplyee->dateOfBirth??'',
             ];
         }
 
@@ -259,11 +259,13 @@ class AccountController extends Controller
                     return response()->json(['error' => $validator->errors()], 422);
                 }
             }
-
             $userToUpdate = User::find($id);
             $userToUpdate->name = $request->name;
             $userToUpdate->email = $request->email;
-            $userToUpdate->password = Hash::make($request->password);
+            if($request->password != null){
+                $userToUpdate->password = Hash::make($request->password);
+            }
+
             $userToUpdate->save();
 
             if ($userToUpdate->role == 4) {
@@ -278,7 +280,9 @@ class AccountController extends Controller
                 $mwaten->dateOfBirth = $request->dateOfBirth;
                 $userToUpdate->mwaten()->save($mwaten);
             } else {
-                $employee = Employee::findOrFail($userToUpdate->employee->id);
+                $employee = Employee::findOrFail($userToUpdate->emplyee->id);
+
+
                 $employee->first_name = $request->first_name;
                 $employee->middle_name = $request->middle_name;
                 $employee->last_name = $request->last_name;
@@ -287,10 +291,12 @@ class AccountController extends Controller
                 $employee->gender = $request->gender;
                 $employee->marital_status = $request->maritalStatus;
                 $employee->dateOfBirth = $request->dateOfBirth;
-                $userToUpdate->employee()->save($employee);
+                $userToUpdate->emplyee()->save($employee);
             }
+            $user->status = 1;
+            $user->save();
 
-            return response()->json(['message' => 'User updated successfully'], 201);
+            return response()->json(['access_token' => 1,'message' => 'User updated successfully'], 201);
         }catch (\Exception $e) {
             error_log($e->getMessage());
             return response()->json(['success' => $e->getMessage()],400);

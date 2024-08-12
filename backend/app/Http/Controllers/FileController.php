@@ -47,7 +47,7 @@ class FileController extends Controller
                 //error_log($request->service_id);
                 $service_follow_up = new Service_Follow_Up();
                 $service_follow_up->file_id = $file->id;
-                $service_follow_up->mwaten_id = 2;
+                $service_follow_up->mwaten_id = $user->mwaten->id;
                 $service_follow_up->service_id = $request->id_service;
                 $service_follow_up->save();
                 return response()->json(['message' => 'PDF generation in progress'], 201);
@@ -95,9 +95,10 @@ class FileController extends Controller
                 }
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $service = Service_Follow_Up::with('services')
-                        ->whereIn('status', [0,2,3])
-                        ->where('approve', 0)
+                        ->where('status', 2)
+                        ->where('approve', 1)
                         ->whereHas('services', function ($query) {
+
                             $query->where('ID_office', Auth::user()->emplyee->ID_office);
                         })
                         ->get();
@@ -139,7 +140,6 @@ class FileController extends Controller
                         'status' => $service->status == 0 ? 'في الانتظار' : ($service->status == 1 ? 'تحت المراجعة' : ($service->status == 2 ? 'قيد التنفيذ' : ($service->status == 3 ? 'مكتمل' : 'مرفوض'))),
                         'note' => $service->note,
                         'data' => $service->documents != null ? $service->documents->path_file : null,
-
                     ];
                 });
             return response()->json($service,200);
@@ -166,6 +166,21 @@ class FileController extends Controller
             $service->data_approve = date('Y-m-d');
             $service->save();
             return response()->json(['message' => 'approved'],200);
+        }catch (\Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
+    public function send_wezara($id){
+        try {
+            $user = Auth::user();
+            if(!in_array($user->role, [2,3])){
+                return response()->json(['success' => "doesn't have permission"], 403);
+            }
+            $service = Service_Follow_Up::find($id);
+            $service->status = 1;
+            $service->save();
+            return response()->json(['message' => 'send success'],200);
         }catch (\Exception $e) {
             error_log($e->getMessage());
             return response()->json(['success' => $e->getMessage()],400);
@@ -198,7 +213,6 @@ class FileController extends Controller
         if ($services->count() == 0) {
             return response()->json(['success' => "no data"], 404);
         }
-
         $services = (object)[
             'id' => $services->id,
             'name_mwaten' => $services->mwatens->first_name." ".$services->mwatens->last_name,
@@ -207,10 +221,8 @@ class FileController extends Controller
             'city' => $services->services->offices->addresses->name,
             'date' => $services->created_at->format('Y-m-d'),
             'name_file' => $services->files->path_file,
-            'status' => $services->status == 1 ? 'قيد المراجعة' : ($services->status == 2 ? 'تحت العمل' : ($services->status == 3 ? 'مكتمل' : 'مرفوض')),
-
+            'status' => $services->status,
         ];
-
         return response()->json($services);
     }
     public function downloadFile($filename,$id)
@@ -245,8 +257,8 @@ class FileController extends Controller
             $service = Service_Follow_Up::find($id);
             $service->status = 3;
             $service->save();
-            ///storage file
 
+            ///storage file
             $doc = new Document();
             $doc->name_document = basename($path);;
             $doc->type_document = 'application/pdf';

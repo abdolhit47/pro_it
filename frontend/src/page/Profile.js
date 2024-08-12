@@ -57,6 +57,8 @@ function Profile() {
             });
             if(res.status===201 ){
                 toast.success('تم تحديث بياناتك بنجاح');
+                localStorage.setItem('access_token',res.access_token);
+                window.location.reload();
             }
 
         }catch (error){
@@ -72,10 +74,10 @@ function Profile() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-10">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] md:mt-20 sm:mt-5">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
-                        <div className="flex flex-col p-8 max-w-3xl">
-                            {access === "0" && <h1 className="text-2xl text-red-900 text-center mb-6">يجيب ملء جميع الحقول حتى تتمكن من
+                        <div className="flex flex-col p-3 max-w-3xl">
+                            {access === "0" && <h1 className="text-2xl text-red-900 text-center mb-6">يجب ملء جميع الحقول حتى تتمكن من
                                 استخدام النظام</h1>}
                             <h1 className="text-2xl text-gray-900 text-right mb-6">بياناتي الشخصية</h1>
                                 <div>
@@ -120,6 +122,7 @@ function Profile() {
                                             <select className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right"
                                                     name="gender" id="gender"
                                                     value={user.gender} onChange={handelChange}>
+                                                <option value="">اختر الجنس</option>
                                                 <option value="1">ذكر</option>
                                                 <option value="2">انثي</option>
                                             </select>
@@ -134,6 +137,7 @@ function Profile() {
                                             <select className={'w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right'}
                                                 id='maritalStatus' name='maritalStatus'
                                                 value={user.maritalStatus} onChange={handelChange} >
+                                                <option value="">اختر حالة الإجتماعية</option>
                                                 <option value="1">أعزب</option>
                                                 <option value="2">متزوج</option>
                                                 <option value="3">مطلق</option>
@@ -157,18 +161,18 @@ function Profile() {
                                         <div className=" flex flex-row-reverse -mx-3 mb-4">
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="password" className="block mb-2 text-gray-700 font-medium  text-right">كلمة السر الجديدة</label>
-                                                <input type="password" name="password" id="password"   className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                <input type="password" name="password" id="password"  value={user.password} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                             </div>
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="confirmpassword" className="block mb-2 text-gray-700 font-medium  text-right">تأكيد الكلمة السر</label>
-                                                <input type="password" name="confirmpassword" id="confirmpassword"  className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                <input type="password" name="confirmpassword" id="confirmpassword" value={user.confirmpassword} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                                <button className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]" onClick={onSubmit}>تعديل</button>
-                                <button className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 " onClick={handelback}>رجوع</button>
+                                <button className="  p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]" onClick={onSubmit}>تعديل</button>
+                                <button className="  p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 " onClick={handelback}>رجوع</button>
                             </div>
 
                         </div>

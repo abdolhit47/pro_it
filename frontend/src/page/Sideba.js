@@ -5,15 +5,16 @@ import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SendIcon from '@mui/icons-material/Send';
-// import ArchiveIcon from '@mui/icons-material/Archive';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {Link, useNavigate} from 'react-router-dom'
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import 'react-toastify/dist/ReactToastify.css';
 import ShowEmployee from "./Employee/showEmployee";
-// import {Office} from "./index";
-// import Service from "./Services/serivce";
+import {baseurl} from "../Baseurl/baseurl";
+import {toast} from "react-toastify";
+
+import axios from 'axios';
 
 function Sideba() {
     const role = localStorage.getItem('role');
@@ -23,15 +24,29 @@ function Sideba() {
 
 
     const [activePath, setActivePath] = useState(window.location.pathname);
-    const navigator = useNavigate();
+    const navigate = useNavigate();
     const handleLinkClick = (path) => {
     setActivePath(path);
-    navigator(path);
+        navigate(path);
     };
     const open = useState(true);
     const [subOpen, setSubOpen] = useState(false);
-    //console.log(role)
-    return (
+    const handleLogoutClick = async () => {
+        await axios.get(baseurl + 'logout',{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        toast.success('تم تسجيل الخروج بنجاح');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        localStorage.removeItem('Office');
+        localStorage.removeItem('access_token');
+        setTimeout(() => {
+            navigate('/login');
+        }, 1000);
+    };    return (
       <>
           <div className=" bg-gray-50 flex flex-row-reverse text-right absolute inset-y-14 mt-10 right-7">
               <nav className="  w-64  rounded-3xl bg-yellow-600  flex flex-col justify-between text-white transition duration-150 ease-in-out">
@@ -128,11 +143,11 @@ function Sideba() {
                           </ul>
                       </div>
                   </div>
-                  <div className=" flex-col mr-4 mb-10 tall:mb-5 ">
-                      <Link to="/Service" aria-expanded="false">
+                  <div className=" flex-col mr-4 mb-10 tall:mb-5 " onClick={handleLogoutClick}>
+
                       <span className="ml-2 text-sm font-medium mr-2"> تسجيل الخروج </span>
                       <LogoutIcon/>
-                      </Link>
+
                   </div>
               </nav>
           </div>

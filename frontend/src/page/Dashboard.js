@@ -57,7 +57,6 @@ const handleFilterChange = (event) => {
             filterCount();
         if(role==="0")
             getCount();
-        filterCount()
     }, []);
     useEffect(() => {
         if (count) {
@@ -123,7 +122,6 @@ const handleFilterChange = (event) => {
                     backgroundColor = `rgba(${index * 50},${index * 50},${200 - index * 50},0.4)`;
                     borderColor = `rgb(${index * 50},${index * 50},${200 - index * 50})`;
             }
-
             dataSets.push({
                 label: status.description,
                 data,
@@ -131,7 +129,6 @@ const handleFilterChange = (event) => {
                 borderColor,
                 fill: false,
                 lineTension: 0.1,
-
             });
         });
 
@@ -141,31 +138,16 @@ const handleFilterChange = (event) => {
     //const data = processChartData(count, filter.filterType);
 
 
-    const test = count2?.map((item, index) =>
-        ({
-            label: item.office_name, // Label for the dataset
-            data: [item.total_requests], // Data for each office's total requests
-            backgroundColor:`rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`||[], // Background color for each bar
-            borderColor: `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`||[], // Border color for each bar
-            borderWidth: 1, // Width of the border around each bar
-         })
-    )||[];
     const data = {
-        labels: count2?.map(item => item.office_name)||[], // Labels for each office
-        datasets: test
-        // [
-        //     {
-        //         label: 'Total Requests', // Label for the dataset
-        //         data: count?.map(item => item.total_requests)||[], // Data for each office's total requests
-        //         backgroundColor: count?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`)||[], // Background color for each bar
-        //         borderColor: count?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`)||[], // Border color for each bar
-        //         borderWidth: 1, // Width of the border around each bar
-        //     }
-        // ]
+        labels: count2?.map(item => item.office_name) || [], // Labels for each office
+        datasets: [{
+           label:'',
+            data: count2?.map(item => item.total_requests) || [], // Data for each office's total requests
+            backgroundColor: count2?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 0.5)`) || [], // Background colors for each bar
+            borderColor: count2?.map((_, index) => `rgba(${index * 50}, ${150 - index * 30}, ${200 - index * 20}, 1)`) || [], // Border colors for each bar
+           // borderWidth: 1, // Width of the border around each bar
+        }]
     };
-    console.log(chartData)
-    console.log(data)
-    //console.log(test)
     return (
     <>
         <div className="flex h-screen ">
@@ -247,7 +229,7 @@ const handleFilterChange = (event) => {
                                 </div>
                                 <Line data={chartData}/>
                             </div>}
-                            <Bar data={data}/>
+                            {role==="0"&&<Bar data={data}/>}
                         </div>
                     </div>
                 </div><ToastContainer position="top-left" />

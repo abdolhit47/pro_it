@@ -80,12 +80,12 @@ export default function Uploadfiles({onClose,id}) {
                     <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>الخدمة: {id.service}</h1>
                     <h1 className=" text-gray-900 text-right my-2 font-bold" dir={"rtl"}>أوراق مطلوبة: </h1>
                     <ol className="text-gray-900 text-right my-2 flex flex-col gap-2 grid grid-cols-2">
-                        {reqDocs.ID_card===1 ? <li key={reqDocs.id}>بطاقة الشخصية</li>:null}
-                        {reqDocs.birth_certificate === 1 ? <li key={reqDocs.id}>شهادة الميلاد</li> : null}
-                        {reqDocs.license === 1 ? <li key={reqDocs.id}>رخصة القيادة</li> : null}
-                        {reqDocs.passport === 1 ? <li key={reqDocs.id}>جواز سفر</li> : null}
-                        {reqDocs.medical_certificate === 1 ? <li key={reqDocs.id}>شهادة صحية</li> : null}
-                        {reqDocs.family_status_certificate === 1 ? <li key={reqDocs.id}>شهادة وضع العائلة</li> : null}
+                        {reqDocs.ID_card===1 ? <li >بطاقة الشخصية</li>:null}
+                        {reqDocs.birth_certificate === 1 ? <li >شهادة الميلاد</li> : null}
+                        {reqDocs.license === 1 ? <li >رخصة القيادة</li> : null}
+                        {reqDocs.passport === 1 ? <li >جواز سفر</li> : null}
+                        {reqDocs.medical_certificate === 1 ? <li >شهادة صحية</li> : null}
+                        {reqDocs.family_status_certificate === 1 ? <li >شهادة وضع العائلة</li> : null}
                     </ol>
                         <div className="flex flex-row-reverse mt-2 -mx-3 mb-4">
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
