@@ -68,7 +68,7 @@ function Sign_up() {
     }
     return(
 
-        <div className="min-h-screen flex items-center justify-center w-full bg-gray-900 ">
+        <div className="min-h-screen flex items-center justify-center w-full bg-yellow-800 ">
             <div className="bg-gray-100  shadow-md rounded-lg px-8 py-6 max-w-md">
                 <h1 className="text-2xl font-bold text-center mb-4 text-gray-900" dir="rtl">تسجيل حساب جديد</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,17 +93,17 @@ function Sign_up() {
                 </div>
 
                 <div className=" flex flex-row-reverse -mx-3 mb-4">
-                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                         <label for="dateOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
                         <input type="date" id="dateOfBirth" name="dateOfBirth" {...register("dateOfBirth",{required:true})} value={value.dateOfBirth} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
                     {errors.dateOfBirth&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
-                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                         <label for="placeOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">مكان الميلاد</label>
                         <input type="text" id="placeOfBirth" name="placeOfBirth" {...register("placeOfBirth",{required:true})} value={value.placeOfBirth} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
                     {errors.placeOfBirth&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                     </div>
-                    <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                    <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                         <label htmlFor="gender" className="block mb-2 text-gray-700 font-medium  text-right">الجنس</label>
                         <select  id="gender" name="gender" {...register("gender",{required:true})} value={value.gender} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right">
                             <option value=""></option>
