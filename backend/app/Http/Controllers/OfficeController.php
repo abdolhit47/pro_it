@@ -10,6 +10,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class OfficeController extends Controller
@@ -65,12 +66,6 @@ class OfficeController extends Controller
             $employee->ID_office = $office->id;
             $employee->id = $user->id; // Ensure your `Employee` model has a user_id column
             $employee->save();
-//            Employee::create(
-//                [
-//                    'id' => $user->id,
-//                    'ID_office' => $office->id,
-//                ]
-//            );
             return response()->json(['success' => true],201);
         }catch (Exception $e) {
             error_log($e->getMessage());
@@ -126,4 +121,139 @@ class OfficeController extends Controller
         }
     }
 
+
+    public function countServiceFollowUp(){
+        $statusDescriptions = [//قيم ابتدائية
+            0 => 'في الانتظار',
+            1 => 'تحت المراجعة',
+            2 => 'قيد التنفيذ',
+            3 => 'مكتمل',
+            4 => 'مرفوض'
+        ];
+        $statusesCount = collect($statusDescriptions)->mapWithKeys(function ($description, $status) {
+            return [
+                $status => [
+                    'description' => $description,
+                    'count' => 0
+                ]
+            ];
+        });
+
+        $existingStatuses = Service_Follow_Up::whereHas('services', function ($query) {
+            $query->where('ID_office', Auth::user()->emplyee->ID_office);
+        })->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get();
+
+        $statusesCount = $statusesCount->transform(function ($item, $key) use ($existingStatuses) {
+            $statusItem = $existingStatuses->firstWhere('status', $key);
+            if ($statusItem) {
+                $item['count'] = $statusItem->count;
+            }
+            return $item;
+        });
+        $totalCount = Service_Follow_Up::whereHas('services', function ($query) {//count total
+            $query->where('ID_office', Auth::user()->emplyee->ID_office);
+        })->count();
+
+        $response = [
+            'statuses' => $statusesCount,
+            'total' => $totalCount
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function filter_countServiceFollowUp(Request $request) {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
+        $filterType = $request->input('filterType'); // either 'month' or 'year'
+
+        $statusDescriptions = [
+            0 => 'في الانتظار',
+            1 => 'تحت المراجعة',
+            2 => 'قيد التنفيذ',
+            3 => 'مكتمل',
+            4 => 'مرفوض'
+        ];
+
+        $statusesCount = collect($statusDescriptions)->mapWithKeys(function ($description, $status) {
+            return [
+                $status => [
+                    'description' => $description,
+                    'count' => []
+                ]
+            ];
+        });
+
+        $query = Service_Follow_Up::whereHas('services', function ($query) {
+            $query->where('ID_office', Auth::user()->emplyee->ID_office);
+        });
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        if ($filterType === 'month') {
+            $query->select(
+                DB::raw('DATE(created_at) as date'),
+                'status',
+                DB::raw('count(*) as count')
+            )->groupBy('status', 'date');
+        } else if ($filterType === 'year') {
+            $query->select(
+                DB::raw('MONTH(created_at) as month'),
+                'status',
+                DB::raw('count(*) as count')
+            )->groupBy('status', 'month');
+        }
+
+        $existingStatuses = $query->get();
+
+        $statusesCount = $statusesCount->transform(function ($item, $key) use ($existingStatuses, $filterType) {
+            $statusItems = $existingStatuses->where('status', $key);
+            if ($statusItems->isNotEmpty()) {
+                $item['count'] = $statusItems->pluck('count');
+                if ($filterType === 'month') {
+                    $item['labels'] = $statusItems->pluck('date');
+                } else if ($filterType === 'year') {
+                    $item['labels'] = $statusItems->pluck('month');
+                }
+            }
+            return $item;
+        });
+
+        $totalCountQuery = Service_Follow_Up::whereHas('services', function ($query) {
+            $query->where('ID_office', Auth::user()->emplyee->ID_office);
+        });
+
+        if ($startDate && $endDate) {
+            $totalCountQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $totalCount = $totalCountQuery->count();
+
+        $response = [
+            'statuses' => $statusesCount,
+            'total' => $totalCount
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function show_filterServiceFollowUp() {
+
+        $query = Office::query()
+            ->leftJoin('service', 'office.id', '=', 'service.ID_office') // استخدام left join لضمان جلب جميع المكاتب
+            ->leftJoin('service_follow_up', 'service.id', '=', 'service_follow_up.service_id') // ربط جدول Service_Follow_Up بجدول services
+            ->select(
+                'office.id', // تحديد المكتب
+                'office.name as office_name', // تحديد اسم المكتب
+                DB::raw('count(service_follow_up.id) as total_requests') // حساب العدد الإجمالي للطلبات
+            )
+            ->groupBy('office.id', 'office.name'); // تجميع النتائج حسب المكتب
+
+        $existingStatuses = $query->get();
+
+        return response()->json($existingStatuses, 200);
+
+    }
 }

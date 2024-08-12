@@ -112,7 +112,7 @@ function Order() {
 
                                     </tr>
                                 </thead>
-                                <tbody className=" items-center overflow-y-auto h-auto max-h-80">
+                                <tbody className=" flex flex-col items-center overflow-y-auto h-auto max-h-80">
                                 {
                                     filteredData.map((item,index)=>(
                                         <tr className="text-center hover:bg-orange-100 flex w-full px-2">

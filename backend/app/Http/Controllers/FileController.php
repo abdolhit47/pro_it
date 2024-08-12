@@ -78,7 +78,10 @@ class FileController extends Controller
                     return response()->json(['success' => "doesn't have permission"], 403);
                 }
                 if (Auth::user()->role == 0 || Auth::user()->role == 1) {
-                    $service = Service_Follow_Up::with('services', 'files', 'mwatens')->where('approve', 0)->get();
+                    $service = Service_Follow_Up::with('services', 'files', 'mwatens')
+                        ->where('status', 1)
+                        ->where('approve', 0)
+                        ->get();
                     $service = $service->map(function ($service) {
                         return (object)[
                             'id' => $service->id,
@@ -91,15 +94,22 @@ class FileController extends Controller
                     return response()->json($service, 200);
                 }
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
-                    $service = Service_Follow_Up::where('approve', 1)->where('status','!=',3)->get();
+                    $service = Service_Follow_Up::with('services')
+                        ->whereIn('status', [0,2,3])
+                        ->where('approve', 0)
+                        ->whereHas('services', function ($query) {
+                            $query->where('ID_office', Auth::user()->emplyee->ID_office);
+                        })
+                        ->get();
                     $service = $service->map(function ($service) {
-                        return (object)[
-                            'id' => $service->id,
-                            'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
-                            'name_service' => $service->services->name,
-                            'name_office' => $service->services->offices->name,
-                            'date' => $service->created_at->format('Y-m-d'),
-                        ];
+                            return (object)[
+                                'id' => $service->id,
+                                'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
+                                'name_service' => $service->services->name,
+                                'name_office' => $service->services->offices->name,
+                                'date' => $service->created_at->format('Y-m-d'),
+                                'status' => $service->status
+                            ];
                     });
                     return response()->json($service, 200);
                 }
@@ -126,7 +136,7 @@ class FileController extends Controller
                         'id' => $service->id,
                         'name_service' => $service->services->name,
                         'name_office' => $service->services->offices->name,
-                        'status' => $service->status == 1 ? 'قيد المراجعة' : ($service->status == 2 ? 'تحت العمل' : ($service->status == 3 ? 'مكتمل' : 'مرفوض')),
+                        'status' => $service->status == 0 ? 'في الانتظار' : ($service->status == 1 ? 'تحت المراجعة' : ($service->status == 2 ? 'قيد التنفيذ' : ($service->status == 3 ? 'مكتمل' : 'مرفوض'))),
                         'note' => $service->note,
                         'data' => $service->documents != null ? $service->documents->path_file : null,
 

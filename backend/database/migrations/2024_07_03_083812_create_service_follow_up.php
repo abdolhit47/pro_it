@@ -22,8 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger("mwaten_id");
             $table->foreign("mwaten_id")->references("id")->on("mwaten")->onDelete('cascade')->onUpdate('cascade');
 
-            $table->string('status')->comment('تحت العمل=1,تم العمل=2,تم الانتهاء=3,رفض=4')->default(1);#تتبع الخدمة للمواطن
-            $table->boolean('approve')->comment('لا=2,نعم=1,قيد المراجعة=0')->default(0);#موافقة من الوزارة
+            $table->string('status')->comment('في الانتظار=0,تحت المراجعة=1,قيد التنفيذ=2,مكتمل=3,رفض=4')->default(0);#تتبع الخدمة للمواطن
+            $table->boolean('approve')->comment('رفض=2,قبول=1,قيد المراجعة=0')->default(0);#موافقة من الوزارة
             $table->string('note')->nullable();#ملاحظات
 
             $table->unsignedBigInteger('approve_by_wzara')->nullable(); #موافقة من الوزارة

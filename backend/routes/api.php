@@ -43,6 +43,9 @@ use Illuminate\Support\Facades\Route;
     Route::post("/storeoffice", [OfficeController::class, "store"])->middleware('auth:sanctum');
     Route::get('/show_mes', [OfficeController::class, 'show_mes'])->middleware('auth:sanctum');
     #Route::put("/updateoffice/{id}", [OfficeController::class, "update"])->middleware('auth:sanctum');
+    Route::get('/countServiceFollowUp', [OfficeController::class, 'countServiceFollowUp'])->middleware('auth:sanctum');
+    Route::post('/filter_countServiceFollowUp', [OfficeController::class, 'filter_countServiceFollowUp'])->middleware('auth:sanctum');
+    Route::get('/show_filterServiceFollowUp', [OfficeController::class, 'show_filterServiceFollowUp'])->middleware('auth:sanctum');
     /****End Office****/
 
 
