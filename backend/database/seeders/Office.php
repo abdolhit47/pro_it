@@ -15,6 +15,7 @@ class Office extends Seeder
     {
         DB::table('office')->delete();
         $office =[[
+            'id'=>'1',
             'name'=>'الوزارة',
             'description'=>'',
             'ID_address'=>'1'

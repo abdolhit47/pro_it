@@ -15,7 +15,7 @@ class Service extends Seeder
     {
         DB::table('service')->delete();
         $service =[
-            ['name'=>'تجربة','description'=>'تحت العمل','ID_office'=>1],];
+            ['id'=>'1','name'=>'تجربة','description'=>'تحت العمل','ID_office'=>1],];
         foreach ($service as $ser)
             DB::table('service')->insert($ser);
     }

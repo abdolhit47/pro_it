@@ -20,6 +20,6 @@ class Employee extends Seeder
 
         ]];
         foreach ($employee as $key => $value)
-            DB::table("employees")->insert($value);
+            DB::table("employee")->insert($value);
     }
 }

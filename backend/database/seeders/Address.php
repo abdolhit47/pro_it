@@ -14,7 +14,7 @@ class Address extends Seeder
     public function run(): void
     {
         DB::table('address')->delete();
-        $address =[['name'=>'طرابلس']];
+        $address =[['id'=>'1','name'=>'طرابلس']];
         foreach ($address as $ad)
             DB::table('address')->insert($ad);
 
