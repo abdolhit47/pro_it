@@ -44,6 +44,7 @@ class FileController extends Controller
                 $file->type = 'application/pdf'; // نوع الملف
                 $file->path_file = $path; // المسار الذي تم تخزين الملف فيه
                 $file->save(); // حفظ سجل الملف في قاعدة البيانات
+
                 //error_log($request->service_id);
                 $service_follow_up = new Service_Follow_Up();
                 $service_follow_up->file_id = $file->id;
@@ -77,9 +78,11 @@ class FileController extends Controller
                 if (!in_array($user->role, [0, 1, 2, 3])){
                     return response()->json(['success' => "doesn't have permission"], 403);
                 }
+
+                // superadmin, admin
                 if (Auth::user()->role == 0 || Auth::user()->role == 1) {
                     $service = Service_Follow_Up::with('services', 'files', 'mwatens')
-                        ->where('status', 1)
+                        // ->where('status', 1) // status = revision
                         ->where('approve', 0)
                         ->get();
                     $service = $service->map(function ($service) {
@@ -93,9 +96,11 @@ class FileController extends Controller
                     });
                     return response()->json($service, 200);
                 }
+
+                // user, employee
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $service = Service_Follow_Up::with('services')
-                        ->where('status', 2)
+                        ->where('status', 2) // status = in progress
                         ->where('approve', 1)
                         ->whereHas('services', function ($query) {
 
@@ -124,7 +129,7 @@ class FileController extends Controller
         try {
             if(Auth::check()){
                 $user = Auth::user();
-                if($user->role != 4){
+                if($user->role != 4){ // role = mowaten
                     return response()->json(['success' => "doesn't have permission"],403);
                 }
             }
