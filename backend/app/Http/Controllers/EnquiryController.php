@@ -64,5 +64,7 @@ class EnquiryController extends Controller
         catch (Exception $e)
         {
         }
+
+        return response()->json(['status'=> 'error'],404);
     }
 }
