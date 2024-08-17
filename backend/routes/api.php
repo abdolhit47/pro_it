@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\ServiceController;
@@ -91,3 +92,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/show_req_document/{id}', [ServiceController::class, 'show_req_document'])->middleware('auth:sanctum');
     /****End Req Document****/
 
+
+    // Enquiry
+    Route::get('/civilRegistryEnquiry/{nationalNumber}', [EnquiryController::class, 'civilRegistryEnquiry'])->middleware('auth:sanctum');
+    Route::get('/financeMinistryEnquiry/{nationalNumber}', [EnquiryController::class, 'financeMinistryEnquiry'])->middleware('auth:sanctum');
