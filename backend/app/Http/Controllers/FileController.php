@@ -40,7 +40,7 @@ class FileController extends Controller
                 $path = $files[0]->store('uploads');
                 $file = new File();
                 $file->name = basename($path); // اسم الملف الأصلي
-                $file->size = filesize(public_path($path)); // حجم الملف
+                $file->size = $files[0]->getSize();
                 $file->type = 'application/pdf'; // نوع الملف
                 $file->path_file = $path; // المسار الذي تم تخزين الملف فيه
                 $file->save(); // حفظ سجل الملف في قاعدة البيانات
