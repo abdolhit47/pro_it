@@ -82,7 +82,7 @@ class FileController extends Controller
                 // superadmin, admin
                 if (Auth::user()->role == 0 || Auth::user()->role == 1) {
                     $service = Service_Follow_Up::with('services', 'files', 'mwatens')
-                        // ->where('status', 1) // status = revision
+                        ->where('status', 1) // status = revision
                         ->where('approve', 0)
                         ->get();
                     $service = $service->map(function ($service) {
