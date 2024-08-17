@@ -1,11 +1,53 @@
-import {  urls } from '../Baseurl/baseurl';
-import React from "react";
+import {  urls, baseurl } from '../Baseurl/baseurl';
+import React, { useState } from "react";
+import axios from 'axios';
 
 export default function Showfiles({setOpenModal,path_file}) {
 
     const closeModalTp = () => {
         setOpenModal(false);
     };
+
+    const [financeNationalNumber, setFinanceNationalNumber] = useState();
+    const [civilNationalNumber, setCivilNationalNumber] = useState();
+
+    const [civilData, setCivilData] = useState();
+    const [financeData, setFinanceData] = useState();
+
+    const getFinanceData = async () => {
+        try{
+            const res =  await axios.get(baseurl + 'financeMinistryEnquiry/' + financeNationalNumber,{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            
+            if(res.status===200){
+                setFinanceData(res.data)
+            }
+            else
+            {
+                setFinanceData(null);
+            }
+        }catch (error){
+            setFinanceData(null);
+        }
+    }
+
+    const geCivilData = async () => {
+        try{
+            const res =  await axios.get(baseurl + 'civilRegistryEnquiry/' + civilNationalNumber,{
+                headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+            });
+            if(res.status===200){
+                setCivilData(res.data)
+            }
+            else
+            {
+                setCivilData(null);
+            }
+        }catch (error){
+            setCivilData(null);
+        }
+    }
 
     return (
     <div id="modelConfirm" className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
@@ -32,21 +74,57 @@ export default function Showfiles({setOpenModal,path_file}) {
                                 >
                                 </object>
                         </div>
-                    <div className={'flex flex-col justify-center items-center w-full gap-6'}>
+                    <div className={'flex flex-col justify-center items-center w-full gap-6 border-1'}>
                         <div className={'flex flex-col items-center'}>
                             <label htmlFor="name" className={'mb-2'}>بحث في سجل المدني</label>
                             <div className={'flex'}>
-                                <input type='text' className={'border-2 border-black mr-2'} />
-                                <button className={'border-2 border-black-200 px-2'}>بحث</button>
+                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'}  value={civilNationalNumber} onChange={(e) => { setCivilNationalNumber(e.target.value)}}/>
+                                <button onClick={geCivilData} className={'border-2 border-black-200 px-2'}>بحث</button>
                             </div>
-                            <span className={'mt-2 text-green-700'}>موجود</span>
+
+                            {
+                                civilData != null ?
+                                (
+                                    <>
+                                        <div className={'border-2 border-green-700 p-2 mt-4 w-full rounded'}>
+                                            <p>Martial Status: <strong>{civilData?.data?.martial_status}</strong></p>
+                                            <hr></hr>
+                                            <p>Has Disability: <strong>{civilData?.data?.has_disability ? "Yes" : "No"}</strong></p>
+                                        </div>
+
+                                        <span className={'mt-2 text-green-700'}>موجود</span>
+                                    </>
+                                )
+                                :
+                                (
+                                    <span className={'mt-2 text-red-700'}>غير موجود</span>
+                                )
+                            }
+
+                            
                         </div><div className={'flex flex-col items-center'}>
                             <label htmlFor="name" className={'mb-2'}>بحث في المالية</label>
                             <div className={'flex'}>
-                                <input type='text' className={'border-2 border-black mr-2'} />
-                                <button className={'border-2 border-black-200 px-2'}>بحث</button>
+                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'} value={financeNationalNumber} onChange={(e) => { setFinanceNationalNumber(e.target.value)}} />
+                                <button onClick={getFinanceData} className={'border-2 border-black-200 px-2'}>بحث</button>
                             </div>
-                            <span className={'mt-2  text-green-700'}>غير موجود</span>
+
+                            {
+                                 financeData != null ?
+                                (
+                                    <>
+                                        <div className={'border-2 border-green-700 p-2 mt-4 w-full rounded'}>
+                                            <p>Auto Number: <strong>{financeData?.data?.auto_number}</strong></p>
+                                        </div>
+
+                                        <span className={'mt-2 text-green-700'}>موجود</span>
+                                    </>
+                                )
+                                :
+                                (
+                                    <span className={'mt-2 text-red-700'}>غير موجود</span>
+                                )
+                            }
                         </div>
                     </div>
 
