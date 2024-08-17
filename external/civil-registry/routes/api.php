@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CivilRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/civilEnquiry/{nationalNumber}', function (Request $request, $nationalNumber) {
+    if(!$request->has('apiKey') || $request->apiKey != env("API_KEY")) 
+    {
+        return response()->json([], 403);
+    }
+
+    $civilRecord = CivilRecord::where("national_number", $nationalNumber)->firstOrFail();
+
+    return response()->json([
+        "national_id" => $civilRecord->national_number,
+        "martial_status" => $civilRecord->martial_status,
+        "has_disability" => $civilRecord->has_disability
+    ], 200);
 });
