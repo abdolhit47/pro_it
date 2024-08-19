@@ -102,7 +102,7 @@ function Sideba() {
                                       {array3.includes(role) &&
                                           <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
                                               <Link to="/ShowEmployee" aria-expanded="false">
-                                                  <span className="ml-2 text-sm font-medium mr-4">تعيين الموظف</span>
+                                                  <span className="ml-2 text-sm font-medium mr-4">إضافة الموظف</span>
                                                   <PersonAddIcon/>
                                               </Link>
                                           </li>
