@@ -77,9 +77,11 @@ function ShowOrder() {
     const handleshow = () => {
             navigate(`/Order`);
     };
-    const handleClose= () => {
+    const handleCloseUnapprove= () => {
         setunapprove(false);
-        navigate(`/Order`);
+    };
+    const handleCloseUploadDoc= () => {
+        setuploaddocs(false);
     };
 
     async function send($id){
@@ -144,8 +146,8 @@ function ShowOrder() {
             {/*<ToastContainer  position="top-left" />*/}
         </div>
             {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file}/>}
-            {unapprove && <Unapprove onClose={handleClose}  id={value} />}
-            {uploaddocs && <UploadDoc onClose={handleClose} id={value}/>}
+            {unapprove && <Unapprove onClose={handleCloseUnapprove}  id={value} />}
+            {uploaddocs && <UploadDoc onClose={handleCloseUploadDoc} id={value}/>}
         </>
     )
 }

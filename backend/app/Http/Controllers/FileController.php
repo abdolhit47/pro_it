@@ -99,9 +99,10 @@ class FileController extends Controller
 
                 // user, employee
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
+                    $status = [0, 2];
                     $service = Service_Follow_Up::with('services')
-                        ->where('status', 2) // status = in progress
-                        ->where('approve', 1)
+                        ->whereIn('status', $status)
+                        ->where('approve', 0)->orWhere('approve', 1)
                         ->whereHas('services', function ($query) {
 
                             $query->where('ID_office', Auth::user()->emplyee->ID_office);

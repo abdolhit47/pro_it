@@ -26,7 +26,7 @@ class EnquiryController extends Controller
         try
         {
             $response = $httpClient->get(env("CIVIL_API").'/'.$nationalNumber.'?apiKey='.env('CIVIL_FINANCE_API_KEY'));
-        
+
             if($response->getStatusCode() == 200)
             {
                 return response()->json(['status'=> 'success', 'data'=> json_decode($response->getBody())],200);
@@ -55,7 +55,7 @@ class EnquiryController extends Controller
         try
         {
             $response = $httpClient->get(env("FINANCE_API").'/'.$nationalNumber.'?apiKey='.env('CIVIL_FINANCE_API_KEY'));
-        
+
             if($response->getStatusCode() == 200)
             {
                 return response()->json(['status'=> 'success', 'data'=> json_decode($response->getBody())],200);

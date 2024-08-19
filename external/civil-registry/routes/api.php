@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/civilEnquiry/{nationalNumber}', function (Request $request, $nationalNumber) {
-    if(!$request->has('apiKey') || $request->apiKey != env("API_KEY")) 
+    if(!$request->has('apiKey') || $request->apiKey != env("API_KEY"))
     {
         return response()->json([], 403);
     }

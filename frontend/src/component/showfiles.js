@@ -1,20 +1,24 @@
 import {  urls, baseurl } from '../Baseurl/baseurl';
 import React, { useState } from "react";
 import axios from 'axios';
+import {  toast } from 'react-toastify'
 
 export default function Showfiles({setOpenModal,path_file}) {
-
+    let role = localStorage.getItem("role");
     const closeModalTp = () => {
         setOpenModal(false);
     };
 
-    const [financeNationalNumber, setFinanceNationalNumber] = useState();
-    const [civilNationalNumber, setCivilNationalNumber] = useState();
+    const [financeNationalNumber, setFinanceNationalNumber] = useState("");
+    const [civilNationalNumber, setCivilNationalNumber] = useState("");
 
     const [civilData, setCivilData] = useState();
     const [financeData, setFinanceData] = useState();
-
     const getFinanceData = async () => {
+        if (financeNationalNumber.trim() === "") {
+            toast.error("الرجاء إدخال رقم السجل المالي");
+            return;
+        }
         try{
             const res =  await axios.get(baseurl + 'financeMinistryEnquiry/' + financeNationalNumber,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -33,6 +37,10 @@ export default function Showfiles({setOpenModal,path_file}) {
     }
 
     const geCivilData = async () => {
+        if (civilNationalNumber.trim() === "") {
+            toast.error("الرجاء إدخال رقم السجل المدني");
+            return;
+        }
         try{
             const res =  await axios.get(baseurl + 'civilRegistryEnquiry/' + civilNationalNumber,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -56,77 +64,71 @@ export default function Showfiles({setOpenModal,path_file}) {
                 <button onClick={closeModalTp} type="button"
                     className="top-right text-red-400 bg-transparent hover:bg-gray-200 hover:text-red-700 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
+                        <path fillRule="evenodd"
                               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"></path>
+                              clipRule="evenodd"></path>
                     </svg>
                 </button>
             </div>
             <div className="pt-0 text-center  ">
                 <div className="flex flex-row-reverse gap-3">
-                        <div className="flex flex-row  w-full px-4">
-                                <object
-                                        data=
-                                            {urls+path_file}
-                                        type="application/pdf"
-                                        height="500"
-                                        width="100%"
-                                >
-                                </object>
-                        </div>
-                    <div className={'flex flex-col justify-center items-center w-full gap-6 border-1'}>
+                    <div className="flex flex-row  w-full px-4">
+                            <object
+                                    data=
+                                        {urls+path_file}
+                                    type="application/pdf"
+                                    height="500"
+                                    width="100%"
+                            >
+                            </object>
+                    </div>
+
+                    {role === "0" && (
+                        <div className={'flex flex-col justify-center items-center w-full gap-6 border-1'}>
                         <div className={'flex flex-col items-center'}>
                             <label htmlFor="name" className={'mb-2'}>بحث في سجل المدني</label>
                             <div className={'flex'}>
-                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'}  value={civilNationalNumber} onChange={(e) => { setCivilNationalNumber(e.target.value)}}/>
+                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'}
+                                       value={civilNationalNumber} onChange={(e) => {
+                                    setCivilNationalNumber(e.target.value)
+                                }}/>
                                 <button onClick={geCivilData} className={'border-2 border-black-200 px-2'}>بحث</button>
                             </div>
-
                             {
-                                civilData != null ?
-                                (
-                                    <>
+                                civilData === null ? (
+                                    <span className={'border-2 border-red-700 p-2 mt-4 w-full rounded'}>غير موجود</span>
+                                ) : (
+                                    civilData && (
                                         <div className={'border-2 border-green-700 p-2 mt-4 w-full rounded'}>
-                                            <p>Martial Status: <strong>{civilData?.data?.martial_status}</strong></p>
-                                            <hr></hr>
-                                            <p>Has Disability: <strong>{civilData?.data?.has_disability ? "Yes" : "No"}</strong></p>
+                                            <span className={'mt-2 text-green-700'}>موجود</span>
                                         </div>
-
-                                        <span className={'mt-2 text-green-700'}>موجود</span>
-                                    </>
-                                )
-                                :
-                                (
-                                    <span className={'mt-2 text-red-700'}>غير موجود</span>
-                                )
-                            }
-
-                            
-                        </div><div className={'flex flex-col items-center'}>
-                            <label htmlFor="name" className={'mb-2'}>بحث في المالية</label>
-                            <div className={'flex'}>
-                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'} value={financeNationalNumber} onChange={(e) => { setFinanceNationalNumber(e.target.value)}} />
-                                <button onClick={getFinanceData} className={'border-2 border-black-200 px-2'}>بحث</button>
-                            </div>
-
-                            {
-                                 financeData != null ?
-                                (
-                                    <>
-                                        <div className={'border-2 border-green-700 p-2 mt-4 w-full rounded'}>
-                                            <p>Auto Number: <strong>{financeData?.data?.auto_number}</strong></p>
-                                        </div>
-
-                                        <span className={'mt-2 text-green-700'}>موجود</span>
-                                    </>
-                                )
-                                :
-                                (
-                                    <span className={'mt-2 text-red-700'}>غير موجود</span>
+                                    )
                                 )
                             }
                         </div>
-                    </div>
+                        <div className={'flex flex-col items-center'}>
+                            <label htmlFor="name" className={'mb-2'}>بحث في المالية</label>
+                            <div className={'flex'}>
+                                <input type='text' className={'border-2 border-gray-300 p-2 rounded ml-3'}
+                                       value={financeNationalNumber} onChange={(e) => {
+                                    setFinanceNationalNumber(e.target.value)
+                                }}/>
+                                <button onClick={getFinanceData} className={'border-2 border-black-200 px-2'}>بحث
+                                </button>
+                            </div>
+                            {
+                                financeData === null ? (
+                                    <span className={'border-2 border-red-700 p-2 mt-4 w-full rounded'}>غير موجود</span>
+                                ) : (
+                                    financeData && (
+                                        <div className={'border-2 border-green-700 p-2 mt-4 w-full rounded'}>
+                                            <span className={'mt-2 text-green-700'}>موجود</span>
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
+                    </div>)}
 
                 </div>
             </div>

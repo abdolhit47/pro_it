@@ -6,30 +6,23 @@ import { Route, BrowserRouter, Routes } from "react-router-dom";
 import{
   Dashboard,
   Login,
-  Profile,
-  User,
-  Sign_up,
-  Showprofile,
+
+  User,Sign_up,Profile, Showprofile,
+  Office,ShowOffice,Service,
   ShowEmployee,
-  Office,
-  ShowOffice,
-  Order,
-  ShowOrder,
-  Trackorder,
+  Order, ShowOrder,Trackorder,
   City,
-  Service,
-  Archive,
-  Chats
+  //Archive,
+  Chats,
+    Home
 }from './page'
 // import PrivateRoute from './PrivateRoute';
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-
-
         <Route path='/Signup' element={<Sign_up/>}/>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
@@ -41,7 +34,7 @@ function App() {
           <Route path="/order" element={<Order />} />
           <Route path="/showorder/:id" element={<ShowOrder />} />
           <Route path="/trackorder" element={<Trackorder />} />
-          <Route path="/archive" element={<Archive />} />
+          {/*<Route path="/archive" element={<Archive />} />*/}
           <Route path="/chats" element={<Chats />} />
         <Route path="/showemployee" element={<ShowEmployee />} />
         <Route path="/city" element={<City />} />
