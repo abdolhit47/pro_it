@@ -14,7 +14,12 @@ export {default as Trackorder} from './Order/trackorder';
 export {default as Chats} from './Chats/chats';
 export {default as ShowEmployee} from './Employee/showEmployee';
 export {default as City} from './City/showCity';
-export {default as Home} from './Home';
+export {default as Home} from './Homes/Home';
+export {default as Entities} from './Homes/Entities';
+export {default as Gallery} from './Homes/Gallery';
+export {default as News} from './Homes/News';
+export {default as ContactUs} from './Homes/Contact-us';
+
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";
 //export {default as Chackemail} from './chackemail';
