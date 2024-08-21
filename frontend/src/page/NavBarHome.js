@@ -7,7 +7,7 @@ function NavBarHome() {
     return (
         <>
         <nav
-            className="flex inset-x-0 top-0 justify-between  pt-4 pb-5 items-center sticky backdrop-blur-md border-b-stone-700 bg-[#5f4a24]">
+            className="flex inset-x-0 top-0 justify-between absolute pt-4 pb-5 items-center  backdrop-blur-md border-b-stone-700 bg-[#5f4a24]">
             <ul className="md:flex space-x-0 mx-8 md:space-x-4 text-white">
                 <li>
                     <Link to={"/login"}>
