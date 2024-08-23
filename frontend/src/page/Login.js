@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Link} from 'react-router-dom'
 //import { useForm } from "react-hook-form"
 import NavBarHome from "../page/NavBarHome";
-function Login() {
+function Login({office}) {
     const [value,setValues] = useState({
         login:'',
         password:''
@@ -54,7 +54,7 @@ function Login() {
       }
     return(
         <>
-            <NavBarHome />
+            <NavBarHome office={office}/>
             <div className="h-full flex items-center justify-center w-full md:mt-20 sm:mt-5 bg-white-800">
                 <div className="bg-gray-100 shadow-md rounded-lg px-8 py-6 w-full max-w-md">
                     <h1 className="text-2xl font-bold text-center mb-4 text-gray-900" dir="rtl">مرحبا بك!</h1>

@@ -1,11 +1,11 @@
 import NavBarHome from "../NavBarHome";
-function Gallery(){
+function Gallery({office}){
     return(
         <>
             <div className="flex min-h-screen ">
                 <div className="flex-grow bg-gray-100">
-                    <NavBarHome/>
-                    <div className="content-center flex flex-row justify-between my-20 w-full">
+                    <NavBarHome office={office}/>
+                    <div className="content-center flex flex-row justify-between my-20 md:mt-36 w-full">
                         <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-8/12">
                             <p className="text-3xl text-center font-bold mt-10">معرض الصور</p>
                             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-14 w-full mx-auto p-4">

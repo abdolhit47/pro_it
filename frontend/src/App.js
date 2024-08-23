@@ -2,6 +2,9 @@
 import './App.css';
 import './index.css';
 import { Route, BrowserRouter, Routes } from "react-router-dom";
+import axios from "axios";
+import {useEffect, useState} from "react";
+import {baseurl} from "./Baseurl/baseurl";
 
 import{
   Dashboard,
@@ -16,17 +19,30 @@ import{
   Chats,
   Home,Entities,Gallery,News,ContactUs
 }from './page'
+
 // import PrivateRoute from './PrivateRoute';
 function App() {
+
+  const [office, setOffice] = useState([]);
+  async function getoffice(){
+    const response = await axios.get(baseurl+'getshow');
+    if (response.data.error) {
+      return
+    }
+    setOffice(response.data)
+  }
+  useEffect(()=>{
+    getoffice()
+  },[])
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/entities" element={<Entities />} />
-        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/" element={<Home office={office} />} />
+        <Route path="/entities" element={<Entities office={office}/>} />
+        <Route path="/gallery" element={<Gallery office={office} />} />
         <Route path="/news" element={<News />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/contact-us" element={<ContactUs office={office} />} />
+        <Route path="/login" element={<Login office={office} />} />
         <Route path='/Signup' element={<Sign_up/>}/>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />

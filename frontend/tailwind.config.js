@@ -15,6 +15,9 @@ module.exports = {
         'tall3': { 'raw': '( min-height: 1024px)' },
         //'tall4': { 'raw': '( max-height: 1024px)' },
       },
+      fontFamily: {
+        regular: ['Cairo'],
+      },
     },
   },
   plugins: [require('@tailwindcss/line-clamp'),],

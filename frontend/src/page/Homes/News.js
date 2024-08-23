@@ -1,7 +1,7 @@
 function News(){
     return(
         <>
-            <div className="content-center flex flex-row justify-between my-20 w-full">
+            <div className="content-center flex flex-row justify-between my-20 md:mt-36 w-full">
                 <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md m-auto w-8/12">
                     <p className="text-3xl text-center font-bold mt-10">أخبار وزارة الشؤون الاجتماعية</p>
                     <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full mx-auto p-4">

@@ -111,6 +111,17 @@ class OfficeController extends Controller
             return response()->json(['success' => $e->getMessage()],400);
         }
     }
+    public function getshow()
+    {
+        try {
+            $office = Office::select('id','name')->get();
+            return response()->json($office,200);
+        }catch (Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => $e->getMessage()],400);
+        }
+    }
+
 
     public function show_mes()
     {

@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 
     /****Office****/
     Route::get("/showoffice", [OfficeController::class, "index"])->middleware('auth:sanctum');
+    Route::get("/getshow", [OfficeController::class, "getshow"]);
     Route::get("/showoffice/{id}", [OfficeController::class, "show"])->middleware('auth:sanctum');
     Route::post("/storeoffice", [OfficeController::class, "store"])->middleware('auth:sanctum');
     Route::get('/show_mes', [OfficeController::class, 'show_mes'])->middleware('auth:sanctum');
