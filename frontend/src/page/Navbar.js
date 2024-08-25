@@ -126,7 +126,7 @@ function Navbar({countme}) {
                         </Link>
                     </li>
                 </ul>
-                <p className="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>الوزارة الشؤون الإجتماعية</p>
+                <p className="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>وزارة الشؤون الإجتماعية</p>
             </nav><ToastContainer position="top-left" />
         </>
     );

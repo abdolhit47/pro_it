@@ -94,32 +94,33 @@ export default function AddOffice({onClose}) {
                             </div>
                         </div>
 
+                        <p className="block mb-2 font-medium text-right">:المرفقات مطلوبة</p>
                         <div className="flex flex-row-reverse justify-centeritems-center -mx-3 mb-4">
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"ID_card"} value={'value.ID_card'} onChange={handleCheckboxChange}/>
-                                <label htmlFor={"ID_card"} className={'mr-2 font-bold inline-flex'}>بطاقة الشخصية</label>
+                                <label htmlFor={"ID_card"} className={'mr-2 inline-flex'}>بطاقة الشخصية</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"birth_certificate"} value={'value.birth_certificate'} onChange={handleCheckboxChange}/>
-                                <label htmlFor={"birth_certificate"} className={'mr-2 font-bold inline-flex'}>شهادة ميلاد</label>
+                                <label htmlFor={"birth_certificate"} className={'mr-2 inline-flex'}>شهادة ميلاد</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"passport"} value={'value.passport'}  onChange={handleCheckboxChange}/>
-                                <label htmlFor={"passport"} className={'mr-2 font-bold inline-flex'}>جواز السفر</label>
+                                <label htmlFor={"passport"} className={'mr-2 inline-flex'}>جواز السفر</label>
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center -mx-3 mb-4">
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"license"} value={'value.license'}  onChange={handleCheckboxChange}/>
-                                <label htmlFor={"license"} className={'mr-2 font-bold inline-flex'}>رخصة</label>
+                                <label htmlFor={"license"} className={'mr-2 inline-flex'}>رخصة</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"medical_certificate"} value={'value.medical_certificate'}  onChange={handleCheckboxChange}/>
-                                <label htmlFor={"medical_certificate"} className={'mr-2 font-bold inline-flex'}>إثبات طبي</label>
+                                <label htmlFor={"medical_certificate"} className={'mr-2 inline-flex'}>إثبات طبي</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"family_status_certificate"} value={'value.family_status_certificate'}  onChange={handleCheckboxChange}/>
-                                <label htmlFor={"family_status_certificate"} className={'mr-2 font-bold inline-flex'}>شهادة وضع العائلة</label>
+                                <label htmlFor={"family_status_certificate"} className={'mr-2 inline-flex'}>شهادة وضع العائلة</label>
                             </div>
                         </div>
 

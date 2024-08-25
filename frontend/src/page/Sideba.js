@@ -48,7 +48,7 @@ function Sideba() {
         }, 1000);
     };    return (
       <>
-          <div className=" bg-gray-50 flex flex-row-reverse text-right absolute inset-y-14 mt-10 right-7">
+          <div className=" bg-gray-50 flex flex-row-reverse text-right absolute inset-y-14 mt-10 right-7 ">
               <nav className="  w-64  rounded-3xl bg-yellow-600  flex flex-col justify-between text-white transition duration-150 ease-in-out">
                   <div className="grow ">
                       <div className="ounded-lg my-2">

@@ -74,12 +74,12 @@ function Profile() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] md:mt-20 sm:mt-5">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] xl:mt-14 md:mt-5 sm:mt-5">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
                         <div className="flex flex-col p-3 max-w-3xl">
-                            {access === "0" && <h1 className="text-2xl text-red-900 text-center mb-6">يجب ملء جميع الحقول حتى تتمكن من
+                            {access === "0" && <h1 className="text-xl text-red-900 text-center mb-4">يجب ملء جميع الحقول حتى تتمكن من
                                 استخدام النظام</h1>}
-                            <h1 className="text-2xl text-gray-900 text-right mb-6">بياناتي الشخصية</h1>
+                            <h1 className="text-2xl text-gray-900 text-right mb-4">بياناتي الشخصية</h1>
                                 <div>
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -146,7 +146,7 @@ function Profile() {
                                         </div>
                                     </div>
 
-                                    <h1 className="text-2xl text-gray-900  text-right mb-6">بيانات حسابي</h1>
+                                    <h1 className="text-2xl text-gray-900  text-right mb-4">بيانات حسابي</h1>
                                     <div className="flex flex-col">
                                         <div className="flex flex-row-reverse -mx-3 mb-4">
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -170,7 +170,7 @@ function Profile() {
                                         </div>
                                     </div>
                                 </div>
-                            <div className="flex flex-row-reverse justify-center items-center mt-4 ">
+                            <div className="flex flex-row-reverse justify-center items-center mt-2 ">
                                 <button className="  p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]" onClick={onSubmit}>تعديل</button>
                                 <button className="  p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 " onClick={handelback}>رجوع</button>
                             </div>

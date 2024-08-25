@@ -55,7 +55,7 @@ function Login({office}) {
     return(
         <>
             <NavBarHome office={office}/>
-            <div className="h-full flex items-center justify-center w-full md:mt-20 sm:mt-5 bg-white-800">
+            <div className="h-full flex items-center justify-center w-full  my-20 md:mt-36 sm:mt-5 bg-white-800">
                 <div className="bg-gray-100 shadow-md rounded-lg px-8 py-6 w-full max-w-md">
                     <h1 className="text-2xl font-bold text-center mb-4 text-gray-900" dir="rtl">مرحبا بك!</h1>
                         <div className="mb-4"  dir="rtl">

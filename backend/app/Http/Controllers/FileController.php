@@ -58,7 +58,7 @@ class FileController extends Controller
                     $imagePaths[] = $path;
                 }
                 $destinationPath = 'uploads';
-                GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service);
+                GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service,$user->mwaten->id);//->delay(Carbon::now()->addSeconds(5));
                 return response()->json(['message' => 'PDF generation in progress'], 201);
             }else{
                 foreach ($imagePaths as $path) {

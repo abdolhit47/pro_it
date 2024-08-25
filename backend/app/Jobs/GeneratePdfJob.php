@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -17,20 +18,20 @@ class GeneratePdfJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $imagePaths;
-    protected $destinationPath;
-    protected $id_service;
+    protected $imagePaths,$destinationPath,$id_service,$id;
+
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($imagePaths, $destinationPath, $id_service)
+    public function __construct($imagePaths, $destinationPath, $id_service,$id)
     {
         $this->imagePaths = $imagePaths;
         $this->destinationPath = $destinationPath;
         $this->id_service = $id_service;
+        $this->id = $id;
     }
 
     /**
@@ -71,8 +72,9 @@ class GeneratePdfJob implements ShouldQueue
             $file->save(); // حفظ سجل الملف في قاعدة البيانات
             // Delete images after PDF is generated
             $service_follow_up = new Service_Follow_Up();
+            error_log($this->id_service);
             $service_follow_up->file_id = $file->id;
-            $service_follow_up->mwaten_id = 2;
+            $service_follow_up->mwaten_id = $this->id;
             $service_follow_up->service_id = $this->id_service;
             $service_follow_up->save();
             foreach ($this->imagePaths as $path) {

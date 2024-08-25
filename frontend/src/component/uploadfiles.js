@@ -7,7 +7,11 @@ import {useNavigate, useParams} from "react-router-dom";
 export default function Uploadfiles({onClose,id}) {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const handleFileChange = (event)=> {
-        setSelectedFiles(event.target.files);
+        const { name, files } = event.target;
+        setSelectedFiles(prevState => ({
+            ...prevState,
+            [name]: files[0] // Store each file under its respective name
+        }));
     };
     const closeModalTp = () => {
         onClose(false);
@@ -31,15 +35,37 @@ export default function Uploadfiles({onClose,id}) {
     const navigate = useNavigate();
 
     async function onSubmit ()  {
-        if(selectedFiles.length===0){
-            toast.error('يجب عليك تحميل وثيقة/وثائق');
-            return
+        if (reqDocs.ID_card && !selectedFiles.ID_card) {
+            toast.error('يرجى تحميل بطاقة الشخصية.');
+            return;
+        }
+        if (reqDocs.birth_certificate && !selectedFiles.birth_certificate) {
+            toast.error('يرجى تحميل شهادة الميلاد.');
+            return;
+        }
+        if (reqDocs.license && !selectedFiles.license) {
+            toast.error('يرجى تحميل رخصة القيادة.');
+            return;
+        }
+        if (reqDocs.passport && !selectedFiles.passport) {
+            toast.error('يرجى تحميل جواز السفر.');
+            return;
+        }
+        if (reqDocs.medical_certificate && !selectedFiles.medical_certificate) {
+            toast.error('يرجى تحميل شهادة صحية.');
+            return;
+        }
+        if (reqDocs.family_status_certificate && !selectedFiles.family_status_certificate) {
+            toast.error('يرجى تحميل شهادة وضع العائلة.');
+            return;
         }
         const formData = new FormData();
+
+        Object.keys(selectedFiles).forEach((key) => {
+            formData.append('files[]', selectedFiles[key]);
+        });
         formData.append('id_service',id.id_service);
-        for (let i = 0; i < selectedFiles.length; i++) {
-            formData.append('files[]', selectedFiles[i]);
-        }
+        //console.log(formData)
         try{
             const res =  await axios.post(baseurl + 'storefollowup', formData,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -60,6 +86,7 @@ export default function Uploadfiles({onClose,id}) {
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }
         }
+
     }
     return (
     <div id="modelConfirm" className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
@@ -79,21 +106,27 @@ export default function Uploadfiles({onClose,id}) {
                     <h1 className="text-2xl text-gray-900 text-right">{id.name} - {id.address}</h1>
                     <h1 className=" text-gray-900 text-right my-4" dir={"rtl"}>الخدمة: {id.service}</h1>
                     <h1 className=" text-gray-900 text-right my-2 font-bold" dir={"rtl"}>أوراق مطلوبة: </h1>
-                    <ol className="text-gray-900 text-right my-2 flex flex-col gap-2 grid grid-cols-2">
-                        {reqDocs.ID_card===1 ? <li >بطاقة الشخصية</li>:null}
-                        {reqDocs.birth_certificate === 1 ? <li >شهادة الميلاد</li> : null}
-                        {reqDocs.license === 1 ? <li >رخصة القيادة</li> : null}
-                        {reqDocs.passport === 1 ? <li >جواز سفر</li> : null}
-                        {reqDocs.medical_certificate === 1 ? <li >شهادة صحية</li> : null}
-                        {reqDocs.family_status_certificate === 1 ? <li >شهادة وضع العائلة</li> : null}
+                    <ol className="text-gray-900 text-right my-2 flex-col gap-2 grid grid-cols-2" dir={'rtl'}>
+                        {reqDocs.ID_card===1 ? <><li >بطاقة الشخصية</li>
+                            <input type="file"  id="ID_card" name={'ID_card'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </>:null}
+                        {reqDocs.birth_certificate === 1 ? <><li >شهادة الميلاد</li>
+                            <input type="file"  id="birth_certificate" name={'birth_certificate'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </> : null}
+                        {reqDocs.license === 1 ? <><li >رخصة القيادة</li>
+                            <input type="file"  id="license" name={'license'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </>: null}
+                        {reqDocs.passport === 1 ?<> <li >جواز سفر</li>
+                            <input type="file"  id="passport" name={'passport'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </>: null}
+                        {reqDocs.medical_certificate === 1 ? <><li >شهادة صحية</li>
+                            <input type="file"  id="medical_certificate" name={'medical_certificate'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </> : null}
+                        {reqDocs.family_status_certificate === 1 ? <><li >شهادة وضع العائلة</li>
+                            <input type="file" id="family_status_certificate"  name={'family_status_certificate'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
+                        </> : null}
                     </ol>
-                        <div className="flex flex-row-reverse mt-2 -mx-3 mb-4">
-                            <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0" dir={"rtl"}>
-                                <label for="files" className="block mb-2 text-gray-700 font-medium  text-right">رفع الوثائق:</label>
-                                <input type="file"  id="files" multiple name={'files[]'} onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png"/>
 
-                            </div>
-                        </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
