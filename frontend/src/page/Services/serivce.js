@@ -47,20 +47,19 @@ function Service() {
                         <div className=" px-3 mb-6 md:mb-0" dir="rtl">
                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={handleAdd}>اضافة الخدمة</button>
                         </div>
-                        <div className={"px-6 py-4 mt-6 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
+                        <div className={"px-6 py-4 mt-6 grid gap-4 justify-start overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                             {service.map((item,index)=>(<>
                                 {/*    <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">*/}
                                 {/*        {item.name}*/}
                                 {/*    </span>*/}
                                 {/*<p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{item.description}</p>*/}
-                                <div className={"ml-6  relative h-auto w-1/6 md:w-1/4  flex-shrink-0 flex-col inline-flex"}>
-                                    <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-full">
-                                        <label htmlFor={"service"} className={'mr-2 font-bold inline-flex'}>{item.name}</label>
+                                <div className={"ml-6  relative h-auto w-full  flex-shrink-0"}>
+                                    <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 ml-2 w-full">
+                                        <label htmlFor={"service"} className={'mr-2 font-bold'}>{item.name}</label>
                                         <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{item.description}</p>
                                     </div>
-
                                 </div>
-                    </>))}
+                            </>))}
                         </div>
                     </div>
                 </div>

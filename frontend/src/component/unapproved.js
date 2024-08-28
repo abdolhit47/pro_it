@@ -34,12 +34,15 @@ export default function Unapproved({onClose,id}) {
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'multipart/form-data',},
             });
-            if(res.status===200){
+            console.log(res.data.message)
+            if(res.status===200 && res.data.message==="unapproved"){
                 toast.success('تم رفض الطلب بنجاح');
                 setTimeout(() => {
                     onClose(false);
                 }, 1250);
-
+            }
+            else{
+                toast.warning('تم إجراء هذا طلب سابقا');
             }
         }catch (error){
             if(error?.response?.status === 422){

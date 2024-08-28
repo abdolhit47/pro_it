@@ -19,6 +19,7 @@ export {default as Entities} from './Homes/Entities';
 export {default as Gallery} from './Homes/Gallery';
 export {default as News} from './Homes/News';
 export {default as ContactUs} from './Homes/Contact-us';
+export {default as ShowOfficeH} from './Homes/ShowOfficeH';
 
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";

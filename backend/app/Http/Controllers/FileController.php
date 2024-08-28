@@ -47,6 +47,7 @@ class FileController extends Controller
 
                 //error_log($request->service_id);
                 $service_follow_up = new Service_Follow_Up();
+                $service_follow_up->task_id = random_int(1000, 999999);
                 $service_follow_up->file_id = $file->id;
                 $service_follow_up->mwaten_id = $user->mwaten->id;
                 $service_follow_up->service_id = $request->id_service;
@@ -88,6 +89,7 @@ class FileController extends Controller
                     $service = $service->map(function ($service) {
                         return (object)[
                             'id' => $service->id,
+                            'task' => $service->task_id,
                             'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
                             'name_service' => $service->services->name,
                             'name_office' => $service->services->offices->name,
@@ -99,7 +101,7 @@ class FileController extends Controller
 
                 // user, employee
                 if (Auth::user()->role == 2 || Auth::user()->role == 3) {
-                    $status = [0, 2];
+                    $status = [0,1, 2];
                     $service = Service_Follow_Up::with('services')
                         ->whereIn('status', $status)
                         ->where('approve', 0)->orWhere('approve', 1)
@@ -111,6 +113,7 @@ class FileController extends Controller
                     $service = $service->map(function ($service) {
                             return (object)[
                                 'id' => $service->id,
+                                'ticket' => $service->task_id,
                                 'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
                                 'name_service' => $service->services->name,
                                 'name_office' => $service->services->offices->name,
@@ -141,6 +144,7 @@ class FileController extends Controller
             $service =  $service->map(function ($service) {
                     return (object) [
                         'id' => $service->id,
+                        'ticket' => $service->task_id,
                         'name_service' => $service->services->name,
                         'name_office' => $service->services->offices->name,
                         'status' => $service->status == 0 ? 'في الانتظار' : ($service->status == 1 ? 'تحت المراجعة' : ($service->status == 2 ? 'قيد التنفيذ' : ($service->status == 3 ? 'مكتمل' : 'مرفوض'))),
@@ -158,7 +162,7 @@ class FileController extends Controller
     public function approve($id){
         try {
             $user = Auth::user();
-            if(!in_array($user->role, [0, 1])){
+            if(!in_array($user->role, [2,3])){
                 return response()->json(['success' => "doesn't have permission"], 403);
             }
 
@@ -177,25 +181,25 @@ class FileController extends Controller
             return response()->json(['success' => $e->getMessage()],400);
         }
     }
-    public function send_wezara($id){
-        try {
-            $user = Auth::user();
-            if(!in_array($user->role, [2,3])){
-                return response()->json(['success' => "doesn't have permission"], 403);
-            }
-            $service = Service_Follow_Up::find($id);
-            $service->status = 1;
-            $service->save();
-            return response()->json(['message' => 'send success'],200);
-        }catch (\Exception $e) {
-            error_log($e->getMessage());
-            return response()->json(['success' => $e->getMessage()],400);
-        }
-    }
+//    public function send_wezara($id){
+//        try {
+//            $user = Auth::user();
+//            if(!in_array($user->role, [2,3])){
+//                return response()->json(['success' => "doesn't have permission"], 403);
+//            }
+//            $service = Service_Follow_Up::find($id);
+//            $service->status = 1;
+//            $service->save();
+//            return response()->json(['message' => 'send success'],200);
+//        }catch (\Exception $e) {
+//            error_log($e->getMessage());
+//            return response()->json(['success' => $e->getMessage()],400);
+//        }
+//    }
     public function unapprove($id,Request $request){
         try {
             $user = Auth::user();
-            if(!in_array($user->role, [0, 1])){
+            if(!in_array($user->role, [2,3])){
                 return response()->json(['success' => "doesn't have permission"], 403);
             }
             $service = Service_Follow_Up::find($id);
@@ -228,6 +232,7 @@ class FileController extends Controller
             'date' => $services->created_at->format('Y-m-d'),
             'name_file' => $services->files->path_file,
             'status' => $services->status,
+            'approve' => $services->approve
         ];
         return response()->json($services);
     }

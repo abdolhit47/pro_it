@@ -8,6 +8,12 @@ import axios from "axios";
 import useFollowUp from "../../component/search";
 
 function Order() {
+    const role = localStorage.getItem('role');
+    const array = [ "2", "3"];
+    const array2 = ["0", "1", "4"]
+    const navigate = useNavigate();
+    const access = localStorage.getItem('access_token');
+
     const {
         Data,
         filteredData,
@@ -19,15 +25,15 @@ function Order() {
         getFollowUp
     } = useFollowUp("Order");
 
-    const role = localStorage.getItem('role');
-    const array = ["0", "1", "2", "3"];
-    const navigate = useNavigate();
-    const access = localStorage.getItem('access_token');
     useEffect(()=>{
         if (access === "0") {
             navigate('/profile');
         }
+        if (array2.some(element => element ===role)){
+            navigate('/Dashboard')
+        }
     })
+
     const handleshow = (id, event) => {
         event.preventDefault();
         if (id) {
@@ -77,7 +83,7 @@ function Order() {
                             <h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>
                             {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
                         </div>
-                        {filteredData.length > 0 && array.some(element => element === role) &&
+                        {Data.length > 0 && array.some(element => element === role) &&
                             <div className="px-6 py-4 flex  " dir={'rtl'}>
                                 <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
                                 <input
@@ -106,6 +112,7 @@ function Order() {
                                 <thead className="flex w-full items-center ">
                                 <tr className="border-b text-center flex w-full px-2 mb-4">
                                     <th className="p-3 items-center w-1/8">#</th>
+                                    <th className="p-3 items-center w-1/5">رقم الطلب</th>
                                     <th className="p-3 items-center w-1/5">الاسم المواطن</th>
                                     <th className="p-3 items-center w-1/5">الجهة/المركز</th>
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
@@ -119,6 +126,7 @@ function Order() {
                                     filteredData.map((item, index) => (
                                         <tr className="text-center hover:bg-orange-100 flex w-full px-2">
                                             <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
+                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.ticket.toString()}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
                                             <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>

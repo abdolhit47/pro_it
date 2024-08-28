@@ -9,7 +9,7 @@ import {baseurl} from "./Baseurl/baseurl";
 import{
   Dashboard,
   Login,
-
+  ShowOfficeH,
   User,Sign_up,Profile, Showprofile,
   Office,ShowOffice,Service,
   ShowEmployee,
@@ -49,6 +49,7 @@ function App() {
         <Route path="/showprofile/:id" element={<Showprofile />} />
         <Route path="/user" element={<User />} />
         <Route path="/office" element={<Office />} />
+        <Route path="/office/:id" element={<ShowOfficeH office={office} />} />
         <Route path={"/service"} element={<Service/>} />
         <Route path="/showoffice/:id" element={<ShowOffice />} />
         <Route path="/order" element={<Order />} />

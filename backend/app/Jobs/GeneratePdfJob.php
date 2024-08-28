@@ -72,7 +72,7 @@ class GeneratePdfJob implements ShouldQueue
             $file->save(); // حفظ سجل الملف في قاعدة البيانات
             // Delete images after PDF is generated
             $service_follow_up = new Service_Follow_Up();
-            error_log($this->id_service);
+            $service_follow_up->task_id = random_int(1000, 999999);
             $service_follow_up->file_id = $file->id;
             $service_follow_up->mwaten_id = $this->id;
             $service_follow_up->service_id = $this->id_service;

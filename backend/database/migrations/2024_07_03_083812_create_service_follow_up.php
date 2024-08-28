@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('service_follow_up', function (Blueprint $table) {
             $table->id();
+            $table->integer('task_id')->unique();
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('service')->onDelete('cascade');
 

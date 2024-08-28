@@ -37,36 +37,9 @@ function ShowOrder() {
     const handleShow = ()=>{
         setOpenModal(true);
     }
-    async function approve ($id){
-        await axios.put(baseurl+'approve/'+$id,{}, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            }
-        }).then((response) => {
-            if(response.data.message === "approved"){
-                toast.success("تم الموافقة بنجاح");
-                setTimeout(() => {
-                    navigate('/Order');
-                }, 1000);
-            }else if(response.data.message === 'already approved'){
-                toast.success("تم الموافقة مسبقا");
-                setTimeout(() => {
-                    navigate('/Order');
-                }, 1250);
-            }
-        }).catch((error) => {
-            console.log(error);
-        })
 
-    }
 
-    const [unapprove, setunapprove] = useState(false);
     const [value, setvalue] = useState(0);
-    const handleUnapprove = ($id,event)=>{
-        event.preventDefault();
-        setvalue($id)
-        setunapprove(true)
-    }
     const [uploaddocs, setuploaddocs] = useState(false); //uploaddocs
     const handleUploadDoc = ($id,event)=>{
         event.preventDefault();
@@ -77,28 +50,26 @@ function ShowOrder() {
     const handleshow = () => {
             navigate(`/Order`);
     };
-    const handleCloseUnapprove= () => {
-        setunapprove(false);
-    };
     const handleCloseUploadDoc= () => {
         setuploaddocs(false);
     };
 
-    async function send($id){
-        await axios.put(baseurl + 'send_wezara/'+$id,{}, {
-            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-        }).then((response) => {
-            if(response.status === 200){
-                toast.success("تم الارسال بنجاح");
-                setTimeout(() => {
-                    navigate('/Order');
-                }, 1000);
-            }
-        }).catch( (error) => {
-            console.log(error);
-        });
-
-    }
+    // async function send($id){
+    //     await axios.put(baseurl + 'send_wezara/'+$id,{}, {
+    //         headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+    //     }).then((response) => {
+    //         if(response.status === 200){
+    //             toast.success("تم الارسال بنجاح");
+    //             setTimeout(() => {
+    //                 navigate('/Order');
+    //             }, 1000);
+    //         }
+    //     }).catch( (error) => {
+    //         console.log(error);
+    //     });
+    //
+    // }
+    console.log(Order.status === "2"??"ASa")
     return (
         <>
         <div className="flex h-screen ">
@@ -124,19 +95,19 @@ function ShowOrder() {
                             </div>
                             {/*<p className={"my-10 mr-4"}>وعليه تم قبول طلبه من قبل الوزارة والرجاء من الجهة المعنية تنفيد الطلب. </p>*/}
                             <div className="flex flex-row justify-center items-center mt-4 ">
-                                {role.includes("0") &&<div className="p-3 w-1/5 flex items-center justify-between">
-                                    <button onClick={()=>approve(id)}><CheckCircleOutlineIcon color="success" fontSize="large"/>القبول</button>
-                                    <button onClick={(event)=>handleUnapprove(id,event)} ><CancelIcon sx={{ color: red[500] }} fontSize="large"/>الرفض</button>
-                                </div>}
-                                {array.includes(role) &&
-                                    (Order.status === "2" ?
+                                {Order.status === "2" ?
                                     <button
-                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={(event)=>handleUploadDoc(id,event)}>إصدار
-                                    الوثيقة</button> :
-                                    <button
-                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={()=>send(id)}>
-                                        إرسال إلى الوزارة</button>)
+                                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                        onClick={(event) => handleUploadDoc(id, event)}>
+                                        إصدار الوثيقة
+                                    </button>: null
+                                    // <button
+                                    //     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                    //     //onClick={() => send(id)}
+                                    //     >
+                                    //     إرسال إلى الوزارة</button>
                                 }
+
                                 <button className="mr-44 py-2 px-4 font-bold border-solid border-2 border-amber-700 hover:bg-amber-700 hover:text-white rounded-md " onClick={handleshow} >رجوع</button>
                             </div>
                         </div>
@@ -145,8 +116,8 @@ function ShowOrder() {
             </div>
             {/*<ToastContainer  position="top-left" />*/}
         </div>
-            {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file}/>}
-            {unapprove && <Unapprove onClose={handleCloseUnapprove}  id={value} />}
+            {OpenModal &&<Showfile setOpenModal={setOpenModal} path_file={Order.name_file} id={id} status={Order.status} approved={Order.approve}/>}
+
             {uploaddocs && <UploadDoc onClose={handleCloseUploadDoc} id={value}/>}
         </>
     )

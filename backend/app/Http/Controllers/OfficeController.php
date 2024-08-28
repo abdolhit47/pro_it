@@ -36,6 +36,17 @@ class OfficeController extends Controller
         });
         return response()->json($office);
     }
+    public function indexH($id)
+    {
+        $office = Office::with('addresses')->where('id',$id)->first();
+        $office = (object) [
+            'id' => $office->id,
+            'name' => $office->name,
+            'description' => $office->description,
+            'address' => $office->addresses->name,
+            ];
+        return response()->json($office);
+    }
 
     public function store(Request $request){
         try {
@@ -114,7 +125,7 @@ class OfficeController extends Controller
     public function getshow()
     {
         try {
-            $office = Office::select('id','name')->get();
+            $office = Office::select('id','name')->where('id','!=',1)->get();
             return response()->json($office,200);
         }catch (Exception $e) {
             error_log($e->getMessage());

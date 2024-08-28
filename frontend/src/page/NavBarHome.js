@@ -1,12 +1,14 @@
 //import React, {useState} from "react";
 import {Link} from 'react-router-dom'
 import {useState, useEffect} from "react";
-
+import {useNavigate} from "react-router-dom";
 function NavBarHome({office}) {
     // const [activePath, setActivePath] = useState(window.location.pathname);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
-
+    const handleClick = (id,index) => {
+        navigate(`/office/${id}`);
+    }
     return (
         <>
         <nav
@@ -28,45 +30,31 @@ function NavBarHome({office}) {
                     </Link>
                 </li>
                 <li>
-                    <details>
-                        <summary dir={'ltr'}>
+                    <details onMouseEnter={(e) => e.currentTarget.setAttribute('open', true)}
+                                         onMouseLeave={(e) => e.currentTarget.removeAttribute('open')}>
+
+                    <summary dir={'ltr'}>
                             <span className="hover:border-b-4 hover:border-b-amber-600">مراكز والجهات</span>
                         </summary>
                         <ul className="space-y-0 absolute text-gray-800 bg-gray-300/90 rounded-md w-52 text-right max-h-40 overflow-y-auto">
-                            {office.map((office)=>{
+                            {office.map((office, index)=>{
                                 return(
-                                    <li>
-                                        <Link to={`/office/${office.id}`}>
-                                            <summary className=" p-3  cursor-pointer ">
-                                                <span >{office.name}</span>
-                                            </summary>
-                                        </Link>
+                                    <li key={index}>
+                                        <summary className="p-3 cursor-pointer" onClick={() => handleClick(office.id, index)}>
+                                            {office.name}
+                                        </summary>
                                     </li>
                                 )
-                            })
+                                })
                             }
-                            {/*<li>*/}
-                            {/*    <summary className=" p-3  cursor-pointer ">*/}
-                            {/*        <span className="font-semibold">صندوق الضمان الاجتماعي</span>*/}
-                            {/*    </summary>*/}
-                            {/*</li>*/}
-                            {/*<li>*/}
-                            {/*    <summary className=" p-3  cursor-pointer ">*/}
-                            {/*        <span className="font-semibold">صندوق الضمان الاجتماعي</span>*/}
-                            {/*    </summary>*/}
-                            {/*</li>*/}
-                            {/*<li>*/}
-                            {/*    <summary className=" p-3  cursor-pointer ">*/}
-                            {/*        <span className="font-semibold">صندوق الضمان الاجتماعي</span>*/}
-                            {/*    </summary>*/}
-                            {/*</li>*/}
                         </ul>
                     </details>
                 </li>
             </ul>
 
-            <Link to={"/"}>
-                <p className="text-white text-3xl ml-auto pr-4" style={{fonSize: "30px"}}>وزارة الشؤون الإجتماعية</p>
+            <Link to={"/"} dir={'rtl'} className={"text-center justify-start"}>
+                <img src={require("../images/logo.png")} className={'inline w-20 h-20'}/>
+                <p className="text-white text-3xl ml-auto pr-4 inline" style={{fonSize: "30px"}}>وزارة الشؤون الإجتماعية</p>
             </Link>
         </nav>
         </>

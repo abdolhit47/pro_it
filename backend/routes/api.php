@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Route;
     /****Office****/
     Route::get("/showoffice", [OfficeController::class, "index"])->middleware('auth:sanctum');
     Route::get("/getshow", [OfficeController::class, "getshow"]);
+    Route::get("/showofficeH/{id}", [OfficeController::class, "indexH"]);
     Route::get("/showoffice/{id}", [OfficeController::class, "show"])->middleware('auth:sanctum');
     Route::post("/storeoffice", [OfficeController::class, "store"])->middleware('auth:sanctum');
     Route::get('/show_mes', [OfficeController::class, 'show_mes'])->middleware('auth:sanctum');
@@ -80,7 +81,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/storefollowup', [FileController::class, 'store'])->middleware('auth:sanctum');//upload file and store service follow up
     Route::get('/getfollowup', [FileController::class, 'showe_service'])->middleware('auth:sanctum');
     Route::get('/gettrackorder', [FileController::class, 'showe_trackorder'])->middleware('auth:sanctum');
-    Route::put('/send_wezara/{id}', [FileController::class, 'send_wezara'])->middleware('auth:sanctum');
+//    Route::put('/send_wezara/{id}', [FileController::class, 'send_wezara'])->middleware('auth:sanctum');
     Route::put('/approve/{id}', [FileController::class, 'approve'])->middleware('auth:sanctum');
     Route::post('/unapprove/{id}', [FileController::class, 'unapprove'])->middleware('auth:sanctum');
     Route::get("/getservicesfollow/{id}", [FileController::class, "getservicesfollow"])->middleware('auth:sanctum');

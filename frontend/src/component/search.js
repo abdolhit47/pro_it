@@ -41,6 +41,7 @@ const useFollowUp = ($id) => {
         }else{
             if (nameFilter) {
                 filteredData = filteredData.filter(item =>
+                    item.ticket.toString().includes(nameFilter.toString())||
                     item.name_mwaten.includes(nameFilter) ||
                     item.name_office.includes(nameFilter) ||
                     item.name_service.includes(nameFilter)

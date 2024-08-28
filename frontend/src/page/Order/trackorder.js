@@ -59,45 +59,78 @@ function Order() {
                             <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl" onClick={handleshow}>طلب الخدمة<AddIcon/></button>
                         </div>
                         {/*<div className="px-6 py-4 flex  " dir={'rtl'}>*/}
-                            <div className={"px-6 py-4  gap-3 flex  flex-col overflow-y-auto h-auto max-h-96 max-w-full"} dir={'rtl'}>
 
+                        {serviceFollowUp.length > 0 ?
+                            <div className={'flex flex-wrap col-span-4 gap-5 my-4'} dir={'rtl'}>
+                                <span className=" font-bold text-black border-b-2 border-gray-300 px-3 py-2 w-1/6">
+                                    رقم الطلب
+                                </span>
+                                <span className=" font-bold text-black border-b-2 border-green-500 px-3 py-2 w-1/6">
+                                                    نوع الخدمة
+                                </span>
+                                <span className=" font-bold text-black border-b-2 border-green-500 px-3 py-2 w-1/6">
+                                                    المركز/الجهة
+                                </span>
+                                <span className={" font-bold border-red-500 text-black border-b-2 px-3 py-2 w-1/6"}>
+                                                    الحالة
+                                </span>
+                            </div>:null
+                        }
+                        <div className={"px-6 py-4  gap-3 flex  flex-col overflow-y-auto h-auto max-h-96 max-w-full"} dir={'rtl'}>
                                 {
                                     serviceFollowUp.length === 0 ? (
                                         <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-5/6 text-3xl">
+                                            <span className="bg-gray-100  text-black text-center rounded-md px-3 py-2 w-full text-3xl">
                                                 لا يوجد طلبات
                                             </span>
                                         </div>
                                     ):
-                                    serviceFollowUp.map((item,index)=>(
-                                        <div className={'flex flex-wrap col-span-4 gap-5 my-4'}>
-                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                                {item.name_office}
-                                            </span>
 
-                                            <span className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
-                                                {item.name_service}
-                                            </span>
+                                    (<>
 
-                                            <span className={`${item.status === "مرفوض" ? "bg-gray-100 border-red-500 text-black border-r-8 rounded-md px-3 py-2 w-1/6" : (item.status === "مكتمل" ? "bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6" : "bg-gray-100  text-black border-r-8 border-amber-500 rounded-md px-3 py-2 w-1/6")}`}>
-                                                {item.status}
-                                            </span>
+                                        {serviceFollowUp.map((item, index) => (
+                                                <div className={'flex flex-wrap col-span-4 gap-5 my-4 '}>
+                                                <span
+                                                    className="bg-gray-100  text-black border-r-8 border-gray-300 rounded-md px-3 py-2 w-1/6">
+                                                    {item.ticket}
+                                                </span>
 
-                                            <span className={`${item.note == null ? "  px-3 py-2 w-1/6" : "bg-gray-100  text-black border-2 border-red-500 rounded-md px-3 py-2 w-1/6"}`}>
-                                                {item.note}
-                                            </span>
+                                                    <span
+                                                        className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                    {item.name_office}
+                                                </span>
 
-                                            {item.data != null && item.status === "مكتمل" ? (
-                                                <button className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded" >
-                                                    <a href={`${baseurl}download/${item.data}`} download>تحميل الوثيقة</a>
-                                                </button>
-                                            ) : (
-                                                ""
-                                            )}
-                                        </div>
-                                ))}
+                                                    <span
+                                                        className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
+                                                    {item.name_service}
+                                                </span>
 
-                            </div>
+                                                    <span
+                                                        className={`${item.status === "مرفوض" ? "bg-gray-100 border-red-500 text-black border-r-8 rounded-md px-3 py-2 w-1/6" : (item.status === "مكتمل" ? "bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6" : "bg-gray-100  text-black border-r-8 border-amber-500 rounded-md px-3 py-2 w-1/6")}`}>
+                                                    {item.status}
+                                                </span>
+
+                                                    <span
+                                                        className={`${item.note == null ? "  px-3 py-2 w-1/6" : "bg-gray-100  text-black border-2 border-red-500 rounded-md px-3 py-2 w-1/6"}`}>
+                                                    {item.note}
+                                                </span>
+
+                                                    {item.data != null && item.status === "مكتمل" ? (
+                                                        <button
+                                                            className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded">
+                                                            <a href={`${baseurl}download/${item.data}`} download>تحميل
+                                                                الوثيقة</a>
+                                                        </button>
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                </div>
+                                            )
+                                        )}
+                                    </>)
+                                }
+
+                </div>
                     </div>
                 </div>
             </div>

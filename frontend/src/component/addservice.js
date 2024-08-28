@@ -16,9 +16,6 @@ export default function AddOffice({onClose}) {
         medical_certificate: false,
         family_status_certificate: false,
     });
-
-    console.log(value); // For debugging purposes
-
     const closeModalTp = () => {
         onClose(false);
     };
