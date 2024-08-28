@@ -18,12 +18,12 @@ class OfficeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->role == 4){
+//        if($user->role == 4){
             $offices = Office::with('employees','addresses')->where('id','!=','1')->get();
-        }else{
-            $offices = Office::with('employees','addresses')->get();
-
-        }
+//        }else{
+//            $offices = Office::with('employees','addresses')->get();
+//
+//        }
 
         $office = $offices->map(function ($office) {
             return [
