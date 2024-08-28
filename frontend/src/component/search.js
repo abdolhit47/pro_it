@@ -30,7 +30,8 @@ const useFollowUp = ($id) => {
             if (nameFilter) {
                 filteredData = filteredData.filter(item =>
                     item.name.includes(nameFilter)||
-                    item.address.includes(nameFilter)
+                    item.user.includes(nameFilter)
+                    //item.address.includes(nameFilter)
                 );
             }
             if (DataFilter) {

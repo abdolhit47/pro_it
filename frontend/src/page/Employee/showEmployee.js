@@ -63,6 +63,7 @@ function ShowEmployee() {
             if (res.status === 200) {
                 toast.success('تمت العملية بنجاح');
                 getFollowUp()
+                setValue({name: ''});
                 setShow(false);
             }
         } catch (error) {

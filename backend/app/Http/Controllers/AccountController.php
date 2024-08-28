@@ -33,7 +33,7 @@ class AccountController extends Controller
         $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
         $user = auth()->user();
         $user->token = $token;
-        return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->ID_office], 200);
+        return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee->offices->name], 200);
     }
 
     public function logout()

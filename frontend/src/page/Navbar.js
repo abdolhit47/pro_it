@@ -20,7 +20,7 @@ const ITEM_HEIGHT = 48;
 
 function Navbar({countme}) {
     const username = localStorage.getItem('username');
-
+    const office = localStorage.getItem('Office');
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -126,7 +126,7 @@ function Navbar({countme}) {
                         </Link>
                     </li>
                 </ul>
-                <p className="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>وزارة الشؤون الإجتماعية</p>
+                <p className="text-black text-3xl font-bold ml-auto pr-4" style={{fonSize: "30px"}}>{office}</p>
             </nav><ToastContainer position="top-left" />
         </>
     );

@@ -33,7 +33,7 @@ function Login({office}) {
                 localStorage.setItem('username', res.data.username);
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', res.data.role);
-                localStorage.setItem('Office', res.data.Office);
+                localStorage.setItem('Office', res.data.office);
                 toast.success('مرحبا');
                 setTimeout(() => {
                     navigate('/Dashboard');
