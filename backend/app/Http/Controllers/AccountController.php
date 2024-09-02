@@ -25,16 +25,30 @@ class AccountController extends Controller
             $login_type => $request->input('login'),
             'password' => $request->input('password')
         ];
-
         $access_token = auth()->attempt($credentials);
         if (!$access_token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
-        $user = auth()->user();
-        $user->token = $token;
-        return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee->offices->name], 200);
-    }
+
+        $checkIDOffice = auth()->user()->emplyee?auth()->user()->emplyee->offices->id:0;
+        //Citizen
+        if($checkIDOffice == 0){//check if Citizen go to login
+            $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
+            $user = auth()->user();
+            $user->token = $token;
+            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee?$user->emplyee->offices->name:""], 200);
+
+        }
+        //if employee
+        if ($checkIDOffice == $request->office_id) { //check if same office to login
+            $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
+            $user = auth()->user();
+            $user->token = $token;
+            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee?$user->emplyee->offices->name:""], 200);
+        }
+
+        return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
     public function logout()
     {

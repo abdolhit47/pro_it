@@ -124,7 +124,7 @@ export default function AddOffice({onClose}) {
                                     }}
                                     options={optionscity}
                                 />
-                                {error&& value.address ===null&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
+                                {error&& value.address === ''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
                         <div className="flex flex-row-reverse -mx-3 mb-4">

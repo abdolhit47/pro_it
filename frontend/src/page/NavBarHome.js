@@ -3,11 +3,27 @@ import {Link} from 'react-router-dom'
 import {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 function NavBarHome({office}) {
-    // const [activePath, setActivePath] = useState(window.location.pathname);
     const navigate = useNavigate();
 
-    const handleClick = (id,index) => {
+    const handleClick = (id, name) => {
+        localStorage.setItem('selected_office_id', id);
+        localStorage.setItem('selected_office_name', name);
         navigate(`/office/${id}`);
+    }
+    const handleHomeClick = () => {
+        localStorage.setItem('selected_office_id', 1);
+        localStorage.setItem('selected_office_name', "وزارة الشؤون الإجتماعية");
+        navigate("/");
+    }
+    const handleLoginClick =(id) =>{
+        const storedOfficeId = localStorage.getItem('selected_office_id');
+        if (storedOfficeId) {
+            navigate(`/login`);
+        } else {
+            localStorage.setItem('selected_office_id', 1);
+            localStorage.setItem('selected_office_name', "وزارة الشؤون الإجتماعية");
+            navigate("/login");
+        }
     }
     return (
         <>
@@ -15,9 +31,9 @@ function NavBarHome({office}) {
             className="flex inset-x-0 top-0 justify-between absolute pt-4 pb-5 items-center  backdrop-blur-md border-b-stone-700 bg-[#5f4a24]">
             <ul className="md:flex space-x-0 mx-8 md:space-x-4 text-white">
                 <li>
-                    <Link to={"/login"}>
-                        <a href="/login" className="hover:border-b-4 hover:border-b-amber-600 ">تسجيل دخول</a>
-                    </Link>
+                    {/*<Link to={"/login"}>*/}
+                        <a onClick={handleLoginClick} className="hover:border-b-4 hover:border-b-amber-600 ">تسجيل دخول</a>
+                    {/*</Link>*/}
                 </li>
                 <li>
                     <Link to={"/contact-us"}>
@@ -40,7 +56,7 @@ function NavBarHome({office}) {
                             {office.map((office, index)=>{
                                 return(
                                     <li key={index}>
-                                        <summary className="p-3 cursor-pointer" onClick={() => handleClick(office.id, index)}>
+                                        <summary className="p-3 cursor-pointer" onClick={() => handleClick(office.id, office.name)} >
                                             {office.name}
                                         </summary>
                                     </li>
@@ -52,10 +68,10 @@ function NavBarHome({office}) {
                 </li>
             </ul>
 
-            <Link to={"/"} dir={'rtl'} className={"text-center justify-start"}>
+            <a onClick={handleHomeClick} dir={'rtl'} className={"text-center justify-start"}>
                 <img src={require("../images/logo.png")} className={'inline w-20 h-20'}/>
                 <p className="text-white text-3xl ml-auto pr-4 inline" style={{fonSize: "30px"}}>وزارة الشؤون الإجتماعية</p>
-            </Link>
+            </a>
         </nav>
         </>
     );

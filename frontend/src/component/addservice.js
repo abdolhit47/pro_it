@@ -52,7 +52,16 @@ export default function AddOffice({onClose}) {
     //         }
     //     }setOpenModal(false);
     // }
+    const [error, setErrors] = useState(false);
+
     async function onSubmit  (){
+        if(!value.name || !value.description ||
+            (!value.ID_card && !value.birth_certificate && !value.passport &&
+                !value.license && !value.medical_certificate && !value.family_status_certificate)){
+            setErrors(true);
+            toast.error('يجب عليك تعبئة جميع الحقول');
+            return;
+        }
         const res = await axios.post(baseurl+"storeservice",value,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
@@ -82,16 +91,18 @@ export default function AddOffice({onClose}) {
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الخدمة</label>
                                 <input type="text" id="name" name="name" value={value.name} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.name_model&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {error&& value.name===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                             <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
                                 <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف الخدمة</label>
                                 <textarea  id="description" name="description" value={value.description} onChange={handleInputChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
-                                {/*{errors.documentation&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}*/}
+                                {error&& value.description===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
 
                         <p className="block mb-2 font-medium text-right">:المرفقات مطلوبة</p>
+                    {error&& (value.ID_card===false || value.birth_certificate===false || value.license===false || value.medical_certificate===false
+                        || value.license===false || value.medical_certificate===false )&&<p className="block text-red-500 text-xs  mt-1 w-full">يجب إختيار مرفق واحد على أقل</p>}
                         <div className="flex flex-row-reverse justify-centeritems-center -mx-3 mb-4">
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
                                 <input type={'checkbox'} id={"service"} name={"ID_card"} value={'value.ID_card'} onChange={handleCheckboxChange}/>
