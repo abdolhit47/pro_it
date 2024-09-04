@@ -64,13 +64,20 @@ function City() {
                                 <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-6" onClick={Addcity}>اضافة البلدية</button>
                             {error&& value.name===''&&<p className="block text-red-500 text-xs mr-4 mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
-                            <div className={"px-6 py-4 mt-6 grid gap-4 justify-start overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
-                                {city.map((item,index)=>(
-                                    <p className="bg-gray-100 text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-full">
-                                        {item.name}
-                                    </p>
-                                ))}
-                            </div>
+                            {
+                                city.length === 0 ?
+                                    ( <div dir="rtl" className={'flex-col flex items-center justify-center text-2xl my-10'}>
+                                        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8" style={{borderTopColor: '#c88903'}} />
+                                        رجاء الانتظار...
+                                    </div>):
+                                    city.length>0?<div className={"px-6 py-4 mt-6 grid gap-4 justify-start overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
+                                        {city.map((item, index) => (
+                                            <p className="bg-gray-100 text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-full">
+                                                {item.name}
+                                            </p>
+                                        ))}
+                                </div>:<p className=" text-2xl flex flex-col items-center my-5">لايوجد بيانات لعرضها</p>
+                            }
 
                         </div>
                     </div>

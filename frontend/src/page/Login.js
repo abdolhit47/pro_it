@@ -58,14 +58,14 @@ function Login({office}) {
                     navigate('/Dashboard');
                 }, 1000);
             }else{
-               toast.warning('تحقق من كلمة المرور او اسم المستخدم');
+               toast.error('تحقق من كلمة المرور او اسم المستخدم');
             }
 
         }catch (error){
             if(error?.response?.status === 401){
-                toast.warning('تحقق من كلمة المرور او اسم المستخدم');
+                toast.error('تحقق من كلمة المرور او اسم المستخدم');
             }else if(error?.response?.status === 402){
-                toast.warning('حسابك غير مؤكد، رجاء تأكيده');
+                toast.error('حسابك غير مؤكد، رجاء تأكيده');
             }else {
                 toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
             }

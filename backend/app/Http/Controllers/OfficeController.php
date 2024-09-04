@@ -24,7 +24,9 @@ class OfficeController extends Controller
 //            $offices = Office::with('employees','addresses')->get();
 //
 //        }
-
+//        if($offices->isEmpty()){
+//            return response()->json(0, 202);
+//        }
         $office = $offices->map(function ($office) {
             return [
                 'id' => $office->id,

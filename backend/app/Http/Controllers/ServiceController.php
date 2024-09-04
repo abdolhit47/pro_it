@@ -21,6 +21,9 @@ class ServiceController extends Controller
 //        }
         $user = Auth::user();
         $services = Service::select('name','description')->where('ID_office', $user->emplyee->ID_office)->get();
+        if($services->isEmpty()){
+            return response()->json(0, 202);
+        }
         return response()->json($services);
     }
 

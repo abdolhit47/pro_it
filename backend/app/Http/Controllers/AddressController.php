@@ -13,6 +13,9 @@ class AddressController extends Controller
         $user = Auth::user();
         if ($user->role == 0 || $user->role == 1 || $user->role == 2 || $user->role == 4) {
             $addresses = Address::all();
+            if($addresses->isEmpty()){
+                return response()->json(0, 202);
+            }
             return response()->json($addresses);
         }
         return response()->json(['success' => "doesn't have permission"], 403);

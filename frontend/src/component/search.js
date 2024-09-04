@@ -50,7 +50,7 @@ const useFollowUp = ($id) => {
             }
             if (DataFilter) {
                 filteredData = filteredData.filter(item =>
-                    item.name_office === DataFilter
+                    item.name_service === DataFilter
                 );
             }
         }

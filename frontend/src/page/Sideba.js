@@ -71,7 +71,7 @@ function Sideba() {
                                       </li>
                                   </div>
                               }
-                              {array2.some(element => element === role) &&
+                              {array3.some(element => element === role) &&
                                   <div className={activePath === '/Order' ? 'border-r-8 border-r-amber-700 rounded-r-md' : ''} onClick={() => handleLinkClick('/Order')}>
                                       <li className="px-4 py-2 flex-row space-x-4 items-center hover:bg-amber-700 cursor-pointer ">
                                           <Link to="/order" aria-expanded="false">
@@ -144,10 +144,8 @@ function Sideba() {
                       </div>
                   </div>
                   <div className=" flex-col mr-4 mb-10 tall:mb-5 " onClick={handleLogoutClick}>
-
-                      <span className="ml-2 text-sm font-medium mr-2"> تسجيل الخروج </span>
+                      <a className="ml-2 text-sm font-medium mr-2"> تسجيل الخروج </a>
                       <LogoutIcon/>
-
                   </div>
               </nav>
           </div>

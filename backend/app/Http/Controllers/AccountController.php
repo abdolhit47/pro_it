@@ -67,6 +67,9 @@ class AccountController extends Controller
             return response()->json(['success' => "doesn't have permission"],403);
         }
         $users = Employee::with('users')->where('ID_office',$user->emplyee->ID_office)->where('id','!=',$user->emplyee->id)->get();
+        if($users->isEmpty()){
+            return response()->json(0, 202);
+        }
         $users = $users->map(function ($users){
             return(object) [
                 'id' => $users->id,

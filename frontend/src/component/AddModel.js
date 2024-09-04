@@ -49,8 +49,6 @@ export default function AddModel({setOpenModal,id}) {
             formData.append('files[]', selectedFiles[i]);
         }
         // }
-
-        console.log(formData)
         try{
             const res =  await axios.post(baseurl + 'storefollowup', formData,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,

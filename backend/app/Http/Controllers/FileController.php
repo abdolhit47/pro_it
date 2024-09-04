@@ -79,37 +79,40 @@ class FileController extends Controller
                 if (!in_array($user->role, [0, 1, 2, 3])){
                     return response()->json(['success' => "doesn't have permission"], 403);
                 }
-
-                // superadmin, admin
-                if (Auth::user()->role == 0 || Auth::user()->role == 1) {
-                    $service = Service_Follow_Up::with('services', 'files', 'mwatens')
-                        ->where('status', 1) // status = revision
-                        ->where('approve', 0)
-                        ->get();
-                    $service = $service->map(function ($service) {
-                        return (object)[
-                            'id' => $service->id,
-                            'task' => $service->task_id,
-                            'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
-                            'name_service' => $service->services->name,
-                            'name_office' => $service->services->offices->name,
-                            'date' => $service->created_at->format('Y-m-d'),
-                        ];
-                    });
-                    return response()->json($service, 200);
-                }
+//                if (Auth::user()->role == 0 || Auth::user()->role == 1) {
+//                    $service = Service_Follow_Up::with('services', 'files', 'mwatens')
+//                        ->where('status', 1) // status = revision
+//                        ->where('approve', 0)
+//                        ->get();
+//                    if($service->count() == 0){
+//                        return response()->json(0, 202);
+//                    }
+//                    $service = $service->map(function ($service) {
+//                        return (object)[
+//                            'id' => $service->id,
+//                            'task' => $service->task_id,
+//                            'name_mwaten' => $service->mwatens->first_name . ' ' . $service->mwatens->last_name,
+//                            'name_service' => $service->services->name,
+//                            'name_office' => $service->services->offices->name,
+//                            'date' => $service->created_at->format('Y-m-d'),
+//                        ];
+//                    });
+//                    return response()->json($service, 200);
+//                }
 
                 // user, employee
-                if (Auth::user()->role == 2 || Auth::user()->role == 3) {
+//                if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $status = [0,1, 2];
                     $service = Service_Follow_Up::with('services')
                         ->whereIn('status', $status)
                         ->where('approve', 0)->orWhere('approve', 1)
                         ->whereHas('services', function ($query) {
-
                             $query->where('ID_office', Auth::user()->emplyee->ID_office);
                         })
                         ->get();
+                    if($service->count() == 0){
+                        return response()->json(0, 202);
+                    }
                     $service = $service->map(function ($service) {
                             return (object)[
                                 'id' => $service->id,
@@ -118,11 +121,10 @@ class FileController extends Controller
                                 'name_service' => $service->services->name,
                                 'name_office' => $service->services->offices->name,
                                 'date' => $service->created_at->format('Y-m-d'),
-                                'status' => $service->status
                             ];
                     });
                     return response()->json($service, 200);
-                }
+//                }
             }
         }catch (\Exception $e) {
             error_log($e->getMessage());

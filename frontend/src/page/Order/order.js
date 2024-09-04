@@ -9,8 +9,8 @@ import useFollowUp from "../../component/search";
 
 function Order() {
     const role = localStorage.getItem('role');
-    const array = [ "2", "3"];
-    const array2 = ["0", "1", "4"]
+    const array = ["0", "1",  "2", "3"];
+    const array2 = ["4"]
     const navigate = useNavigate();
     const access = localStorage.getItem('access_token');
 
@@ -70,7 +70,7 @@ function Order() {
         setDataFilter(value);
         applyFilters(filter, value);
     };
-    const uniqueOffices = [...new Set(Data.map(item => item.name_office))];
+    const uniqueOffices = [...new Set(Data.length >0 ? Data.map(item => item.name_service):"")];
 
     return (
         <>
@@ -83,7 +83,7 @@ function Order() {
                             <h1 className="text-2xl text-gray-900 text-right">الطلبات</h1>
                             {/*<button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleshow}>اضافة جهة</button>*/}
                         </div>
-                        {Data.length > 0 && array.some(element => element === role) &&
+                        { array.some(element => element === role) &&
                             <div className="px-6 py-4 flex  " dir={'rtl'}>
                                 <label htmlFor="filter" className="mr-2 text-center flex items-center ml-3">بحث: </label>
                                 <input
@@ -98,7 +98,7 @@ function Order() {
                                     value={DataFilter}
                                     onChange={handleOfficeFilterChange}
                                 >
-                                    <option value="">جميع الجهات</option>
+                                    <option value="">جميع الخدمات</option>
                                     {uniqueOffices.map((office, index) => (
                                         <option key={index} value={office}>{office}</option>
                                     ))}
@@ -106,7 +106,7 @@ function Order() {
                             </div>
                         }
                         <div className="px-6 py-4 flex justify-center " dir={'rtl'}>
-                            {filteredData.length > 0 ?
+
                                 <table className="w-full text-md bg-white shadow-md rounded mb-4 table-fixed max-w-4xl"
                                     dir="rtl">
                                 <thead className="flex w-full items-center ">
@@ -121,30 +121,39 @@ function Order() {
 
                                 </tr>
                                 </thead>
-                                <tbody className=" flex flex-col items-center overflow-y-auto h-auto max-h-80">
-                                {
-                                    filteredData.map((item, index) => (
-                                        <tr className="text-center hover:bg-orange-100 flex w-full px-2">
-                                            <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.ticket.toString()}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.date}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">
-                                                <button
-                                                    className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
-                                                    onClick={(event) => handleshow(item.id, event)}>العرض
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                                </tbody>
-                            </table>:
-                                <p className=" text-2xl ">لايوجد بيانات لعرضها</p>
+                                    {
+                                        filteredData.length === 0 ?
+                                        ( <div dir="rtl" className={'flex-col flex items-center justify-center text-2xl'}>
+                                                <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8" style={{borderTopColor: '#c88903'}} />
+                                                رجاء الانتظار...
+                                        </div>):
+                                        filteredData.length > 0 ?
+                                        <tbody className=" flex flex-col items-center overflow-y-auto h-auto max-h-80">
+                                            {
+                                                filteredData.map((item, index) => (
+                                                    <tr className="text-center hover:bg-orange-100 flex w-full px-2">
+                                                        <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.ticket.toString()}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.date}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">
+                                                            <button
+                                                                className="border-2 border-green-500 hover:bg-green-500 hover:text-white font-bold py-2 px-4 rounded"
+                                                                onClick={(event) => handleshow(item.id, event)}>العرض
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            }
+                                    </tbody>
+                                                :
+                                        <p className=" text-2xl flex flex-col items-center my-5">لايوجد بيانات لعرضها</p>
 
-                            }
+                                    }
+                            </table>
+
                         </div>
                     </div>
                 </div>

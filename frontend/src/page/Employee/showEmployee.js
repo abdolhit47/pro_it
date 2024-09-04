@@ -1,7 +1,5 @@
 import Navbar from "../Navbar";
 import React, {useState, useEffect} from "react";
-import AddOffice from "../../component/addOffice";
-import {useNavigate} from "react-router-dom";
 import useFollowUp from "../../component/search";
 import AddIcon from "@mui/icons-material/Add";
 import {toast}  from "react-toastify";
@@ -19,20 +17,6 @@ function ShowEmployee() {
         getFollowUp
      } = useFollowUp("Employee");
     const role = localStorage.getItem('role');
-    // const [addOffice, setaddOffice] = useState(false);
-
-    const navigate = useNavigate()
-
-    // const handleadd = ()=>{
-    //     setaddOffice(true);
-    // }
-    const handleshow = (index, event) => {
-        event.preventDefault();
-        if (index) {
-            navigate(`/showoffice/${index}/`);
-        }
-    };
-
     const handleFilterChange = (e) => {
         const value = e.target.value;
         setFilter(value);
@@ -44,7 +28,8 @@ function ShowEmployee() {
         setDataFilter(value);
         applyFilters(filter, value);
     };
-    const uniqueOffices = [...new Set(Data.map(item => item.address))];
+
+    const uniqueOffices = [...new Set(Data.length >0 ? Data.map(item => item.address):"")];
     const [show, setShow] = useState(false);
     const handlshow = () => setShow(!show);
 
@@ -81,9 +66,10 @@ function ShowEmployee() {
 
         // Initialize checkedItems based on filteredData
         const initialCheckedItems = {};
-        filteredData.forEach(item => {
-            initialCheckedItems[item.id] = item.status === "مفعل";
-        });
+        if (filteredData)
+            filteredData.forEach(item => {
+                initialCheckedItems[item.id] = item.status === "مفعل";
+            });
         setCheckedItems(initialCheckedItems);
     }, [filteredData]);
 
@@ -96,8 +82,6 @@ function ShowEmployee() {
     };
 
     async function handlestatus(id) {
-        console.log(`Status changed for item ${id}`);
-
         try {
             const res = await axios.put(baseurl + 'update/' + id, {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -169,36 +153,42 @@ function ShowEmployee() {
                                         <th className="p-3 w-1/4">التعديل</th>
                                     </tr>
                                     </thead>
-                                    <tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-72 tall3:max-h-96">
-                                    {filteredData.map((item, index) => (
-                                        <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
-                                            <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.user}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center">{item.status}</td>
-                                            <td className="p-3 w-1/5 flex items-center justify-center" dir={'ltr'}>
-                                                <label className='themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center'>
-                                                    <input
-                                                        onClick={() => {
-                                                            handleCheckboxChange(item.id);
-                                                            handlestatus(item.id);
-                                                        }}
-                                                        type='checkbox'
-                                                        checked={checkedItems[item.id]}
-                                                        className='sr-only'
-                                                    />
-                                                    <span className={`slider mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 ${
-                                                        checkedItems[item.id] ? 'bg-green-600' : 'bg-red-700'
-                                                    }`}>
-                  <span className={`dot h-6 w-6 rounded-full bg-white duration-200 ${checkedItems[item.id] ? 'translate-x-[28px]' : ''}`}></span>
-                </span>
-                                                </label>
-                                                {/*<button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>*/}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
+                                    {
+                                        filteredData.length === 0 ?( <div dir="rtl" className={'flex-col flex items-center justify-center text-2xl'}>
+                                                <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 my-10" style={{borderTopColor: '#c88903'}} />
+                                                رجاء الانتظار...
+                                            </div>)
+                                            :filteredData.length > 0 ?<tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-72 tall3:max-h-96">
+                                                {filteredData.map((item, index) => (
+                                                    <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
+                                                        <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.name}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center text-ellipsis">{item.user}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.address}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.status}</td>
+                                                        <td className="p-3 w-1/5 flex items-center justify-center" dir={'ltr'}>
+                                                            <label className='themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center'>
+                                                                <input
+                                                                    onClick={() => {
+                                                                        handleCheckboxChange(item.id);
+                                                                        handlestatus(item.id);
+                                                                    }}
+                                                                    type='checkbox'
+                                                                    checked={checkedItems[item.id]}
+                                                                    className='sr-only'
+                                                                />
+                                                                <span className={`slider mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 ${
+                                                                    checkedItems[item.id] ? 'bg-green-600' : 'bg-red-700'
+                                                                }`}>
+                                                                    <span className={`dot h-6 w-6 rounded-full bg-white duration-200 ${checkedItems[item.id] ? 'translate-x-[28px]' : ''}`}></span>
+                                                                </span>
+                                                            </label>
+                                                            {/*<button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded" onClick={(event) =>handleshow(item.id, event)}>التعديل</button>*/}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                    </tbody>:<p className=" text-2xl flex flex-col items-center my-5">لايوجد بيانات لعرضها</p>
+                                    }
                                 </table>
                             </div>
                         </div>
