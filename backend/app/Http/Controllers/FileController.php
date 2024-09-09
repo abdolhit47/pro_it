@@ -141,7 +141,7 @@ class FileController extends Controller
             }
             $service = Service_Follow_Up::with('services','files','mwatens')->where('mwaten_id', Auth::user()->mwaten->id)->get();
             if($service->count() == 0){
-                return response()->json(['success' => "no data"], 404);
+                return response()->json(0, 202);
             }
             $service =  $service->map(function ($service) {
                     return (object) [
@@ -164,7 +164,7 @@ class FileController extends Controller
     public function approve($id){
         try {
             $user = Auth::user();
-            if(!in_array($user->role, [2,3])){
+            if(!in_array($user->role, [0,1,2,3])){
                 return response()->json(['success' => "doesn't have permission"], 403);
             }
 
@@ -201,7 +201,7 @@ class FileController extends Controller
     public function unapprove($id,Request $request){
         try {
             $user = Auth::user();
-            if(!in_array($user->role, [2,3])){
+            if(!in_array($user->role, [0,1,2,3])){
                 return response()->json(['success' => "doesn't have permission"], 403);
             }
             $service = Service_Follow_Up::find($id);

@@ -36,7 +36,7 @@ class AccountController extends Controller
             $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
             $user = auth()->user();
             $user->token = $token;
-            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee?$user->emplyee->offices->name:""], 200);
+            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => "وزارة الشؤون الإجتماعية","name" => $user->mwaten->first_name." ".$user->mwaten->last_name], 200);
 
         }
         //if employee
@@ -44,7 +44,8 @@ class AccountController extends Controller
             $token = auth()->user()->createToken('auth_token',expiresAt: now()->addDay())->plainTextToken;
             $user = auth()->user();
             $user->token = $token;
-            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,"office" => $user->emplyee?$user->emplyee->offices->name:""], 200);
+            return response()->json(['access_token' => $user->status,"username" => $user->name,"token" => $token,"role" => $user->role,
+                "office" => $user->emplyee?$user->emplyee->offices->name:"","name" => $user->emplyee?$user->emplyee->first_name." ".$user->emplyee->last_name:""], 200);
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -73,9 +74,9 @@ class AccountController extends Controller
         $users = $users->map(function ($users){
             return(object) [
                 'id' => $users->id,
-            'name' => $users->first_name . " " . $users->last_name,
+                'name' => $users->first_name . " " . $users->last_name,
                 'address' => $users->address,
-             'user' => $users->users->name,
+                'user' => $users->users->name,
                 'status' => $users->users->status == 1 ? 'مفعل' : 'غير مفعل',
             ];
         });
@@ -132,9 +133,11 @@ class AccountController extends Controller
             $mwaten->maritalStatus = $request->maritalStatus;
             $mwaten->dateOfBirth = $request->dateOfBirth;
             //$mwaten->placeOfBirth = $request->placeOfBirth;
+            //$mwaten->nationalNumber = $request->nationalNumber;
             $mwaten->save();
             $token = Str::uuid();
             $user->verification_token = $token;
+            $user->status = 1;
             $user->mwaten()->save($mwaten);
 
             if($user == null) {
@@ -271,10 +274,28 @@ class AccountController extends Controller
                     'required' => 'هذا الحقل مطلوب',
                     'unique' => 'هذا مستعمل بالفعل',
                 ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['error' => $validator->errors()], 422);
+            }
+            if($user->mwaten) {
+                if ($request->has('phone') && $request->phone != $user->mwaten->phone) {
+                    $validator = Validator::make($request->all(), [
+                        'phone' => 'required|unique:mwaten',
+                    ], [
+                        'required' => 'هذا الحقل مطلوب',
+                        'unique' => 'هذا مستعمل بالفعل',
+                    ]);
                 }
+            }else {
+                    if ($request->has('phone') && $request->phone != $user->emplyee->phone) {
+                        $validator = Validator::make($request->all(), [
+                            'phone' => 'required|unique:employee',
+                        ], [
+                            'required' => 'هذا الحقل مطلوب',
+                            'unique' => 'هذا مستعمل بالفعل',
+                        ]);
+                    }
+                }
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 422);
             }
             $userToUpdate = User::find($id);
             $userToUpdate->name = $request->name;
@@ -298,8 +319,6 @@ class AccountController extends Controller
                 $userToUpdate->mwaten()->save($mwaten);
             } else {
                 $employee = Employee::findOrFail($userToUpdate->emplyee->id);
-
-
                 $employee->first_name = $request->first_name;
                 $employee->middle_name = $request->middle_name;
                 $employee->last_name = $request->last_name;

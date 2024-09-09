@@ -7,6 +7,7 @@ use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\Servicefollow_upController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('/countServiceFollowUp', [OfficeController::class, 'countServiceFollowUp'])->middleware('auth:sanctum');
     Route::post('/filter_countServiceFollowUp', [OfficeController::class, 'filter_countServiceFollowUp'])->middleware('auth:sanctum');
     Route::get('/show_filterServiceFollowUp', [OfficeController::class, 'show_filterServiceFollowUp'])->middleware('auth:sanctum');
+    Route::get('/randomOffice', [OfficeController::class, 'randomOffice'])->middleware('auth:sanctum');
     /****End Office****/
 
 
@@ -94,6 +96,9 @@ use Illuminate\Support\Facades\Route;
     Route::get('/show_req_document/{id}', [ServiceController::class, 'show_req_document'])->middleware('auth:sanctum');
     /****End Req Document****/
 
+    /****Service_Follow_Up****/
+    Route::get('/showlast_service_follow_up', [Servicefollow_upController::class, 'index'])->middleware('auth:sanctum');
+    /****End Service_Follow_Up****/
 
     // Enquiry
     Route::get('/civilRegistryEnquiry/{nationalNumber}', [EnquiryController::class, 'civilRegistryEnquiry'])->middleware('auth:sanctum');

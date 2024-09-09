@@ -107,7 +107,7 @@ function Sideba() {
                                               </Link>
                                           </li>
                                       }
-                                      {role === "2" &&
+                                      {array3.includes(role) &&
                                           <li className="flex-row items-center justify-between mr-6 px-4 py-2 rounded hover:bg-amber-700 ">
                                               <Link to="/Service" aria-expanded="false">
                                                   <span className="ml-2 text-sm font-medium mr-4">الخدمات</span>

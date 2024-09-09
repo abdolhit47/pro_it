@@ -18,15 +18,14 @@ class OfficeController extends Controller
     public function index()
     {
         $user = Auth::user();
-//        if($user->role == 4){
+        if($user->role == 0){
             $offices = Office::with('employees','addresses')->where('id','!=','1')->get();
-//        }else{
-//            $offices = Office::with('employees','addresses')->get();
-//
-//        }
-//        if($offices->isEmpty()){
-//            return response()->json(0, 202);
-//        }
+        }else{
+            $offices = Office::with('employees','addresses')->get();
+        }
+        if ($offices->isEmpty()) {
+            return response()->json(0, 202);
+        }
         $office = $offices->map(function ($office) {
             return [
                 'id' => $office->id,
@@ -50,6 +49,10 @@ class OfficeController extends Controller
         return response()->json($office);
     }
 
+    public function randomOffice(){
+        $office = Office::select('id','name')->inRandomOrder()->take(5)->get();
+        return response()->json($office);
+    }
     public function store(Request $request){
         try {
 //            if(Auth::check()){

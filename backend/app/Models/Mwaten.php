@@ -10,7 +10,9 @@ class Mwaten extends Model
     use HasFactory;
     protected $table = "mwaten";
     protected $primaryKey = "id";
-    protected $fillable = ['first_name', 'miden_name', 'last_name', 'phone', 'gender', 'maritalStatus', 'address', 'dateOfBirth'];
+    protected $fillable = ['first_name', 'miden_name', 'last_name', 'phone', 'gender', 'maritalStatus', 'address', 'dateOfBirth'
+        //,'placeOfBirth','nationalNumber'
+    ];
     public $timestamps = true;
     public function Service_Follow_Up()
     {

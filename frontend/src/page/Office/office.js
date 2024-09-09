@@ -103,7 +103,7 @@ function Office() {
                                         <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8" style={{borderTopColor: '#c88903'}} />
                                         رجاء الانتظار...
                                         </div>)
-                                        :(<tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-80">
+                                        :filteredData.length > 0 ?<tbody className="flex flex-col items-center overflow-y-auto h-auto max-h-80">
                                             {filteredData.map((item, index) => (
                                                 <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                                     <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
@@ -121,7 +121,7 @@ function Office() {
                                                 </tr>
                                             ))}
                                             </tbody>
-                                        )
+                                        :<p className=" text-2xl flex flex-col items-center my-5">لايوجد بيانات لعرضها</p>
                                 }
                             </table>
                         </div>

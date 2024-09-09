@@ -9,9 +9,13 @@ import {Link} from 'react-router-dom'
 //import { useForm } from "react-hook-form"
 import NavBarHome from "../page/NavBarHome";
 function Login({office}) {
-    const [value,setValues] = useState({
-        login:'',
-        password:''
+    const [value, setValues] = useState({
+        login: '',
+        password: '',
+        errors: {
+            loginError: '',
+            passwordError: ''
+        }
     });
     let name_office = localStorage.getItem('selected_office_name');
     function isValidEmail(email) {
@@ -21,24 +25,41 @@ function Login({office}) {
     }
       const handleChange = (event) => {
         const { name, value } = event.target;
-          let errorMessage = '';
-          if (name === 'login') {
-              if (value.trim() === '') {
-                  errorMessage = 'رجاء إدخال اسم مستخدم أو البريد الالكتروني.';
-              } else if (value.includes('@') && !isValidEmail(value)) {
-                  errorMessage = 'رجاء إدخال بريد الالكتروني بشكل صحيح.';
-              }
-          }
         setValues((prevValues) => ({
           ...prevValues,
           [name]: value,
-            error: errorMessage,
         }));
       };
 
       const navigate = useNavigate()
 
      async function onSubmit ()  {
+         let errors = {
+             loginError: '',
+             passwordError: ''
+         };
+
+         // Check login (email/username) field
+         if (value.login.trim() === '') {
+             errors.loginError = 'رجاء إدخال اسم مستخدم أو البريد الالكتروني.';
+         } else if (value.login.includes('@') && !isValidEmail(value.login)) {
+             errors.loginError = 'رجاء إدخال بريد الكتروني بشكل صحيح.';
+         }
+
+         // Check password field
+         if (value.password === '' || value.password.length < 8) {
+             errors.passwordError = 'كلمة المرور يجب أن تكون أطول من 8 أحرف.';
+         }
+
+         // If there are any validation errors, set them and show toast
+         if (errors.loginError || errors.passwordError) {
+             setValues((prevValues) => ({
+                 ...prevValues,
+                 errors: errors
+             }));
+             toast.error('رجاء تحقق من الحقول');
+             return;
+         }
          const formData = new FormData();
          formData.append('login',value.login);
          formData.append('password',value.password);
@@ -53,12 +74,13 @@ function Login({office}) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('Office', res.data.office);
+                localStorage.setItem('name', res.data.name);
                 toast.success('مرحبا');
                 setTimeout(() => {
                     navigate('/Dashboard');
                 }, 1000);
             }else{
-               toast.error('تحقق من كلمة المرور او اسم المستخدم');
+               toast.error('تحقق من اسم المستخدم او كلمة المرور. ');
             }
 
         }catch (error){
@@ -81,12 +103,13 @@ function Login({office}) {
                     <div className="mb-4"  dir="rtl">
                         <label form="login" className="block text-sm font-medium text-gray-700 mb-2">اسم المستخدم</label>
                         <input type="text" id="login" name='login' value={value.login} onChange={handleChange} className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ahmed, Ali...etc"/>
-                        {value.error && <p className="block text-red-500 text-xs mt-1 w-full">{value.error}</p>}
+                        {value.errors.loginError && <p className="block text-red-500 text-xs mt-1 w-full">{value.errors.loginError}</p>}
                     </div>
                     <div className="mb-4"  dir="rtl">
                         <label form="password" className="block text-sm font-medium text-gray-700 mb-2">كلمة المرور</label>
                         <input type="password" id="password" name='password' value={value.password} onChange={handleChange} className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="أدخل كلمة المرور"/>
                         {/* {errors.password &&<p className="text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>} */}
+                        {value.errors.passwordError && <p className="block text-red-500 text-xs mt-1 w-full">{value.errors.passwordError}</p>}
 
                     </div>
                     <div className="flex items-center justify-between mb-4"  dir="rtl">

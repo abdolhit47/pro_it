@@ -48,9 +48,47 @@ function Profile() {
     const handelback = () => {
         navigate(`/Dashboard`);
     }
-    console.log(user)
+    const [errors, setErrors] = useState({});
 
+    const validate = () => {
+        let validationErrors = {};
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^09[0-9]{8}$/;
+        if (!user.first_name) validationErrors.first_name = 'الاسم الأول مطلوب';
+        if (!user.middle_name) validationErrors.middle_name = 'اسم الأب مطلوب';
+        if (!user.last_name) validationErrors.last_name = 'اللقب مطلوب';
+        if (!user.phone) validationErrors.phone = 'رقم الهاتف مطلوب';
+        if (!user.email) validationErrors.email = 'البريد الإلكتروني مطلوب';
+        if (!user.address) validationErrors.address = 'عنوان السكن مطلوب';
+        if (!user.gender) validationErrors.gender = 'الجنس مطلوب';
+        if (!user.maritalStatus) validationErrors.maritalStatus = 'الحالة الاجتماعية مطلوبة';
+        if (!user.dateOfBirth) validationErrors.dateOfBirth = 'تاريخ الميلاد مطلوب';
+        if (!user.name) validationErrors.name = 'اسم المستخدم مطلوب';
+        if (user.email && !emailRegex.test(user.email)) {
+            validationErrors.email = 'البريد الإلكتروني غير صالح';
+        }
+        if (user.phone && !phoneRegex.test(user.phone)) {
+            validationErrors.phone = 'رقم الهاتف يجب أن يكون مكونًا من 10 أرقام';
+        }
+        if (user.password && user.password !== user.confirmpassword) {
+            validationErrors.confirmpassword = 'كلمة المرور غير متطابقة';
+        }
+
+        setErrors(validationErrors);
+        return Object.keys(validationErrors).length === 0;
+    };
+
+    const validateupdate = (data) => {
+        let validationErrors = {};
+        if(data.error.email) validationErrors.email = 'البريد الإلكتروني مستخدم من قبل';
+        if(data.error.phone) validationErrors.phone = 'رقم الهاتف مستخدم من قبل';
+        setErrors(validationErrors);
+        return Object.keys(validationErrors).length === 0;
+    }
     async function onSubmit ()  {
+        if (!validate()) {
+            return;
+        }
         try{
             const res =  await axios.post(baseurl + `update_profile/${user.id}`, user,{
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
@@ -58,13 +96,16 @@ function Profile() {
             if(res.status===201 ){
                 toast.success('تم تحديث بياناتك بنجاح');
                 localStorage.setItem('access_token',res.access_token);
-                window.location.reload();
+                // setTimeout(function(){
+                //     window.location.reload();
+                // }, 2000);
             }
 
         }catch (error){
             if(error?.response?.status === 401){
                 toast.warning('تحقق من كلمة المرور او اسم المستخدم');
             }else  if(error.response.status===422){
+                validateupdate(error.response.data);
                 toast.warning('تحقق من البيانات المدخلة');
             }
         }
@@ -85,16 +126,19 @@ function Profile() {
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="first_name" className="block mb-2 text-gray-700 font-medium  text-right">الاسم</label>
                                             <input type="text" id="first_name" name='first_name' value={user.first_name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700  text-right" />
+                                            {errors.first_name && <p className="text-red-500 text-xs text-right">{errors.first_name}</p>}
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="middle_name" className="block mb-2 text-gray-700 font-medium  text-right">اسم الأب</label>
                                             <input type="text" id="middle_name" name='middle_name' value={user.middle_name}  onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {errors.middle_name && <p className="text-red-500 text-xs text-right">{errors.middle_name}</p>}
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="last_name" className="block mb-2 text-gray-700 font-medium  text-right">اللقب</label>
                                             <input type="text" id="last_name" name="last_name" value={user.last_name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {errors.last_name && <p className="text-red-500 text-xs text-right">{errors.last_name}</p>}
                                         </div>
                                     </div>
 
@@ -102,17 +146,14 @@ function Profile() {
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="phone" className="block mb-2 text-gray-700 font-medium  text-right">رقم الهاتف</label>
                                             <input type="text" id="phone" name="phone" value={user.phone} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {errors.phone && <p className="text-red-500 text-xs text-right">{errors.phone}</p>}
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="dateOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">تاريخ الميلاد</label>
                                             <input type="date" id="dateOfBirth" name="dateOfBirth" value={user.dateOfBirth} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {errors.dateOfBirth && <p className="text-red-500 text-xs text-right">{errors.dateOfBirth}</p>}
                                         </div>
-
-                                        {/*<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">*/}
-                                        {/*    <label for="placeOfBirth" className="block mb-2 text-gray-700 font-medium  text-right">مكان الميلاد</label>*/}
-                                        {/*    <input type="text" id="placeOfBirth" name="placeOfBirth"  className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />*/}
-                                        {/*</div>*/}
                                     </div>
 
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
@@ -126,11 +167,13 @@ function Profile() {
                                                 <option value="1">ذكر</option>
                                                 <option value="2">انثي</option>
                                             </select>
+                                            {errors.gender && <p className="text-red-500 text-xs text-right">{errors.gender}</p>}
                                         </div>
 
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label for="address" className="block mb-2 text-gray-700 font-medium  text-right">عنوان السكن</label>
                                             <input type="text" id="address" name="address" value={user.address} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                            {errors.address && <p className="text-red-500 text-xs text-right">{errors.address}</p>}
                                         </div>
                                         <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                             <label htmlFor="maritalStatus" className="block mb-2 text-gray-700 font-medium  text-right">حالة الإجتماعية</label>
@@ -143,6 +186,7 @@ function Profile() {
                                                 <option value="3">مطلق</option>
                                                 <option value="4">أرمل</option>
                                             </select>
+                                            {errors.maritalStatus && <p className="text-red-500 text-xs text-right">{errors.maritalStatus}</p>}
                                         </div>
                                     </div>
 
@@ -152,20 +196,24 @@ function Profile() {
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="name" className="block mb-2 text-gray-700 font-medium  text-right">اسم المستخدم</label>
                                                 <input type="text" id="name" name="name" value={user.name} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                {errors.name && <p className="text-red-500 text-xs text-right">{errors.name}</p>}
                                             </div>
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="email" className="block mb-2 text-gray-700 font-medium  text-right">البريد الإلكتروني</label>
                                                 <input type="text" id="email" name="email" value={user.email} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                {errors.email && <p className="text-red-500 text-xs text-right">{errors.email}</p>}
                                             </div>
                                         </div>
                                         <div className=" flex flex-row-reverse -mx-3 mb-4">
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="password" className="block mb-2 text-gray-700 font-medium  text-right">كلمة السر الجديدة</label>
                                                 <input type="password" name="password" id="password"  value={user.password} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+
                                             </div>
                                             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                                                 <label for="confirmpassword" className="block mb-2 text-gray-700 font-medium  text-right">تأكيد الكلمة السر</label>
                                                 <input type="password" name="confirmpassword" id="confirmpassword" value={user.confirmpassword} onChange={handelChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                                {errors.confirmpassword && <p className="text-red-500 text-xs text-right">{errors.confirmpassword}</p>}
                                             </div>
                                         </div>
                                     </div>

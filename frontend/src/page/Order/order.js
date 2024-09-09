@@ -118,7 +118,6 @@ function Order() {
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
                                     <th className="p-3 items-center w-1/5">التاريخ طلب</th>
                                     <th className="p-3 items-center w-1/5">العرض</th>
-
                                 </tr>
                                 </thead>
                                     {
