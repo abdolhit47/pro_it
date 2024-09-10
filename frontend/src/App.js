@@ -8,7 +8,7 @@ import {baseurl} from "./Baseurl/baseurl";
 
 import{
   Dashboard,
-  Login,
+  Login,  NotFound,Forgottenpass,Chackemail,Verifyemail,Resetpassword,
   ShowOfficeH,
   User,Sign_up,Profile, Showprofile,
   Office,ShowOffice,Service,
@@ -59,6 +59,15 @@ function App() {
         <Route path="/chats" element={<Chats />} />
         <Route path="/showemployee" element={<ShowEmployee />} />
         <Route path="/city" element={<City />} />
+
+
+        <Route path='/chackemail' element={<Chackemail/>}/>
+        <Route path='/verifyemail/:token' element={<Verifyemail/>}/>
+        <Route path='/passwordreset' element={<Forgottenpass/>}/>
+        <Route path='/resetpassword/:id/:token' element={<Resetpassword/>}/>
+
+        <Route path="*" element={<NotFound to="/not-found" replace office={office}/>} />
+
       </Routes>
     </BrowserRouter>
   );

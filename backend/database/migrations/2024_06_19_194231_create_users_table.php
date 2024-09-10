@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('role')->comment("superadmin=0,admin=1,user=2,employee=3");
             $table->integer('status')->comment("active=1,inactive=0")->default(0);
+            $table->string('verification_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

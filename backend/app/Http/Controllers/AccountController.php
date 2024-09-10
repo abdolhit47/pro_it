@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserVerificationEmail;
 use App\Models\Employee;
 use App\Models\Mwaten;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -113,6 +115,9 @@ class AccountController extends Controller
                 'role' => 4,
                 'status' => 1,
             ]);
+            $token = Str::uuid();
+            $user->verification_token = $token;
+            $user->save();
 //            $mwaten = Mwaten::create([
 //                'first_name' => $request->firstName,
 //                'middle_name' => $request->middleName,
@@ -136,8 +141,7 @@ class AccountController extends Controller
             //$mwaten->placeOfBirth = $request->placeOfBirth;
             //$mwaten->nationalNumber = $request->nationalNumber;
             $mwaten->save();
-            $token = Str::uuid();
-            $user->verification_token = $token;
+
             $user->mwaten()->save($mwaten);
 
             if($user == null) {
@@ -149,6 +153,54 @@ class AccountController extends Controller
             return response()->json(['message' => 'تمت الاضافة'], 201);
         }catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+    public function chackemail(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required',
+            ], [
+                'required' => 'هذا الحقل مطلوب',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 422);
+            }
+
+            $user = User::where('email', $request->email)->first();
+            if($user == null) {
+                return response()->json(['message' => 'البريد الالكتروني غير موجود'], 400);
+            }
+            $type = 'resetpassword';
+
+            Mail::to($user->email)->send(new UserVerificationEmail($user,$type));
+            return response()->json(['message' => 'تمت الاضافة'], 201);
+        }catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function passwordreset(Request $request,int $id,String $token){
+        try{
+            $validator = Validator::make($request->all(), [
+                'password' => 'required',
+                'confirmpassword' => 'required|same:password',
+            ], [
+                'required' => 'هذا الحقل مطلوب',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 422);
+            }
+            $user = User::where('id', $id)->where('verification_token', $token)->first();
+            if($user == null) {
+                return response()->json(['message' => 'مستخدم غير موجود'], 400);
+            }
+            $user->password = Hash::make($request->password);
+            $token = Str::uuid();
+            $user->verification_token = $token;
+            $user->save();
+            return  response()->json(['message' => 'تمت تغيير كلمة المرور'], 201);
+        }catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
         }
     }
 //    public function store(Request $request){
@@ -186,6 +238,8 @@ class AccountController extends Controller
         $users->password = Hash::make("123456789");
         $users->role = $user->role == 0 ? 1 : 3;
         $users->status = 0;
+        $token = Str::uuid();
+        $users->verification_token = $token;
         $users->save();
         $employee = new Employee();
         $employee->ID_office = $user->emplyee->ID_office;

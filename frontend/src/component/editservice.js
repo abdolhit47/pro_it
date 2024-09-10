@@ -4,12 +4,13 @@ import React, { useEffect, useState,useRef} from "react";
 import { ToastContainer, toast } from 'react-toastify'
 import Select from "react-select";
 
-export default function AddOffice({onClose}) {
+export default function EditOffice({onClose,id}) {
 
     const [value, setValue] = useState({
+        id: '',
         name: '',
         description: '',
-        ID_card: false, // Checkbox values are initially false (unchecked)
+        ID_card: false,
         birth_certificate: false,
         passport: false,
         license: false,
@@ -19,12 +20,11 @@ export default function AddOffice({onClose}) {
     const closeModalTp = () => {
         onClose(false);
     };
-
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setValue((prevState) => ({
             ...prevState,
-            [name]: value, // Update state for text inputs (name, description)
+            [name]: value,
         }));
     };
 
@@ -32,27 +32,21 @@ export default function AddOffice({onClose}) {
         const { name, checked } = event.target;
         setValue((prevState) => ({
             ...prevState,
-            [name]: checked, // Update state for checkboxes (0 or 1)
+            [name]: checked,
         }));
     };
 
-    // async function onSubmit ()  {
-    //     try{
-    //         const res =  await axios.post(baseurl + 'storeoffice', value,{
-    //             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
-    //         });
-    //         if(res.status===201){
-    //             toast.success('تم إضافة الجهة بنجاح');
-    //         }
-    //     }catch (error){
-    //         if(error?.response?.status === 400){
-    //             toast.error('اسم مستخدم الجهة موجود مسبقا');
-    //         }else{
-    //             toast.error('حدث خطأ. الرجاء المحاولة مرة أخرى.');
-    //         }
-    //     }setOpenModal(false);
-    // }
     const [error, setErrors] = useState(false);
+    async function getService() {
+        const res = await axios.get(baseurl+"getService/"+id, {
+            headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
+        });
+        setValue(res.data)
+    }
+
+    useEffect(() => {
+        getService();
+    }, []);
     console.log(value)
     async function onSubmit  (){
         if(!value.name || !value.description ||
@@ -62,11 +56,11 @@ export default function AddOffice({onClose}) {
             toast.error('يجب عليك تعبئة جميع الحقول');
             return;
         }
-        const res = await axios.post(baseurl+"storeservice",value,{
+        const res = await axios.put(baseurl+"updateService/"+id+"",value,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
         if(res.status===201){
-            toast.success('تم إضافة الخدمة بنجاح');
+            toast.success('تم تعديل الخدمة بنجاح');
             onClose(false);
         }
     }
@@ -83,7 +77,7 @@ export default function AddOffice({onClose}) {
                             clip-rule="evenodd"></path>
                     </svg>
                 </button>
-                <h1 className="  mr-auto items-center font-bold text-xl">اضافة الخدمة</h1>
+                <h1 className="  mr-auto items-center font-bold text-xl">تعديل الخدمة</h1>
             </div>
             <div className="pt-0 text-center">
                 <div className="flex flex-col px-6 py-4 max-w-3xl">
@@ -106,35 +100,34 @@ export default function AddOffice({onClose}) {
                         || value.license===false || value.medical_certificate===false )&&<p className="block text-red-500 text-xs  mt-1 w-full">يجب إختيار مرفق واحد على أقل</p>}
                         <div className="flex flex-row-reverse justify-centeritems-center -mx-3 mb-4">
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"ID_card"} value={'value.ID_card'} onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"ID_card"} checked={value.ID_card} onChange={handleCheckboxChange}/>
                                 <label htmlFor={"ID_card"} className={'mr-2 inline-flex'}>بطاقة الشخصية</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"birth_certificate"} value={'value.birth_certificate'} onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"birth_certificate"} checked={value.birth_certificate} onChange={handleCheckboxChange}/>
                                 <label htmlFor={"birth_certificate"} className={'mr-2 inline-flex'}>شهادة ميلاد</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"passport"} value={'value.passport'}  onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"passport"} checked={value.passport}  onChange={handleCheckboxChange}/>
                                 <label htmlFor={"passport"} className={'mr-2 inline-flex'}>جواز السفر</label>
                             </div>
                         </div>
                         <div className="flex flex-row-reverse justify-center items-center -mx-3 mb-4">
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"license"} value={'value.license'}  onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"license"} checked={value.license}  onChange={handleCheckboxChange}/>
                                 <label htmlFor={"license"} className={'mr-2 inline-flex'}>رخصة</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"medical_certificate"} value={'value.medical_certificate'}  onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"medical_certificate"} checked={value.medical_certificate}  onChange={handleCheckboxChange}/>
                                 <label htmlFor={"medical_certificate"} className={'mr-2 inline-flex'}>إثبات طبي</label>
                             </div>
                             <div className="w-full md:w-2/4 md:mb-0 flex" dir={'rtl'}>
-                                <input type={'checkbox'} id={"service"} name={"family_status_certificate"} value={'value.family_status_certificate'}  onChange={handleCheckboxChange}/>
+                                <input type={'checkbox'} id={"service"} name={"family_status_certificate"} checked={value.family_status_certificate}  onChange={handleCheckboxChange}/>
                                 <label htmlFor={"family_status_certificate"} className={'mr-2 inline-flex'}>شهادة وضع العائلة</label>
                             </div>
                         </div>
-
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">إضافة</button>
+                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-green-700">تعديل</button>
                             <button onClick={closeModalTp} className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 ">رجوع</button>
                         </div>
                 </div>

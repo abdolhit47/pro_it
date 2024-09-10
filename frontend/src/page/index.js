@@ -20,6 +20,12 @@ export {default as Gallery} from './Homes/Gallery';
 export {default as News} from './Homes/News';
 export {default as ContactUs} from './Homes/Contact-us';
 export {default as ShowOfficeH} from './Homes/ShowOfficeH';
+export {default as NotFound} from "./NotFound";
+
+export {default as Forgottenpass} from "./Acount/forgottenpass";
+export {default as Chackemail} from "./Acount/chackemail";
+export {default as Verifyemail} from "./Acount/verify-email";
+export {default as Resetpassword} from "./Acount/resetpassword";
 
 //export {default as Chackemail} from './chackemail';
 //export {default as NotFound} from "./NotFound";

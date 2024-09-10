@@ -20,7 +20,7 @@ class ServiceController extends Controller
 //            }
 //        }
         $user = Auth::user();
-        $services = Service::select('name','description')->where('ID_office', $user->emplyee->ID_office)->get();
+        $services = Service::select('id','name','description')->where('ID_office', $user->emplyee->ID_office)->get();
         if($services->isEmpty()){
             return response()->json(0, 202);
         }
@@ -84,40 +84,52 @@ class ServiceController extends Controller
 
 
 
-//    public function edit($id)
-//    {
-//        $service = Service::find($id);
-//        $req_document = Req_Document::all()->where('service_id', $id)->first();
-//        return response()->json([$service, $req_document]);
-//    }
+    public function getService($id)
+    {
+        $req_document = Req_Document::with('service')->where('service_id', $id)->first();
+        $service = (object)[
+            'ID_card' => $req_document->ID_card,
+            'birth_certificate' => $req_document->birth_certificate,
+            'passport' => $req_document->passport,
+            'license' => $req_document->license,
+            'medical_certificate' => $req_document->medical_certificate,
+            'family_status_certificate' => $req_document->family_status_certificate,
+            'service_id' => $req_document->service->id,
+            'name' => $req_document->service->name,
+            'description' => $req_document->service->description,
+        ];
 
-//    public function update(Request $request, $id)
-//    {
-//        try {
-//            $request->validate([
-//                'name' => 'required',
-//            ]);
+        return response()->json($service,200);
+    }
+
+    public function updateService(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required',
+
+            ]);
 //            $user = Auth::user();
 //            if ($user->role != 1) {
 //                return response()->json(['success' => "doesn't have permission"], 403);
 //            }
-//            $service = Service::find($id);
-//            $service->name = $request->name;
-//            $service->description = $request->description;
-//            $service->save();
-//            $req_document = Req_Document::all()->where('service_id', $id)->first();
-//            $req_document->ID_card = $request->ID_card?:0;
-//            $req_document->birth_certificate = $request->birth_certificate?:0;
-//            $req_document->passport = $request->passport?:0;
-//            $req_document->license = $request->license?:0;
-//            $req_document->medical_certificate = $request->medical_certificate?:0;
-//            $req_document->family_status_certificate = $request->family_status_certificate?:0;
-//            $req_document->service_id = $service->id;
-//            $service->req_documents()->save($req_document);
-//            return response()->json(['success' => true],201);
-//        }catch (Exception $e) {
-//            error_log($e->getMessage());
-//            return response()->json(['success' => false],400);
-//        }
-//    }
+            $service = Service::find($id);
+            $service->name = $request->name;
+            $service->description = $request->description;
+            $service->save();
+            $req_document = Req_Document::all()->where('service_id', $id)->first();
+            $req_document->ID_card = $request->ID_card?:0;
+            $req_document->birth_certificate = $request->birth_certificate?:0;
+            $req_document->passport = $request->passport?:0;
+            $req_document->license = $request->license?:0;
+            $req_document->medical_certificate = $request->medical_certificate?:0;
+            $req_document->family_status_certificate = $request->family_status_certificate?:0;
+            $req_document->service_id = $service->id;
+            $service->req_documents()->save($req_document);
+            return response()->json(['success' => true],201);
+        }catch (Exception $e) {
+            error_log($e->getMessage());
+            return response()->json(['success' => false],400);
+        }
+    }
 }

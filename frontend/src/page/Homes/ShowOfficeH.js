@@ -31,7 +31,7 @@ function ShowOfficeH({office}){
                         <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md m-auto w-8/12">
                             <p className="text-3xl text-center font-bold mt-10">{showoffice.name}</p>
                             {/*<Login office={office}/>*/}
-                            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 w-full mx-auto p-4" dir={"rtl"}>
+                            <div className="mt-10 w-full mx-auto p-4" dir={"rtl"}>
                                 {showoffice.description}
                             </div>
                         </div>

@@ -30,6 +30,10 @@ use Illuminate\Support\Facades\Route;
     Route::post("/login", [AccountController::class, "login"]);
     Route::get("/logout", [AccountController::class, "logout"])->middleware('auth:sanctum');
     Route::post('/register', [AccountController::class, 'register']);
+    Route::post('/chackemail',[AccountController::class,'chackemail']);
+    Route::post('/passwordreset/{id}/{token}',[AccountController::class,'passwordreset']);
+
+
     Route::get("/Showemployee", [AccountController::class, "user"])->middleware('auth:sanctum');
     Route::post('/addEmployee', [AccountController::class, 'addEmployee'])->middleware('auth:sanctum');
     Route::put('/update/{id}', [AccountController::class, 'updateStatus'])->middleware('auth:sanctum');
@@ -58,6 +62,8 @@ use Illuminate\Support\Facades\Route;
     Route::get("/showservice", [ServiceController::class, "index"])->middleware('auth:sanctum');
     #Route::get("/showservice/{id}", [ServiceController::class, "show"])->middleware('auth:sanctum');
     Route::post("/storeservice", [ServiceController::class, "store"])->middleware('auth:sanctum');
+    Route::get('/getService/{id}', [ServiceController::class, 'getService'])->middleware('auth:sanctum');
+    Route::put('/updateService/{id}', [ServiceController::class, 'updateService'])->middleware('auth:sanctum');
     /****End Service****/
 
 

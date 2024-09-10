@@ -4,18 +4,28 @@ import axios from "axios";
 import {baseurl} from "../../Baseurl/baseurl";
 import {useNavigate} from "react-router-dom";
 import AddService from "../../component/addservice";
+import EditService from "../../component/editservice";
 function Service() {
     const [service, setservice] = useState([]);
     const [addService, setAddService] = useState(false);
+    const [editService, setEditService] = useState(false);
     const access = localStorage.getItem('access_token');
     const navigate = useNavigate()
-
+    const [id, setId] = useState('');
     const handleAdd = () => {
         setAddService(true);
     };
     const handleCloseAddService = () => {
         setAddService(false);
-        // Fetch data again after AddService closes for guaranteed update
+        getServices();
+    };
+    const handleEdit = (id) => {
+        setId(id);
+        setEditService(true);
+    };
+    console.log(id)
+    const handleCloseEditService = () => {
+        setEditService(false);
         getServices();
     };
     async function getServices() {
@@ -40,7 +50,7 @@ function Service() {
             <div className="flex-grow bg-gray-100 h-lvh">
                 <Navbar />
                 <div className="flex flex-grow flex-row-reverse text-right inset-y-14 h-auto max-h-screen md:max-w-[calc(100%-16rem)] mt-20">
-                    <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
+                    <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4  ">
                         <div className="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 className="text-2xl text-gray-900 text-right">الخدمات</h1>
                         </div>
@@ -56,12 +66,13 @@ function Service() {
                                 service.length > 0 ?
                             <div className={"px-6 py-4 mt-6 grid gap-4 justify-start overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
                                 {service.map((item, index) => (<>
-                                    <div className={"ml-6  relative h-auto w-full  flex-shrink-0"}>
-                                        <div
-                                            className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 ml-2 w-full">
+                                    <div className={"ml-6 flex relative h-auto w-full items-center justify-center  flex-shrink-0"}>
+                                        <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 ml-2 w-full">
                                             <label htmlFor={"service"} className={'mr-2 font-bold'}>{item.name}</label>
                                             <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{item.description}</p>
                                         </div>
+                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10 w-20"
+                                                      onClick={() => handleEdit(item.id)} >تعديل</button>
                                     </div>
                                 </>))}
                             </div>:<p className=" text-2xl flex flex-col items-center my-5">لايوجد بيانات لعرضها</p>
@@ -71,6 +82,7 @@ function Service() {
             </div>
         </div>
             {addService && <AddService onClose={handleCloseAddService} />}
+            {editService && <EditService onClose={handleCloseEditService} id={id}/>}
         </>
     )
 }
