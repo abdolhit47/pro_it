@@ -96,6 +96,7 @@ export default function Showfiles({setOpenModal,path_file,id,status,approved}) {
     }
     const handleCloseUnapprove= () => {
         setunapprove(false);
+        navigate('/Order');
     };
 
     console.log(status === "1" && approved===0)

@@ -14,11 +14,9 @@
     <include_path>
       <path value="$PROJECT_DIR$/backend/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/backend/vendor/ramsey/collection" />
-      <path value="$PROJECT_DIR$/backend/vendor/nesbot/carbon" />
       <path value="$PROJECT_DIR$/backend/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/backend/vendor/carbonphp/carbon-doctrine-types" />
       <path value="$PROJECT_DIR$/backend/vendor/mockery/mockery" />
-      <path value="$PROJECT_DIR$/backend/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/backend/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/finder" />
@@ -51,7 +49,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/league/commonmark" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/uid" />
       <path value="$PROJECT_DIR$/backend/vendor/league/flysystem-local" />
-      <path value="$PROJECT_DIR$/backend/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/backend/vendor/league/flysystem" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/translation" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/service-contracts" />
@@ -116,7 +113,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/nette/schema" />
       <path value="$PROJECT_DIR$/backend/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/backend/vendor/vlucas/phpdotenv" />
-      <path value="$PROJECT_DIR$/backend/vendor/laravel/sail" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/prompts" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/backend/vendor/laravel/framework" />
@@ -364,6 +360,14 @@
       <path value="$PROJECT_DIR$/external/finance-ministry/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/external/finance-ministry/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/external/finance-ministry/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/backend/vendor/setasign/fpdi" />
+      <path value="$PROJECT_DIR$/backend/vendor/setasign/fpdf" />
+      <path value="$PROJECT_DIR$/backend/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/backend/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/backend/vendor/laravel/sail" />
+      <path value="$PROJECT_DIR$/backend/vendor/iio/libmergepdf" />
+      <path value="$PROJECT_DIR$/backend/vendor/setasign/fpdi-fpdf" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

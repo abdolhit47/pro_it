@@ -6,6 +6,7 @@ use App\Jobs\GeneratePdfJob;
 use App\Models\Document;
 use App\Models\File;
 use App\Models\Req_Document;
+use App\Models\Service;
 use App\Models\Service_Follow_Up;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,42 +42,57 @@ class FileController extends Controller
                 if($file->getClientMimeType() == 'image/png' || $file->getClientMimeType() == 'image/jpeg' || $file->getClientMimeType() == 'image/jpg'){
                     $path = $file->store('uploads');
                     $imagePaths[] = $path;
-                }else{
+                }else if ($file->getClientMimeType() == 'application/pdf') {
                     $pdfPath[] = $file->store('uploads');
+                }else{
+                    foreach ($imagePaths as $path) {
+                        Storage::delete($path);
+                    }
+                    foreach ($pdfPath as $path) {
+                        Storage::delete($path);
+                    }
+                    return response()->json(['message' => 'Invalid file type'], 403);
                 }
             }
 
-            if($files[0]->getClientMimeType() == 'application/pdf'){
-                $path = $files[0]->store('uploads');
-                $file = new File();
-                $file->name = basename($path); // اسم الملف الأصلي
-                $file->size = $files[0]->getSize();
-                $file->type = 'application/pdf'; // نوع الملف
-                $file->path_file = $path; // المسار الذي تم تخزين الملف فيه
-                $file->save(); // حفظ سجل الملف في قاعدة البيانات
-
-                //error_log($request->service_id);
-                $service_follow_up = new Service_Follow_Up();
-                $service_follow_up->task_id = random_int(1000, 999999);
-                $service_follow_up->file_id = $file->id;
-                $service_follow_up->mwaten_id = $user->mwaten->id;
-                $service_follow_up->service_id = $request->id_service;
-                $service_follow_up->save();
-                return response()->json(['message' => 'PDF generation in progress'], 201);
-            }elseif ($files[0]->getClientMimeType() == 'image/png' || $files[0]->getClientMimeType() == 'image/jpeg' || $files[0]->getClientMimeType() == 'image/jpg') {
-                foreach ($files as $file) {// Save the uploaded images and collect their paths
-                    $path = $file->store('uploads');
-                    $imagePaths[] = $path;
-                }
-                $destinationPath = 'uploads';
-                GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service,$user->mwaten->id);//->delay(Carbon::now()->addSeconds(5));
-                return response()->json(['message' => 'PDF generation in progress'], 201);
-            }else{
-                foreach ($imagePaths as $path) {
-                    Storage::delete($path);
-                }
-                return response()->json(['message' => 'Invalid file type'], 403);
+            GeneratePdfJob::dispatch($imagePaths,$pdfPath, 'uploads', $request->id_service,$user->mwaten->id);//->delay(Carbon::now()->addSeconds(5));
+            foreach ($imagePaths as $path) {
+                Storage::delete($path);
             }
+            foreach ($pdfPath as $path) {
+                Storage::delete($path);
+            }
+//            if($files[0]->getClientMimeType() == 'application/pdf'){
+//                $path = $files[0]->store('uploads');
+//                $file = new File();
+//                $file->name = basename($path); // اسم الملف الأصلي
+//                $file->size = $files[0]->getSize();
+//                $file->type = 'application/pdf'; // نوع الملف
+//                $file->path_file = $path; // المسار الذي تم تخزين الملف فيه
+//                $file->save(); // حفظ سجل الملف في قاعدة البيانات
+//
+//                //error_log($request->service_id);
+//                $service_follow_up = new Service_Follow_Up();
+//                $service_follow_up->task_id = random_int(1000, 999999);
+//                $service_follow_up->file_id = $file->id;
+//                $service_follow_up->mwaten_id = $user->mwaten->id;
+//                $service_follow_up->service_id = $request->id_service;
+//                $service_follow_up->save();
+//                return response()->json(['message' => 'PDF generation in progress'], 201);
+//            }elseif ($files[0]->getClientMimeType() == 'image/png' || $files[0]->getClientMimeType() == 'image/jpeg' || $files[0]->getClientMimeType() == 'image/jpg') {
+//                foreach ($files as $file) {// Save the uploaded images and collect their paths
+//                    $path = $file->store('uploads');
+//                    $imagePaths[] = $path;
+//                }
+//                $destinationPath = 'uploads';
+//                GeneratePdfJob::dispatch($imagePaths, $destinationPath, $request->id_service,$user->mwaten->id);//->delay(Carbon::now()->addSeconds(5));
+                return response()->json(['message' => 'PDF generation in progress'], 201);
+//            }else{
+//                foreach ($imagePaths as $path) {
+//                    Storage::delete($path);
+//                }
+//                return response()->json(['message' => 'Invalid file type'], 403);
+//            }
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 403);
         }
@@ -114,12 +130,13 @@ class FileController extends Controller
 //                if (Auth::user()->role == 2 || Auth::user()->role == 3) {
                     $status = [0,1, 2];
                     $service = Service_Follow_Up::with('services')
-                        ->whereIn('status', $status)
-                        ->where('approve', 0)->orWhere('approve', 1)
                         ->whereHas('services', function ($query) {
                             $query->where('ID_office', Auth::user()->emplyee->ID_office);
-                        })
+                        })->whereIn('status', $status)
+                        ->where('approve', 0)->orWhere('approve', 1)
                         ->get();
+//                    $ser = Service::where('ID_office','==', Auth::user()->emplyee->ID_office)->get();
+//dd($service);
                     if($service->count() == 0){
                         return response()->json(0, 202);
                     }

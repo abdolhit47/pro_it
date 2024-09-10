@@ -23,7 +23,7 @@ function Chats() {
     }
 
     const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
-const [indexchat, setIndexchat] = useState(null);
+    const [indexchat, setIndexchat] = useState(null);
     const [messages, setMessage] = useState('');
     const [title, setTitle] = useState('');
     const [updateCount, setUpdateCount] = useState(false);
@@ -82,8 +82,15 @@ const [indexchat, setIndexchat] = useState(null);
         await axios.post(baseurl+'sendmessage',formdata,{
             headers: {Authorization: `Bearer ${localStorage.getItem('token')}`,},
         })
+        setMessage(prevMessages => [
+            ...prevMessages, {
+            Message: value.message,type:howSend,
+            }]);
         setvalue({message: ''});
-        await handleChatClick(selectedChatId)
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+       // await handleChatClick(selectedChatId)
     }
 
     const [newMessage, setnewMessage] = useState(false);
@@ -178,7 +185,7 @@ const [indexchat, setIndexchat] = useState(null);
                             </div>
                             <div className="flex col-span-3 items-center justify-center h-12">
                                 {chats[indexchat]  ? (chats[indexchat]?.Status !== 'Active' ? <p className="font-bold text-sm p-1 truncate">الرسالة مغلقة</p>
-                                    : (messages.length > 0 ? (
+                                    : (messages.length > 0 && (
                                         <div className="flex w-4/5 my-2 mx-1">
                                             <textarea id="message" rows="1" className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                                                         name="message" value={value.message} onChange={handleChange} placeholder="Your message..." />
@@ -189,7 +196,7 @@ const [indexchat, setIndexchat] = useState(null);
                                                         onClick={() => handlestop()} > <CheckCircleOutlineIcon /> </button>
                                             }
                                         </div>
-                                    ): "")
+                                    ))
                                     ): ""
                                 }
                             </div>

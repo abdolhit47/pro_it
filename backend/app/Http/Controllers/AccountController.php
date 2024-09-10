@@ -111,6 +111,7 @@ class AccountController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => 4,
+                'status' => 1,
             ]);
 //            $mwaten = Mwaten::create([
 //                'first_name' => $request->firstName,
@@ -137,7 +138,6 @@ class AccountController extends Controller
             $mwaten->save();
             $token = Str::uuid();
             $user->verification_token = $token;
-            $user->status = 1;
             $user->mwaten()->save($mwaten);
 
             if($user == null) {

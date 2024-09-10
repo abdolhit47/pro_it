@@ -10,7 +10,6 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/backend/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/external/civil-registry/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/external/civil-registry/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/external/civil-registry/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
@@ -376,6 +375,10 @@
       <excludeFolder url="file://$MODULE_DIR$/external/finance-ministry/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/external/finance-ministry/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/external/finance-ministry/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/iio/libmergepdf" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/setasign/fpdf" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/setasign/fpdi" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/setasign/fpdi-fpdf" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

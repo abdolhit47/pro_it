@@ -7,10 +7,10 @@
           <option name="path" value="$PROJECT_DIR$/tests" />
         </Configuration>
         <Configuration>
-          <option name="path" value="$PROJECT_DIR$/backend/tests" />
+          <option name="path" value="$PROJECT_DIR$/external/civil-registry/tests" />
         </Configuration>
         <Configuration>
-          <option name="path" value="$PROJECT_DIR$/external/civil-registry/tests" />
+          <option name="path" value="$PROJECT_DIR$/backend/tests" />
         </Configuration>
       </list>
     </option>

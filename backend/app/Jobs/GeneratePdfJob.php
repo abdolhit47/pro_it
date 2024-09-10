@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use iio\libmergepdf\Merger;
+
 
 class GeneratePdfJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $imagePaths,$destinationPath,$id_service,$id;
+    protected $imagePaths,$pdfPath,$destinationPath,$id_service,$id;
 
 
     /**
@@ -26,9 +28,10 @@ class GeneratePdfJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($imagePaths, $destinationPath, $id_service,$id)
+    public function __construct($imagePaths,$pdfPath, $destinationPath, $id_service,$id)
     {
         $this->imagePaths = $imagePaths;
+        $this->pdfPath = $pdfPath;
         $this->destinationPath = $destinationPath;
         $this->id_service = $id_service;
         $this->id = $id;
@@ -62,26 +65,45 @@ class GeneratePdfJob implements ShouldQueue
 
             $randomFileName = \Illuminate\Support\Str::random(20) . '.pdf';
             $storedPdfPath = $this->destinationPath . '/' . $randomFileName;
-            //dd($storedPdfPath);
             file_put_contents(public_path($storedPdfPath), $dompdf->output());
+            $merger = new Merger;
+            $merger->addFile(public_path($storedPdfPath));
+            foreach ($this->pdfPath as $path) {
+                if (file_exists(public_path($path))) {
+                    $merger->addFile(public_path($path));
+                } else {
+                    response()->json(['error' => 'File not found: ' . $path], 404);
+                }
+            }
+            $mergedPdf = $merger->merge();
+            $finalFileName = \Illuminate\Support\Str::random(20) . '_merged.pdf';
+            $finalPdfPath = $this->destinationPath . '/' . $finalFileName;
+            file_put_contents(public_path($finalPdfPath), $mergedPdf);
+            foreach ($this->imagePaths as $path) {
+                Storage::delete($path);
+            }
+            foreach ($this->pdfPath as $path) {
+                Storage::delete($path);
+            }
+
             $file = new File();
-            $file->name = basename($storedPdfPath); // اسم الملف الأصلي
-            $file->size = filesize(public_path($storedPdfPath)); // حجم الملف
+            $file->name = basename($finalPdfPath); // اسم الملف الأصلي
+            $file->size = filesize(public_path($finalPdfPath)); // حجم الملف
             $file->type = 'application/pdf'; // نوع الملف
-            $file->path_file = $storedPdfPath; // المسار الذي تم تخزين الملف فيه
+            $file->path_file = $finalPdfPath; // المسار الذي تم تخزين الملف فيه
             $file->save(); // حفظ سجل الملف في قاعدة البيانات
-            // Delete images after PDF is generated
             $service_follow_up = new Service_Follow_Up();
             $service_follow_up->task_id = random_int(1000, 999999);
             $service_follow_up->file_id = $file->id;
             $service_follow_up->mwaten_id = $this->id;
             $service_follow_up->service_id = $this->id_service;
             $service_follow_up->save();
+
+        }catch (\Exception $e){
             foreach ($this->imagePaths as $path) {
                 Storage::delete($path);
             }
-        }catch (\Exception $e){
-            foreach ($this->imagePaths as $path) {
+            foreach ($this->pdfPath as $path) {
                 Storage::delete($path);
             }
         }
