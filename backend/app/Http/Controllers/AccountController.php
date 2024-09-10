@@ -267,36 +267,32 @@ class AccountController extends Controller
 //                'email' => 'required|email|unique:users,email,' . $user->id . ',id',
 //                'password' => 'required|min:8',
 //            ]);
+
+            $rules = [];
+            $messages = [];
             if ($request->has('email') && $request->email != $user->email) {
-                $validator = Validator::make($request->all(), [
-                    'email' => 'required|email|unique:users,email,' . $user->id,
-                ],[
-                    'required' => 'هذا الحقل مطلوب',
-                    'unique' => 'هذا مستعمل بالفعل',
-                ]);
+                $rules['email'] = 'required|email|unique:users';
+                $messages['email.required'] = 'هذا الحقل مطلوب';
+                $messages['email.unique'] = 'هذا البريد الإلكتروني مستعمل بالفعل';
             }
-            if($user->mwaten) {
-                if ($request->has('phone') && $request->phone != $user->mwaten->phone) {
-                    $validator = Validator::make($request->all(), [
-                        'phone' => 'required|unique:mwaten',
-                    ], [
-                        'required' => 'هذا الحقل مطلوب',
-                        'unique' => 'هذا مستعمل بالفعل',
-                    ]);
+            if ($request->has('phone')) {
+                if ($user->mwaten && $request->phone != $user->mwaten->phone) {
+                    $rules['phone'] = 'required|unique:mwaten';
+                    $messages['phone.required'] = 'هذا الحقل مطلوب';
+                    $messages['phone.unique'] = 'هذا الرقم مستعمل بالفعل من مواطن آخر';
                 }
-            }else {
-                    if ($request->has('phone') && $request->phone != $user->emplyee->phone) {
-                        $validator = Validator::make($request->all(), [
-                            'phone' => 'required|unique:employee',
-                        ], [
-                            'required' => 'هذا الحقل مطلوب',
-                            'unique' => 'هذا مستعمل بالفعل',
-                        ]);
-                    }
+
+                if ($user->emplyee && $request->phone != $user->emplyee->phone) {
+                    $rules['phone'] = 'required|unique:employee';
+                    $messages['phone.required'] = 'هذا الحقل مطلوب';
+                    $messages['phone.unique'] = 'هذا الرقم مستعمل بالفعل من موظف آخر';
                 }
+            }
+            $validator = Validator::make($request->all(), $rules, $messages);
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 422);
             }
+
             $userToUpdate = User::find($id);
             $userToUpdate->name = $request->name;
             $userToUpdate->email = $request->email;

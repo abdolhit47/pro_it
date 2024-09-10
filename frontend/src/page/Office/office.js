@@ -56,7 +56,7 @@ function Office() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-20">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-16">
                     <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto  ">
                         <div class="p-4 px-10 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 class="text-2xl text-gray-900 text-right">الجهة/المركز</h1>
@@ -108,7 +108,7 @@ function Office() {
                                                 <tr className="text-center hover:bg-orange-100 flex w-full px-2" key={item.id}>
                                                     <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
                                                     <td className="p-3 w-1/4 flex items-center justify-center text-ellipsis">{item.name}</td>
-                                                    <td className="p-3 w-1/4 flex items-center justify-center truncate text-right">{item.description}</td>
+                                                    <td className="p-3 w-1/4 flex  truncate hover:text-balance hover:h-36 text-right" dir={'rtl'}>{item.description}</td>
                                                     {role === "0" &&<td className="p-3 w-1/4 flex items-center justify-center">{item.employee}</td>}
                                                     <td className="p-3 w-1/4 flex items-center justify-center">{item.address}</td>
                                                     {role !== "0" &&<td className="p-3 w-1/4 flex items-center justify-center">

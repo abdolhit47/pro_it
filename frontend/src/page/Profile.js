@@ -115,10 +115,10 @@ function Profile() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] xl:mt-14 md:mt-5 sm:mt-5">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] xl:mt-10 md:mt-5 sm:mt-5">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
                         <div className="flex flex-col p-3 max-w-3xl">
-                            {access === "0" && <h1 className="text-xl text-red-900 text-center mb-4">يجب ملء جميع الحقول حتى تتمكن من
+                            {access === "0" ?? <h1 className="text-xl text-red-900 text-center mb-4">يجب ملء جميع الحقول حتى تتمكن من
                                 استخدام النظام</h1>}
                             <h1 className="text-2xl text-gray-900 text-right mb-4">بياناتي الشخصية</h1>
                                 <div>

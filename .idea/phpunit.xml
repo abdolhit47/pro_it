@@ -3,12 +3,12 @@
   <component name="PHPUnit">
     <option name="directories">
       <list>
-        <option value="$PROJECT_DIR$/backend/tests/Unit" />
-        <option value="$PROJECT_DIR$/backend/tests/Feature" />
-        <option value="$PROJECT_DIR$/external/civil-registry/tests/Unit" />
-        <option value="$PROJECT_DIR$/external/civil-registry/tests/Feature" />
         <option value="$PROJECT_DIR$/external/finance-ministry/tests/Unit" />
         <option value="$PROJECT_DIR$/external/finance-ministry/tests/Feature" />
+        <option value="$PROJECT_DIR$/external/civil-registry/tests/Unit" />
+        <option value="$PROJECT_DIR$/external/civil-registry/tests/Feature" />
+        <option value="$PROJECT_DIR$/backend/tests/Unit" />
+        <option value="$PROJECT_DIR$/backend/tests/Feature" />
       </list>
     </option>
   </component>

@@ -36,6 +36,16 @@ class FileController extends Controller
 
             $files = $request->file('files');
             $imagePaths = [];
+            $pdfPath = [];
+            foreach ($files as $file) {
+                if($file->getClientMimeType() == 'image/png' || $file->getClientMimeType() == 'image/jpeg' || $file->getClientMimeType() == 'image/jpg'){
+                    $path = $file->store('uploads');
+                    $imagePaths[] = $path;
+                }else{
+                    $pdfPath[] = $file->store('uploads');
+                }
+            }
+
             if($files[0]->getClientMimeType() == 'application/pdf'){
                 $path = $files[0]->store('uploads');
                 $file = new File();

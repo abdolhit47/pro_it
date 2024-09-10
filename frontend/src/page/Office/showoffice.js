@@ -38,7 +38,7 @@ function ShowOffice() {
 
     const handleClose = () => {
         setUploadfiles(false);
-        navigate(`/Trackorder`);
+        //navigate(`/Trackorder`);
     };
     const handleback = () => {
         navigate(`/office`);
@@ -62,7 +62,7 @@ function ShowOffice() {
         <div className="flex h-screen ">
             <div className="flex-grow bg-gray-100">
                 <Navbar />
-                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] mt-16">
+                <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] xl:mt-10 md:mt-5 sm:mt-5">
                     <div class="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-3/4 h-auto">
                         <div class="p-4 px-5 flex content-center justify-between  mt-2" dir="rtl">
                             <h1 class="text-3xl text-gray-900 text-right">{office.name}</h1>
@@ -74,10 +74,10 @@ function ShowOffice() {
                             <div className=" mt-10">
                                 <h1 className="text-xl text-gray-900 text-right">العنوان</h1>
                             </div>
-                            <div className={"px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full "} dir={'rtl'}>
-                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
+                            <div className={"px-6 py-4 flex flex-wrap gap-4 justify-center overflow-y-auto h-auto max-h-96 max-w-full w-1/6 md:w-2/4"} dir={'rtl'}>
+                                <span className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-full">
                                     {/*<input type={'radio'} id={"test"} name={"city"}/>*/}
-                                    <label htmlFor={"test"} className={'mr-2'}>{office.address}</label>
+                                    <label  className={'mr-2'}>{office.address}</label>
                                 </span>
                             </div>
 
@@ -88,11 +88,11 @@ function ShowOffice() {
                                 <ol className="list-inside list-decimal mt-4 mb-5 m-2">
                                     {office.services !== null ?
                                         office.services?.map((service) => (
-                                            <li className={"ml-6  relative h-auto w-1/6 md:w-1/4  flex-shrink-0 flex-col inline-flex"}>
-                                                <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-full">
+                                            <li className={"ml-6  relative h-auto w-1/6 md:w-2/4 hover:w-2/4 flex-shrink-0 flex-col inline-flex"}>
+                                                <div className="bg-gray-100 flex-grow text-black border-r-8 border-green-500 rounded-md px-3 py-2 m-3 ml-2 w-auto">
                                                     <input type={'radio'} id={"service"} name={"service"} onClick={()=>handleset(service.id,service.name)}/>
                                                     <label htmlFor={"service"} className={'mr-2 font-bold inline-flex'}>{service.name}</label>
-                                                    <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip"}>{service.description}</p>
+                                                    <p className={"mr-5 text-sm pl-3 truncate hover:text-wrap hover:text-clip "}>{service.description}</p>
                                                 </div>
 
                                             </li>

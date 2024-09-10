@@ -133,10 +133,12 @@ export default function AddOffice({onClose}) {
                                 <input type="text" id="user_name" name="user_name" value={value.user_name} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {error&& value.user_name===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
-
-                            <div className="w-full md:w-2/4 px-3 mb-6 md:mb-0">
+                        </div>
+                        <div className="flex flex-row-reverse -mx-3 mb-4">
+                            <div className="w-full px-3 mb-6 md:mb-0">
                                 <label form="description" className="block mb-2 text-gray-700 font-medium  text-right">الوصف الجهة</label>
-                                <textarea  id="description" name="description" value={value.description} onChange={handleChange} className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
+                                <textarea  id="description" name="description" value={value.description} onChange={handleChange} dir={"rtl"}
+                                           className="w-full border border-gray-300 rounded-md py-1 px-4 text-gray-700 focus:border-indigo-500 focus:outline-none text-right" />
                                 {error&& value.description===''&&<p className="block text-red-500 text-xs  mt-1 w-full">لا يمكن ترك هذا الحقل فارغًا.</p>}
                             </div>
                         </div>
