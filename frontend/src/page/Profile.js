@@ -6,8 +6,7 @@ import axios from 'axios'
 import {baseurl} from "../Baseurl/baseurl";
 
 function Profile() {
-    const access = localStorage.getItem('access_token');
-
+    const [access, setAccess] = useState(localStorage.getItem('access_token'));
     const [user, setUser] = useState({
         first_name:'',
         middle_name:'',
@@ -95,7 +94,8 @@ function Profile() {
             });
             if(res.status===201 ){
                 toast.success('تم تحديث بياناتك بنجاح');
-                localStorage.setItem('access_token',res.access_token);
+                localStorage.setItem('access_token',res.data.access_token);
+                setAccess(res.data.access_token);
                 // setTimeout(function(){
                 //     window.location.reload();
                 // }, 2000);
@@ -118,8 +118,8 @@ function Profile() {
                 <div className="content-center flex flex-row justify-between md:max-w-[calc(100%-16rem)] xl:mt-10 md:mt-5 sm:mt-5">
                     <div className="bg-gray-200 shadow-xl shadow-indigo-500/40 rounded-md mx-auto w-auto">
                         <div className="flex flex-col p-3 max-w-3xl">
-                            {access === "0" ?? <h1 className="text-xl text-red-900 text-center mb-4">يجب ملء جميع الحقول حتى تتمكن من
-                                استخدام النظام</h1>}
+                            {access === '0' && (<h1 className="text-xl text-red-900 text-center mb-4">يجب ملء جميع الحقول حتى تتمكن من
+                                استخدام النظام</h1>)}
                             <h1 className="text-2xl text-gray-900 text-right mb-4">بياناتي الشخصية</h1>
                                 <div>
                                     <div className="flex flex-row-reverse -mx-3 mb-4">
