@@ -2,8 +2,9 @@ import { baseurl } from '../Baseurl/baseurl';
 import axios from 'axios';
 import React, { useEffect, useState} from "react";
 import { ToastContainer, toast } from 'react-toastify'
-
+import {useNavigate, useParams} from "react-router-dom";
 export default function UploadDoc({onClose,id}) {
+    const navigate = useNavigate();
 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const handleFileChange = (event)=> {
@@ -31,6 +32,7 @@ export default function UploadDoc({onClose,id}) {
                 toast.success('تم تحميل وثيقة/وثائق بنجاح');
                 setTimeout(() => {
                     onClose(false);
+                    navigate(`/Order`);
                 },1250);
             }
         }catch (error){

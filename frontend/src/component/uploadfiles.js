@@ -66,7 +66,6 @@ export default function Uploadfiles({onClose,id}) {
         if (reqDocs.family_status_certificate) validateFile(selectedFiles.family_status_certificate, 'شهادة وضع العائلة','family_status_certificate');
 
         setFileErrors(errors);
-        console.log(fileErrors)
         if (hasError) return;
 
         const formData = new FormData();

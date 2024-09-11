@@ -26,16 +26,18 @@ function ShowOrder() {
         });
         setOrder(res.data)
     }
+    const [OpenModal, setOpenModal] = useState(false);
+
     useEffect(() => {
         if (access === "0") {
             navigate('/profile');
         }
         getOffice();
-    }, []);
+    }, [OpenModal]);
 
-    const [OpenModal, setOpenModal] = useState(false);
     const handleShow = ()=>{
         setOpenModal(true);
+
     }
 
 
@@ -52,6 +54,7 @@ function ShowOrder() {
     };
     const handleCloseUploadDoc= () => {
         setuploaddocs(false);
+
     };
 
     // async function send($id){
@@ -69,7 +72,6 @@ function ShowOrder() {
     //     });
     //
     // }
-    console.log(Order.status === "2"??"ASa")
     return (
         <>
         <div className="flex h-screen ">

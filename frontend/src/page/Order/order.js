@@ -112,7 +112,7 @@ function Order() {
                                 <thead className="flex w-full items-center ">
                                 <tr className="border-b text-center flex w-full px-2 mb-4">
                                     <th className="p-3 items-center w-1/8">#</th>
-                                    <th className="p-3 items-center w-1/5">رقم الطلب</th>
+                                    {/*<th className="p-3 items-center w-1/5">رقم الطلب</th>*/}
                                     <th className="p-3 items-center w-1/5">الاسم المواطن</th>
                                     <th className="p-3 items-center w-1/5">الجهة/المركز</th>
                                     <th className="p-3 items-center w-1/5">نوع خدمة</th>
@@ -132,7 +132,7 @@ function Order() {
                                                 filteredData.map((item, index) => (
                                                     <tr className="text-center hover:bg-orange-100 flex w-full px-2">
                                                         <td className="p-3 w-1/8 flex items-center justify-center">{index + 1}</td>
-                                                        <td className="p-3 w-1/5 flex items-center justify-center">{item.ticket.toString()}</td>
+                                                        {/*<td className="p-3 w-1/5 flex items-center justify-center">{item.ticket.toString()}</td>*/}
                                                         <td className="p-3 w-1/5 flex items-center justify-center">{item.name_mwaten}</td>
                                                         <td className="p-3 w-1/5 flex items-center justify-center">{item.name_office}</td>
                                                         <td className="p-3 w-1/5 flex items-center justify-center">{item.name_service}</td>

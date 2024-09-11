@@ -133,7 +133,7 @@ class FileController extends Controller
                         ->whereHas('services', function ($query) {
                             $query->where('ID_office', Auth::user()->emplyee->ID_office);
                         })->whereIn('status', $status)
-                        ->where('approve', 0)->orWhere('approve', 1)
+                        //->where('approve', 0)
                         ->get();
 //                    $ser = Service::where('ID_office','==', Auth::user()->emplyee->ID_office)->get();
 //dd($service);
@@ -283,7 +283,7 @@ class FileController extends Controller
     public function uploadDoc($id,Request $request){
         try{
             $user = Auth::user();
-            if(!in_array($user->role,[2,3])){
+            if(!in_array($user->role,[0,1,2,3])){
                 return response()->json(['success' => "doesn't have permission"],403);
             }
              $request->validate([

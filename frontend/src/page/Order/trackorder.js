@@ -68,7 +68,7 @@ function Order() {
                                 <span className=" font-bold text-black border-b-2 border-green-500 px-3 py-2 w-1/5">
                                                     نوع الخدمة
                                 </span>
-                                <span className=" font-bold text-black border-b-2 border-green-500 px-3 py-2 w-1/5">
+                                <span className=" font-bold text-black border-b-2 border-green-500 px-3 py-2 w-1/6">
                                                     المركز/الجهة
                                 </span>
                                 <span className={" font-bold border-orange-300 text-black border-b-2 px-3 py-2 w-1/6"}>
@@ -93,17 +93,17 @@ function Order() {
                                                             {/*</span>*/}
 
                                                             <span
-                                                                className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
+                                                                className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
                                                         {item.name_office}
                                                     </span>
 
                                                             <span
-                                                                className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/5">
+                                                                className="bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6">
                                                         {item.name_service}
                                                     </span>
 
                                                             <span
-                                                                className={`${item.status === "مرفوض" ? "bg-gray-100 border-red-500 text-black border-r-8 rounded-md px-3 py-2 w-1/5" : (item.status === "مكتمل" ? "bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6" : "bg-gray-100  text-black border-r-8 border-amber-500 rounded-md px-3 py-2 w-1/6")}`}>
+                                                                className={`${item.status === "مرفوض" ? "bg-gray-100 border-red-500 text-black border-r-8 rounded-md px-3 py-2 w-1/6" : (item.status === "مكتمل" ? "bg-gray-100  text-black border-r-8 border-green-500 rounded-md px-3 py-2 w-1/6" : "bg-gray-100  text-black border-r-8 border-amber-500 rounded-md px-3 py-2 w-1/6")}`}>
                                                         {item.status}
                                                     </span>
 
@@ -114,7 +114,7 @@ function Order() {
 
                                                             {item.data != null && item.status === "مكتمل" ? (
                                                                 <button
-                                                                    className="bg-green-500  hover:bg-green-700 text-white font-bold py-2 px-3 w-1/5 rounded">
+                                                                    className="bg-green-500  hover:bg-green-700 text-white font-bold py-1 px-3 w-1/6 rounded">
                                                                     <a href={`${baseurl}download/${item.data}`} download>تحميل
                                                                         الوثيقة</a>
                                                                 </button>

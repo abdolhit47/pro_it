@@ -73,12 +73,12 @@ export default function Showfiles({setOpenModal,path_file,id,status,approved}) {
             if(response.data.message === "approved"){
                 toast.success("تم الموافقة بنجاح");
                 setTimeout(() => {
-                    navigate('/Order');
+                    setOpenModal(false);
                 }, 1000);
             }else if(response.data.message === 'already approved'){
                 toast.success("تم الموافقة مسبقا");
                 setTimeout(() => {
-                    navigate('/Order');
+                    setOpenModal(false);
                 }, 1250);
             }
         }).catch((error) => {
@@ -96,7 +96,9 @@ export default function Showfiles({setOpenModal,path_file,id,status,approved}) {
     }
     const handleCloseUnapprove= () => {
         setunapprove(false);
-        navigate('/Order');
+        setTimeout(() => {
+            navigate(`/Order`);
+        }, 1200);
     };
 
     console.log(status === "1" && approved===0)
@@ -179,7 +181,7 @@ export default function Showfiles({setOpenModal,path_file,id,status,approved}) {
             <div className="pt-0 text-center justify-center">
                 <div className="flex flex-col py-4">
                     <div className="flex flex-row-reverse justify-center items-center gap-28">
-                        {status === "1" && approved===0 &&(<div className="p-3 w-1/5 flex items-center justify-between">
+                        {status === "0" && approved===0 &&(<div className="p-3 w-1/5 flex items-center justify-between">
                             <button onClick={() => approve(id)}><CheckCircleOutlineIcon color="success"fontSize="large"/>
                                 القبول
                             </button>

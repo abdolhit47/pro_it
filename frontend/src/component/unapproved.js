@@ -39,6 +39,7 @@ export default function Unapproved({onClose,id}) {
                 toast.success('تم رفض الطلب بنجاح');
                 setTimeout(() => {
                     onClose(false);
+
                 }, 1250);
             }
             else{
@@ -80,7 +81,7 @@ export default function Unapproved({onClose,id}) {
                         </div>
 
                         <div className="flex flex-row-reverse justify-center items-center mt-4 ">
-                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]">إضافة</button>
+                            <button onClick={onSubmit} type="submit" className="mb-2 p-1 text-white font-medium ml-28 border-solid border-2 rounded-md w-20 bg-[#5F82BA]">رفض</button>
                             <button onClick={closeModalTp} className="mb-2 p-1 font-medium mr-28 border-solid border-2 border-amber-700 rounded-md w-20 ">رجوع</button>
                         </div>
                 </div>

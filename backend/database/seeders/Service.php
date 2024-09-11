@@ -13,10 +13,10 @@ class Service extends Seeder
      */
     public function run(): void
     {
-        DB::table('service')->delete();
-        $service =[
-            ['id'=>'1','name'=>'تجربة','description'=>'تحت العمل','ID_office'=>1],];
-        foreach ($service as $ser)
-            DB::table('service')->insert($ser);
+//        DB::table('service')->delete();
+//        $service =[
+//            ['id'=>'1','name'=>'تجربة','description'=>'تحت العمل','ID_office'=>1],];
+//        foreach ($service as $ser)
+//            DB::table('service')->insert($ser);
     }
 }
